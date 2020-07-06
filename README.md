@@ -4,7 +4,7 @@ ml_params_tensorflow
 [![License](https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Linting & testing](https://github.com/SamuelMarks/ml-params-tensorflow/workflows/Linting%20&%20testing/badge.svg)](https://github.com/SamuelMarks/ml-params-tensorflow/actions)
 
-[Keras](https://tensorflow.io) implementation of ml-params CLI API
+[TensorFlow](https://tensorflow.org) implementation of ml-params CLI API
 
 ## Install dependencies
 
@@ -28,8 +28,9 @@ Set this environment variable to falsey if you want to `import keras` rather tha
 
   - https://github.com/SamuelMarks/ml-params-keras
   - https://github.com/SamuelMarks/ml-params-jax
-  - https://github.com/SamuelMarks/ml-params-trax
   - https://github.com/SamuelMarks/ml-params-flax
+  - https://github.com/SamuelMarks/ml-params-trax
+  - https://github.com/SamuelMarks/ml-params-pytorch
 
 ## Related projects
 
