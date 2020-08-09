@@ -19,13 +19,7 @@ ml_params_tensorflow
 
 ## Usage
 
-After installing as above, follow usage from https://github.com/SamuelMarks/ml-params
-
-## Additional options
-
-Set this environment variable to falsey if you want to `import keras` rather than `from tensorflow import keras`:
-
-    TF_KERAS
+After installing as above, follow usage from [ml-params](https://github.com/SamuelMarks/ml-params)
 
 ## Sibling projects
 
