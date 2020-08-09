@@ -5,7 +5,7 @@ from io import StringIO
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
-from doctrans.tests.utils_for_tests import unittest_main
+from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 
 
 class TestUtilsForTests(TestCase):
