@@ -2,13 +2,16 @@
 MNIST classification test(s)
 """
 
-from os import path
+from os import path, environ
 from shutil import rmtree
 from tempfile import mkdtemp
 from typing import Optional
 from unittest import TestCase, main as unittest_main
 
-from tensorflow import keras
+if environ.get("TF_KERAS", True):
+    from tensorflow import keras
+else:
+    import keras
 
 from ml_params_tensorflow.example_model import get_model
 from ml_params_tensorflow.ml_params_impl import TensorFlowTrainer
