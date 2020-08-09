@@ -1,10 +1,12 @@
 ml_params_tensorflow
 ===============
-![Python version range](https://img.shields.io/badge/python-3.6%E2%80%933.8+-blue.svg)
+![Python version range](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8%20|%203.9b5-blue.svg)
 [![License](https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Linting & testing](https://github.com/SamuelMarks/ml-params-tensorflow/workflows/Linting%20&%20testing/badge.svg)](https://github.com/SamuelMarks/ml-params-tensorflow/actions)
+[![Linting, testing, and coverage](https://github.com/SamuelMarks/ml-params-tensorflow/workflows/Linting/badge.svg)](https://github.com/SamuelMarks/ml-params-tensorflow/actions)
+![Documentation coverage](.github/doccoverage.svg)
+[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-[TensorFlow](https://tensorflow.org) implementation of ml-params CLI API
+[TensorFlow](https://tensorflow.org) implementation of the [ml-params](https://github.com/SamuelMarks/ml-params) API and CLI.
 
 ## Install dependencies
 
@@ -26,15 +28,17 @@ Set this environment variable to falsey if you want to `import keras` rather tha
 
 ## Sibling projects
 
-  - https://github.com/SamuelMarks/ml-params-keras
-  - https://github.com/SamuelMarks/ml-params-jax
-  - https://github.com/SamuelMarks/ml-params-flax
-  - https://github.com/SamuelMarks/ml-params-trax
-  - https://github.com/SamuelMarks/ml-params-pytorch
+| Google | Other vendors |
+| -------| ------------- |
+| _[tensorflow](https://github.com/SamuelMarks/ml-params-tensorflow)_  | [pytorch](https://github.com/SamuelMarks/ml-params-pytorch) |
+| [keras](https://github.com/SamuelMarks/ml-params-keras)  | [skorch](https://github.com/SamuelMarks/ml-params-skorch) |
+| [flax](https://github.com/SamuelMarks/ml-params-flax) | [sklearn](https://github.com/SamuelMarks/ml-params-sklearn) |
+| [trax](https://github.com/SamuelMarks/ml-params-trax) | [xgboost](https://github.com/SamuelMarks/ml-params-xgboost) |
+| [jax](https://github.com/SamuelMarks/ml-params-jax) | [cntk](https://github.com/SamuelMarks/ml-params-cntk) |
 
-## Related projects
+## Related official projects
 
-  - https://github.com/SamuelMarks/ml-prepare
+  - [ml-prepare](https://github.com/SamuelMarks/ml-prepare)
 
 ---
 
