@@ -2,19 +2,17 @@
 MNIST classification test(s)
 """
 
-from os import path, environ
+from os import path
 from shutil import rmtree
 from tempfile import mkdtemp
 from typing import Optional
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase
 
-if environ.get("TF_KERAS", True):
-    from tensorflow import keras
-else:
-    import keras
+import tensorflow as tf
 
 from ml_params_tensorflow.example_model import get_model
 from ml_params_tensorflow.ml_params_impl import TensorFlowTrainer
+from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 
 
 class TestMnist(TestCase):
@@ -55,7 +53,7 @@ class TestMnist(TestCase):
             epochs=epochs,
             model_dir=TestMnist.model_dir,
             loss="sparse_categorical_crossentropy",
-            optimizer=keras.optimizers.Adam(0.001),
+            optimizer=tf.keras.optimizers.Adam(0.001),
             metrics=["accuracy"],
             callbacks=None,
             save_directory=None,
@@ -63,5 +61,4 @@ class TestMnist(TestCase):
         )
 
 
-if __name__ == "__main__":
-    unittest_main()
+unittest_main()

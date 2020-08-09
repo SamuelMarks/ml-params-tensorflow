@@ -1,12 +1,17 @@
 """
 Implementation of datasets following vendor recommendations.
 """
+from functools import partial
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-
 from ml_params.datasets import load_data_from_ml_prepare
 from ml_prepare.datasets import datasets2classes
+
+
+def normalize_img(image, label, scale):
+    """Normalizes images: `uint8` -> `float32`."""
+    return tf.cast(image, tf.float32) / scale, label
 
 
 def load_data_from_tfds_or_ml_prepare(
@@ -60,19 +65,16 @@ def load_data_from_tfds_or_ml_prepare(
     if "batch_size" not in data_loader_kwargs:
         data_loader_kwargs["batch_size"] = 128
 
-    def normalize_img(image, label):
-        """Normalizes images: `uint8` -> `float32`."""
-        return tf.cast(image, tf.float32) / data_loader_kwargs["scale"], label
-
     num_parallel_calls = tf.data.experimental.AUTOTUNE if "tf" in globals() else 10
 
-    ds_train = ds_train.map(normalize_img, num_parallel_calls=num_parallel_calls)
+    _normalize_img = partial(normalize_img, scale=data_loader_kwargs["scale"])
+    ds_train = ds_train.map(_normalize_img, num_parallel_calls=num_parallel_calls)
     ds_train = ds_train.cache()
     ds_train = ds_train.shuffle(ds_info.splits["train"].num_examples)
     ds_train = ds_train.batch(data_loader_kwargs["batch_size"])
     ds_train = ds_train.prefetch(num_parallel_calls)
 
-    ds_test = ds_test.map(normalize_img, num_parallel_calls=num_parallel_calls)
+    ds_test = ds_test.map(_normalize_img, num_parallel_calls=num_parallel_calls)
     ds_test = ds_test.batch(data_loader_kwargs["batch_size"])
     ds_test = ds_test.cache()
     ds_test = ds_test.prefetch(num_parallel_calls)

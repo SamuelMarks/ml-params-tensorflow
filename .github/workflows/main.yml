@@ -37,6 +37,14 @@ jobs:
             -   name: Test with unittest
                 run: |
                     python -m unittest discover ml_params_tensorflow.tests
+            -   name: Test coverage
+                run: |
+                    pip install codecov coverage
+                    coverage run -m unittest discover
+                    bash <(curl -s https://codecov.io/bash)
+                env:
+                    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+                if: matrix.python-version == '3.8' && matrix.os == 'Linux'
             -   name: Doc coverage
                 run: |
                     pip install interrogate
