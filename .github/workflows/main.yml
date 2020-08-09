@@ -44,7 +44,7 @@ jobs:
                     bash <(curl -s https://codecov.io/bash)
                 env:
                     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-                if: matrix.python-version == '3.8' && matrix.os == 'Linux'
+                if: matrix.python-version == '3.8' && matrix.os == 'linux'
             -   name: Doc coverage
                 run: |
                     pip install interrogate
@@ -63,4 +63,4 @@ jobs:
                         git commit -m '[.github/doccoverage.svg] Updated coverage'
                         git push origin master
                     fi
-                if: matrix.python-version == '3.8' && matrix.os == 'Linux'
+                if: matrix.python-version == '3.8' && matrix.os == 'linux'
