@@ -1,22 +1,22 @@
 """
 Sample model, used in tests and as a starter for writing ones own.
 """
+from typing import Tuple
 
 import tensorflow as tf
 
 
-def get_model(num_classes, input_shape=(28, 28, 1)):
+def get_model(
+    num_classes: int, input_shape: Tuple[int, int, int] = (28, 28, 1)
+) -> tf.keras.Sequential:
     """
     Gets the model.
 
     :param num_classes: Number of classes (e.g., 10 for MNIST, 2 for cat v dog)
-    :type num_classes: ```int```
 
     :param input_shape: The shape of the input, 3 in image context usually means (height, width, channels)
-    :type input_shape: ```Tuple[int, int, int]```
 
     :returns: Keras model configured with the input
-    :rtype: ```keras.Sequential```
     """
     return tf.keras.Sequential(
         [

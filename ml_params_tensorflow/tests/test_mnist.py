@@ -11,7 +11,7 @@ from unittest import TestCase
 import tensorflow as tf
 
 from ml_params_tensorflow.example_model import get_model
-from ml_params_tensorflow.ml_params_impl import TensorFlowTrainer
+from ml_params_tensorflow.ml_params.trainer import TensorFlowTrainer
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 
 
@@ -49,15 +49,18 @@ class TestMnist(TestCase):
         trainer = TensorFlowTrainer()
         trainer.load_data("mnist", tfds_dir=TestMnist.tfds_dir, num_classes=num_classes)
         trainer.load_model(get_model, num_classes=num_classes)
-        trainer.train(
-            epochs=epochs,
-            model_dir=TestMnist.model_dir,
-            loss="sparse_categorical_crossentropy",
-            optimizer=tf.keras.optimizers.Adam(0.001),
-            metrics=["accuracy"],
-            callbacks=None,
-            save_directory=None,
-            metric_emit_freq=None,
+        self.assertIsInstance(
+            trainer.train(
+                epochs=epochs,
+                model_dir=TestMnist.model_dir,
+                loss="SparseCategoricalCrossentropy",
+                optimizer="Adam",
+                metrics=["categorical_accuracy"],
+                callbacks=None,
+                save_directory=None,
+                metric_emit_freq=None,
+            ),
+            tf.keras.Sequential,
         )
 
 
