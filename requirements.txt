@@ -1,5 +1,6 @@
 tensorflow
 numpy
+typing-extensions
 http://github.com/SamuelMarks/ml-params/zipball/master#egg=ml_params
 -r https://raw.githubusercontent.com/SamuelMarks/ml-params/master/requirements.txt
 http://github.com/SamuelMarks/ml-prepare/zipball/master#egg=ml_prepare
