@@ -4,7 +4,6 @@ from sys import stdout
 from typing import (
     Tuple,
     Optional,
-    Literal,
     List,
     Callable,
     Union,
@@ -17,6 +16,7 @@ from typing import (
 import numpy as np
 import tensorflow as tf
 from ml_params.base import BaseTrainer
+from typing_extensions import Literal
 
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare

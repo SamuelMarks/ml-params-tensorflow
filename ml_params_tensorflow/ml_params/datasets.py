@@ -6,7 +6,6 @@ from functools import partial
 from typing import (
     Union,
     Tuple,
-    Literal,
     AnyStr,
     Callable,
     Optional,
@@ -21,6 +20,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 from ml_params.datasets import load_data_from_ml_prepare
 from ml_prepare.datasets import datasets2classes
+from typing_extensions import Literal
 
 # Two lines from https://github.com/tensorflow/datasets/blob/d2b7dd0/tensorflow_datasets/core/dataset_utils.py#L33-L34
 
