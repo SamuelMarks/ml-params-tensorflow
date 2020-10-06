@@ -1,3 +1,7 @@
+"""
+Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
+"""
+
 from collections import namedtuple
 from typing import Any, Literal, Optional, List, Callable
 
@@ -14,8 +18,7 @@ class ConfigClass(object):
     :cvar loss: Loss function, can be a string (depending on the framework) or an instance of a class
     :cvar metrics: Collection of metrics to monitor, e.g., accuracy, f1
     :cvar optimizer: Optimizer, can be a string (depending on the framework) or an instance of a class
-    :cvar metric_emit_freq: Frequency of metric emission,
-     e.g., `lambda: epochs % 10 == 0`, None means every epoch. Defaults to None
+    :cvar metric_emit_freq: Freq. to emit metrics, e.g., `lambda: epochs % 10 == 0`, None == ∀ epochs. Defaults to None
     :cvar save_directory: Directory to save output in, e.g., weights in h5 files. If None, don't save. Defaults to None
     :cvar output_type: `if save_directory is not None` then save in this format, e.g., 'h5'. Defaults to infer
     :cvar validation_split: Optional float between 0 and 1, fraction of data to reserve for validation. Defaults to 0.1

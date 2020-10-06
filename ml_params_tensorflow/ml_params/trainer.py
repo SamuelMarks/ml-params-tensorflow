@@ -180,7 +180,7 @@ class TensorFlowTrainer(BaseTrainer):
 
         :param optimizer: Optimizer, can be a string (depending on the framework) or an instance of a class
 
-        :param metric_emit_freq: Frequency of metric emission, e.g., `lambda: epochs % 10 == 0`, None means every epoch
+        :param metric_emit_freq: Freq. to emit metrics, e.g., `lambda: epochs % 10 == 0`, None == ∀ epochs. Defaults to None
 
         :param save_directory: Directory to save output in, e.g., weights in h5 files. If None, don't save.
 

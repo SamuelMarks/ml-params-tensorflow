@@ -1,3 +1,7 @@
+"""
+CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
+"""
+
 from collections import namedtuple
 from json import loads
 
@@ -106,7 +110,7 @@ def train_parser(argument_parser):
     argument_parser.add_argument(
         "--metric_emit_freq",
         type=int,
-        help="Frequency of metric emission, e.g., `lambda: epochs % 10 == 0`, None means every epoch",
+        help="Freq. to emit metrics, e.g., `lambda: epochs % 10 == 0`, None == ∀ epochs. Defaults to None",
     )
     argument_parser.add_argument(
         "--save_directory",
