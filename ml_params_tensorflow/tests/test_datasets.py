@@ -58,7 +58,7 @@ class TestDatasetsUtils(TestCase):
 
             self.assertIsInstance(
                 ml_params_tensorflow.ml_params.datasets.load_data_from_tfds_or_ml_prepare(
-                    "a"
+                    dataset_name="a"
                 ),
                 MagicMock,
             )
@@ -67,7 +67,9 @@ class TestDatasetsUtils(TestCase):
         """ Tests that `load_data_from_tfds_or_ml_prepare` gives right type when `as_numpy=True` """
         self.assertTrue(tf.executing_eagerly())
 
-        for res in load_data_from_tfds_or_ml_prepare("mnist", K="np", as_numpy=True):
+        for res in load_data_from_tfds_or_ml_prepare(
+            dataset_name="mnist", K="np", as_numpy=True
+        ):
             self.assertEqual(res.__qualname__, "_eager_dataset_iterator")
 
 

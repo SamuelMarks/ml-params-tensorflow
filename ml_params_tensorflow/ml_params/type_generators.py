@@ -69,7 +69,9 @@ def _is_main_name(param: str, extra_filter=None) -> bool:
 
 
 def _expose_module(
-    mod: Any, exclusions: frozenset = frozenset(), extra_filter=None,
+    mod: Any,
+    exclusions: frozenset = frozenset(),
+    extra_filter=None,
 ) -> Dict[AnyStr, Any]:
     """
     :param mod: Any module

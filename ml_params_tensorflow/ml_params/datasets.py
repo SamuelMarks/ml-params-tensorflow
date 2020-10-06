@@ -1,6 +1,6 @@
 """
-Implementation of datasets following vendor recommendations.
-"""
+    Implementation of datasets following vendor recommendations.
+    """
 import os
 from functools import partial
 from typing import (
@@ -21,8 +21,6 @@ import tensorflow_datasets as tfds
 from ml_params.datasets import load_data_from_ml_prepare
 from ml_prepare.datasets import datasets2classes
 from typing_extensions import Literal
-
-# Two lines from https://github.com/tensorflow/datasets/blob/d2b7dd0/tensorflow_datasets/core/dataset_utils.py#L33-L34
 
 NumpyValue = Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]
 NumpyElem = Union[NumpyValue, Iterable[NumpyValue]]
@@ -48,6 +46,7 @@ def normalize_img(image: Any, label: str, scale: Union[float, int]) -> Tuple[Any
 
 
 def load_data_from_tfds_or_ml_prepare(
+    *,
     dataset_name: Union[
         Literal[
             "boston_housing",
@@ -96,7 +95,6 @@ def load_data_from_tfds_or_ml_prepare(
         return load_data_from_ml_prepare(
             dataset_name=dataset_name, tfds_dir=tfds_dir, **data_loader_kwargs
         )
-
     data_loader_kwargs.update({"dataset_name": dataset_name, "tfds_dir": tfds_dir})
     data_loader_kwargs.setdefault("scale", 255)
     data_loader_kwargs.setdefault("batch_size", 128)
@@ -118,7 +116,6 @@ def load_data_from_tfds_or_ml_prepare(
             ),
         },
     )
-
     tfds_load: Callable[
         [
             Tuple[
@@ -137,7 +134,7 @@ def load_data_from_tfds_or_ml_prepare(
                 Optional[bool],
             ]
         ],
-        Tuple[Tuple[tf.data.Dataset, tf.data.Dataset], tfds.core.DatasetInfo,],
+        Tuple[Tuple[tf.data.Dataset, tf.data.Dataset], tfds.core.DatasetInfo],
     ] = tfds.load
     (_ds_train, _ds_test), _ds_info = tfds_load(
         dataset_name,
@@ -146,23 +143,19 @@ def load_data_from_tfds_or_ml_prepare(
         shuffle_files=True,
         as_supervised=True,
         with_info=True,
-        download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"]
-        # builder_kwargs=**data_loader_kwargs
+        download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"],
     )
     ds_train: tf.data.Dataset = _ds_train
     ds_test: tf.data.Dataset = _ds_test
     ds_info: tfds.core.DatasetInfo = _ds_info
-
     assert (
         "num_classes" not in data_loader_kwargs
         or data_loader_kwargs["num_classes"] == ds_info.features["label"].num_classes
     ), "Expected {!r} got {!r}".format(
         data_loader_kwargs["num_classes"], ds_info.features["label"].num_classes
     )
-
     num_parallel_calls = tf.data.experimental.AUTOTUNE if "tf" in globals() else 10
     normalize_img_at_scale = partial(normalize_img, scale=data_loader_kwargs["scale"])
-
     ds_train = ds_train.map(
         normalize_img_at_scale, num_parallel_calls=num_parallel_calls
     )
@@ -170,23 +163,15 @@ def load_data_from_tfds_or_ml_prepare(
     ds_train = ds_train.shuffle(ds_info.splits["train"].num_examples)
     ds_train = ds_train.batch(data_loader_kwargs["batch_size"])
     ds_train = ds_train.prefetch(tf.data.experimental.AUTOTUNE)
-
     ds_test = ds_test.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
     ds_test = ds_test.batch(data_loader_kwargs["batch_size"])
     ds_test = ds_test.cache()
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
-
     splits = ds_train, ds_test
     if as_numpy:
-
-        _ds_train, _ds_test = tuple(
-            map(tfds.as_numpy, splits)
-        )  # type: Tuple[Iterator[NumpyElem], Iterator[NumpyElem]]
+        _ds_train, _ds_test = tuple(map(tfds.as_numpy, splits))
     else:
-        _ds_train, _ds_test = tuple(
-            splits
-        )  # type: Tuple[tf.data.Dataset, tf.data.Dataset]
-
+        _ds_train, _ds_test = tuple(splits)
     ds_train: Union[
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
@@ -195,5 +180,4 @@ def load_data_from_tfds_or_ml_prepare(
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
     ] = _ds_test
-
     return ds_train, ds_test

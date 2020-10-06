@@ -1,17 +1,8 @@
-""" Implementation of ml_params BaseTrainer API """
+"""
+Implementation of ml_params BaseTrainer API
+"""
 from os import path
-from sys import stdout
-from typing import (
-    Tuple,
-    Optional,
-    List,
-    Callable,
-    Union,
-    Any,
-    Dict,
-    AnyStr,
-    IO,
-)
+from typing import Tuple, Optional, List, Callable, Union, Any, Dict, AnyStr
 
 import numpy as np
 import tensorflow as tf
@@ -39,6 +30,7 @@ class TensorFlowTrainer(BaseTrainer):
 
     def load_data(
         self,
+        *,
         dataset_name: Literal[
             "boston_housing",
             "cifar10",
@@ -65,6 +57,8 @@ class TensorFlowTrainer(BaseTrainer):
     ) -> Union[Tuple[tf.data.Dataset, tf.data.Dataset], Tuple[np.ndarray, np.ndarray]]:
         """
         Load the data for your ML pipeline. Will be fed into `train`.
+
+        :param *: syntactic note indicating everything after is a keyword-only argument
 
         :param dataset_name: name of dataset
 
@@ -93,6 +87,7 @@ class TensorFlowTrainer(BaseTrainer):
 
     def train(
         self,
+        *,
         callbacks: Optional[
             List[
                 Literal[
@@ -165,15 +160,15 @@ class TensorFlowTrainer(BaseTrainer):
         ],
         metric_emit_freq: Optional[Callable[[int], bool]] = None,
         save_directory: Optional[str] = None,
-        output_type="infer",
-        writer: Optional[IO] = stdout,
+        output_type: str = "infer",
         validation_split: float = 0.1,
         batch_size: int = 128,
-        *args,
         **kwargs
     ):
         """
         Run the training loop for your ML pipeline.
+
+        :param *: syntactic note indicating everything after is a keyword-only argument
 
         :param callbacks: Collection of callables that are run inside the training loop
 
@@ -191,19 +186,14 @@ class TensorFlowTrainer(BaseTrainer):
 
         :param output_type: `if save_directory is not None` then save in this format, e.g., 'h5'.
 
-        :param writer: Writer for all output, could be a TensorBoard instance, a file handler like stdout or stderr
+        :param validation_split: Optional float between 0 and 1, fraction of data to reserve for validation.
 
-        :param validation_split:
+        :param batch_size: batch size at each iteration.
 
-        :param batch_size:
+        :param kwargs: additional keyword arguments
 
-        :param *args: Arbitrary position arguments
-        :type *args: ```*args```
-
-        :param **kwargs: Arbitrary keyword arguments.
-        :type **kwargs: ```**kwargs``
-
-        :return:
+        :return: the model
+        :rtype: ```Any```
         """
         super(TensorFlowTrainer, self).train(epochs=epochs)
         assert self.data is not None

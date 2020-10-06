@@ -47,8 +47,10 @@ class TestMnist(TestCase):
         epochs = 3
 
         trainer = TensorFlowTrainer()
-        trainer.load_data("mnist", tfds_dir=TestMnist.tfds_dir, num_classes=num_classes)
-        trainer.load_model(get_model, num_classes=num_classes)
+        trainer.load_data(
+            dataset_name="mnist", tfds_dir=TestMnist.tfds_dir, num_classes=num_classes
+        )
+        trainer.load_model(model=get_model, num_classes=num_classes)
         self.assertIsInstance(
             trainer.train(
                 epochs=epochs,
