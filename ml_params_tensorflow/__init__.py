@@ -7,22 +7,21 @@ Root __init__
 import logging
 from logging.config import dictConfig as _dictConfig
 from os import path
+from typing import Optional
 
 import yaml
 
 __author__ = "Samuel Marks"
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 
-def get_logger(name=None):
+def get_logger(name: Optional[str] = None) -> logging.Logger:
     """
     Create a logger instance with the provided name, and default YAML config from this package
 
     :param name: Name of logger instance. Usually the module name with filename dot-appended. None gives root logger.
-    :type name: Optional[str]
 
     :returns: logger instance
-    :rtype: ```logging.Logger```
     """
     with open(path.join(path.dirname(__file__), "_data", "logging.yml"), "rt") as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)

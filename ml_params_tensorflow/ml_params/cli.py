@@ -1,7 +1,11 @@
+from collections import namedtuple
 from json import loads
 
+# TODO
+self = namedtuple("State", ("model",))
 
-def train_parser(self, argument_parser):
+
+def train_parser(argument_parser):
     """
     Set CLI arguments
 
