@@ -110,7 +110,7 @@ def train_parser(argument_parser):
     argument_parser.add_argument(
         "--metric_emit_freq",
         type=int,
-        help="Freq. to emit metrics, e.g., `lambda: epochs % 10 == 0`, None == ∀ epochs. Defaults to None",
+        help="`None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10. Defaults to None",
     )
     argument_parser.add_argument(
         "--save_directory",
