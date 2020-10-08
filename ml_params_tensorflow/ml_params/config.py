@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 
 # TODO
-self = namedtuple("State", ("model",))
+self = namedtuple("State", ("model", "data"))
 
 
 class TrainConfig(object):
