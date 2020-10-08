@@ -3,13 +3,16 @@ Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-para
 """
 
 from collections import namedtuple
-from typing import Any, Literal, Optional, List, Callable
+from typing import Any, Literal, Optional, List, Callable, AnyStr, Union, Tuple, Dict
+
+import numpy as np
+import tensorflow as tf
 
 # TODO
 self = namedtuple("State", ("model",))
 
 
-class ConfigClass(object):
+class TrainConfig(object):
     """
     Run the training loop for your ML pipeline.
 
@@ -103,3 +106,87 @@ class ConfigClass(object):
     batch_size: int = 128
     kwargs: dict = {}
     return_type: Any = self.model
+
+
+class LoadDataConfig(object):
+    """
+    Load the data for your ML pipeline. Will be fed into `train`.
+
+    :cvar dataset_name: name of dataset
+    :cvar data_loader: function that returns the expected data type. Defaults to None
+    :cvar data_type: incoming data type. Defaults to infer
+    :cvar output_type: outgoing data_type. Defaults to None
+    :cvar K: backend engine, e.g., `np` or `tf`. Defaults to None
+    :cvar data_loader_kwargs: pass this as arguments to data_loader function
+    :cvar return_type: Dataset splits (by default, your train and test). Defaults to self.data"""
+
+    dataset_name: Literal[
+        "boston_housing",
+        "cifar10",
+        "cifar100",
+        "fashion_mnist",
+        "imdb",
+        "mnist",
+        "reuters",
+    ] = None
+    data_loader: Optional[
+        Callable[
+            [AnyStr, AnyStr, Literal["np", "tf"], bool, Dict],
+            Union[
+                Tuple[tf.data.Dataset, tf.data.Dataset],
+                Tuple[np.ndarray, np.ndarray],
+                Tuple[Any, Any],
+            ],
+        ]
+    ] = None
+    data_type: str = "infer"
+    output_type: Optional[Literal["np"]] = None
+    K: Optional[Literal["np", "tf"]] = None
+    data_loader_kwargs: dict = {}
+    return_type: Union[
+        Tuple[tf.data.Dataset, tf.data.Dataset], Tuple[np.ndarray, np.ndarray]
+    ] = self.data
+
+
+class LoadModelConfig(object):
+    """
+    Load the model.
+    Takes a model object, or a pipeline that downloads & configures before returning a model object.
+
+    :cvar model: model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance
+    :cvar call: whether to call `model()` even if `len(model_kwargs) == 0`. Defaults to False
+    :cvar model_kwargs: to be passed into the model. If empty, doesn't call, unless call=True.
+    :cvar return_type: self.model, e.g., the result of applying `model_kwargs` on model. Defaults to self.model"""
+
+    model: Union[
+        Literal[
+            "DenseNet121",
+            "DenseNet169",
+            "DenseNet201",
+            "EfficientNetB0",
+            "EfficientNetB1",
+            "EfficientNetB2",
+            "EfficientNetB3",
+            "EfficientNetB4",
+            "EfficientNetB5",
+            "EfficientNetB6",
+            "EfficientNetB7",
+            "InceptionResNetV2",
+            "InceptionV3",
+            "MobileNet",
+            "MobileNetV2",
+            "NASNetLarge",
+            "NASNetMobile",
+            "ResNet101",
+            "ResNet101V2",
+            "ResNet152",
+            "ResNet152V2",
+            "ResNet50",
+            "ResNet50V2",
+            "Xception",
+        ],
+        AnyStr,
+    ] = None
+    call: bool = False
+    model_kwargs: dict = {}
+    return_type: tf.keras.Model = self.model

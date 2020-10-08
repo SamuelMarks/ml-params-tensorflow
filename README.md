@@ -45,15 +45,33 @@ To make the development of _ml-params-tensorflow_ type safer and maintain consis
 
 When TensorFlow itself changes—i.e., a new major version of TensorFlow is releases—then run the `sync_properties`, as shown in the module-level docstring here [`ml_params_tensorflow/ml_params/type_generators.py`](ml_params_tensorflow/ml_params/type_generators.py);
 
-To synchronise all the various other APIs, edit one and it'll translate to the others, but make sure you select which one is the gold-standard, like so:
+To synchronise all the various other APIs, edit one and it'll translate to the others, but make sure you select which one is the gold-standard.
 
-    $ python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
-                              --class-name 'TrainConfig' \
-                              --function 'ml_params_tensorflow/ml_params/trainer.py' \
-                              --function-name 'TensorFlowTrainer.train' \
-                              --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
-                              --argparse-function-name 'train_parser' \
-                              --truth 'function'
+As an example, using the `class TensorFlowTrainer` methods as truth, this will update the CLI parsers and config classes:
+
+    python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
+                            --class-name 'TrainConfig' \
+                            --function 'ml_params_tensorflow/ml_params/trainer.py' \
+                            --function-name 'TensorFlowTrainer.train' \
+                            --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
+                            --argparse-function-name 'train_parser' \
+                            --truth 'function'
+
+    python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
+                            --class-name 'LoadDataConfig' \
+                            --function 'ml_params_tensorflow/ml_params/trainer.py' \
+                            --function-name 'TensorFlowTrainer.load_data' \
+                            --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
+                            --argparse-function-name 'load_data_parser' \
+                            --truth 'function'
+
+    python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
+                            --class-name 'LoadModelConfig' \
+                            --function 'ml_params_tensorflow/ml_params/trainer.py' \
+                            --function-name 'TensorFlowTrainer.load_model' \
+                            --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
+                            --argparse-function-name 'load_model_parser' \
+                            --truth 'function'
 
 ---
 

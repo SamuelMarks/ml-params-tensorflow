@@ -16,7 +16,7 @@ def get_model(
 
     :param input_shape: The shape of the input, 3 in image context usually means (height, width, channels)
 
-    :returns: Keras model configured with the input
+    :return: Keras model configured with the input
     """
     return tf.keras.Sequential(
         [

@@ -12,7 +12,7 @@ from typing import Optional
 import yaml
 
 __author__ = "Samuel Marks"
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 
 def get_logger(name: Optional[str] = None) -> logging.Logger:
@@ -21,7 +21,7 @@ def get_logger(name: Optional[str] = None) -> logging.Logger:
 
     :param name: Name of logger instance. Usually the module name with filename dot-appended. None gives root logger.
 
-    :returns: logger instance
+    :return: logger instance
     """
     with open(path.join(path.dirname(__file__), "_data", "logging.yml"), "rt") as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)

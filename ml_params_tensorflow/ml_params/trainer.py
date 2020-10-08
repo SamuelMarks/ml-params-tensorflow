@@ -1,6 +1,6 @@
 """
-Implementation of ml_params BaseTrainer API
-"""
+    Implementation of ml_params BaseTrainer API
+    """
 from os import path
 from typing import Tuple, Optional, List, Callable, Union, Any, Dict, AnyStr
 
@@ -64,13 +64,13 @@ class TensorFlowTrainer(BaseTrainer):
 
         :param data_loader: function that returns the expected data type.
 
-        :param data_loader_kwargs: pass this as arguments to data_loader function
-
         :param data_type: incoming data type
 
         :param output_type: outgoing data_type, defaults to no conversion
 
         :param K: backend engine, e.g., `np` or `tf`
+
+        :param data_loader_kwargs: pass this as arguments to data_loader function
 
         :return: Dataset splits (by default, your train and test)
         """
@@ -84,6 +84,60 @@ class TensorFlowTrainer(BaseTrainer):
             **data_loader_kwargs
         )
         return self.data
+
+    def load_model(
+        self,
+        *,
+        model: Union[
+            Literal[
+                "DenseNet121",
+                "DenseNet169",
+                "DenseNet201",
+                "EfficientNetB0",
+                "EfficientNetB1",
+                "EfficientNetB2",
+                "EfficientNetB3",
+                "EfficientNetB4",
+                "EfficientNetB5",
+                "EfficientNetB6",
+                "EfficientNetB7",
+                "InceptionResNetV2",
+                "InceptionV3",
+                "MobileNet",
+                "MobileNetV2",
+                "NASNetLarge",
+                "NASNetMobile",
+                "ResNet101",
+                "ResNet101V2",
+                "ResNet152",
+                "ResNet152V2",
+                "ResNet50",
+                "ResNet50V2",
+                "Xception",
+            ],
+            AnyStr,
+        ],
+        call: bool = False,
+        **model_kwargs
+    ) -> tf.keras.Model:
+        """
+        Load the model.
+        Takes a model object, or a pipeline that downloads & configures before returning a model object.
+
+        :param *: syntactic note indicating everything after is a keyword-only argument
+
+        :param model: model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance
+
+        :param call: whether to call `model()` even if `len(model_kwargs) == 0`
+
+        :param **model_kwargs: to be passed into the model. If empty, doesn't call, unless call=True.
+
+        :return: self.model, e.g., the result of applying `model_kwargs` on model
+        """
+        super(TensorFlowTrainer, self).load_model(
+            model=model, call=call, **model_kwargs
+        )
+        return self.model
 
     def train(
         self,

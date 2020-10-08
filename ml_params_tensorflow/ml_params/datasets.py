@@ -39,7 +39,7 @@ def normalize_img(image: Any, label: str, scale: Union[float, int]) -> Tuple[Any
     :param scale: The scale (i.e., the denominator)
     :type scale: ```Union[float, str]```
 
-    :returns: The image in the right datatype and scale, the label
+    :return: The image in the right datatype and scale, the label
     :rtype: ```Tuple[tf.float32, str]```
     """
     return tf.cast(image, dtype=tf.float32) / scale, label
@@ -87,7 +87,6 @@ def load_data_from_tfds_or_ml_prepare(
       of NumPy arrays and `tf.Tensor`s are converted to NumPy arrays.
 
     :param data_loader_kwargs: pass this as arguments to data_loader function
-    :type data_loader_kwargs: ```**data_loader_kwargs```
 
     :return: Train and tests dataset splits.
     """

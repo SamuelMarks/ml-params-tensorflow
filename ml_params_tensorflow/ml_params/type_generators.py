@@ -38,6 +38,14 @@ Install doctrans then run, for example:
     python -m doctrans sync_properties \
                        --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
+                       --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
+                       --input-param 'exposed_applications_keys' \
+                       --output-param-wrap 'Union[{output_param}, AnyStr]' \
+                       --output-param 'TensorFlowTrainer.load_model.model'
+
+    python -m doctrans sync_properties \
+                       --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
+                       --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/datasets.py' \
                        --output-param-wrap 'Union[{output_param}, AnyStr]' \
                        --input-param 'exposed_datasets_keys' \
@@ -57,7 +65,7 @@ def _is_main_name(param: str, extra_filter=None) -> bool:
     :param extra_filter: Any additional filter to run
     :type extra_filter: Optional[Callable[[AnyStr], bool]]
 
-    :returns: Whether it is a 'main' name
+    :return: Whether it is a 'main' name
     """
     return (
         not param.startswith("_")
@@ -81,7 +89,7 @@ def _expose_module(
     :param extra_filter: Any additional filter to run
     :type extra_filter: Optional[Callable[[AnyStr], bool]]
 
-    :returns: Mapping from name to object at identified by that name
+    :return: Mapping from name to object at identified by that name
     """
     return {
         name: getattr(mod, name)
