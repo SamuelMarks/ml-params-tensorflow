@@ -1,6 +1,6 @@
 """
-    Implementation of ml_params BaseTrainer API
-    """
+Implementation of ml_params BaseTrainer API
+"""
 from os import path
 from typing import Tuple, Optional, List, Callable, Union, Any, Dict, AnyStr
 
@@ -134,9 +134,33 @@ class TensorFlowTrainer(BaseTrainer):
 
         :return: self.model, e.g., the result of applying `model_kwargs` on model
         """
+        if "model_kwargs" in model_kwargs:
+            model_kwargs = model_kwargs["model_kwargs"]
         super(TensorFlowTrainer, self).load_model(
             model=model, call=call, **model_kwargs
         )
+        if not isinstance(self.model, tf.keras.Model):
+            assert (
+                "num_classes" in model_kwargs
+            ), "Unable to infer how to construct {!r}".format(self.model)
+
+            if isinstance(self.model, str):
+                self.model = getattr(tf.keras.applications, self.model)(
+                    include_top=False,
+                    **{
+                        k: v
+                        for k, v in model_kwargs.items()
+                        if k not in frozenset(("num_classes", "include_top"))
+                    }
+                )
+                self.model.trainable = False
+            # elif isinstance(self.model, tf.keras.Layer):
+            self.model = tf.keras.Sequential(
+                [
+                    self.model,
+                    tf.keras.layers.Dense(model_kwargs["num_classes"]),
+                ]
+            )
         return self.model
 
     def train(
@@ -252,6 +276,7 @@ class TensorFlowTrainer(BaseTrainer):
         super(TensorFlowTrainer, self).train(epochs=epochs)
         assert self.data is not None
         assert self.model is not None
+
         self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         self.model.fit(self.data[0], epochs=epochs, validation_data=self.data[1])
         return self.model
