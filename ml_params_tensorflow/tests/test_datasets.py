@@ -7,6 +7,7 @@ from unittest.mock import patch, MagicMock
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
+from tensorflow_datasets.core.dataset_utils import _IterableDataset
 
 from ml_params_tensorflow.ml_params.datasets import (
     normalize_img,
@@ -71,11 +72,8 @@ class TestDatasetsUtils(TestCase):
         train_ds, test_ds, info = load_data_from_tfds_or_ml_prepare(
             dataset_name="mnist", K="np", as_numpy=True
         )
-        print("train_ds:\t", train_ds, ";",
-              "\ntype(train_ds):\t", type(train_ds), ";",
-              "\ndir(train_ds):\t", dir(train_ds), ";")
-        self.assertEqual(train_ds.__qualname__, "_eager_dataset_iterator")
-        self.assertEqual(test_ds.__qualname__, "_eager_dataset_iterator")
+        self.assertIsInstance(train_ds, tfds.core.dataset_utils._IterableDataset)
+        self.assertIsInstance(test_ds, tfds.core.dataset_utils._IterableDataset)
         self.assertIsInstance(info, tfds.core.DatasetInfo)
 
 
