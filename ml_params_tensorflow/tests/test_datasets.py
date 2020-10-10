@@ -6,7 +6,7 @@ from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
 import tensorflow as tf
-
+import tensorflow_datasets as tfds
 from ml_params_tensorflow.ml_params.datasets import (
     normalize_img,
     load_data_from_tfds_or_ml_prepare,
@@ -67,10 +67,12 @@ class TestDatasetsUtils(TestCase):
         """ Tests that `load_data_from_tfds_or_ml_prepare` gives right type when `as_numpy=True` """
         self.assertTrue(tf.executing_eagerly())
 
-        for res in load_data_from_tfds_or_ml_prepare(
+        train_ds, test_ds, info = load_data_from_tfds_or_ml_prepare(
             dataset_name="mnist", K="np", as_numpy=True
-        ):
-            self.assertEqual(res.__qualname__, "_eager_dataset_iterator")
+        )
+        self.assertEqual(train_ds.__qualname__, "_eager_dataset_iterator")
+        self.assertEqual(test_ds.__qualname__, "_eager_dataset_iterator")
+        self.assertIsInstance(info, tfds.core.DatasetInfo)
 
 
 unittest_main()

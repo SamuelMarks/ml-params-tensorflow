@@ -2,15 +2,16 @@
 Implementation of ml_params BaseTrainer API
 """
 from os import path
+from types import FunctionType
 from typing import Tuple, Optional, List, Callable, Union, Any, Dict, AnyStr
 
 import numpy as np
 import tensorflow as tf
+import tensorflow_datasets as tfds
 from ml_params.base import BaseTrainer
-from typing_extensions import Literal
-
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare
+from typing_extensions import Literal
 
 logger = get_logger(
     ".".join(
@@ -26,6 +27,7 @@ class TensorFlowTrainer(BaseTrainer):
     """ Implementation of ml_params BaseTrainer for TensorFlow """
 
     data = None
+    ds_info: Optional[tfds.core.DatasetInfo] = None
     model = None
 
     def load_data(
@@ -44,9 +46,9 @@ class TensorFlowTrainer(BaseTrainer):
             Callable[
                 [AnyStr, AnyStr, Literal["np", "tf"], bool, Dict],
                 Union[
-                    Tuple[tf.data.Dataset, tf.data.Dataset],
-                    Tuple[np.ndarray, np.ndarray],
-                    Tuple[Any, Any],
+                    Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
+                    Tuple[np.ndarray, np.ndarray, Any],
+                    Tuple[Any, Any, Any],
                 ],
             ]
         ] = None,
@@ -83,6 +85,7 @@ class TensorFlowTrainer(BaseTrainer):
             K=K,
             **data_loader_kwargs
         )
+        self.ds_info: tfds.core.DatasetInfo = self.data[2]
         return self.data
 
     def load_model(
@@ -134,19 +137,44 @@ class TensorFlowTrainer(BaseTrainer):
 
         :return: self.model, e.g., the result of applying `model_kwargs` on model
         """
-        if "model_kwargs" in model_kwargs:
-            model_kwargs = model_kwargs["model_kwargs"]
+        assert (
+            self.data or self.ds_info
+        ), "Run `load_data` before `load_model` so that `ds_info` is available"
         super(TensorFlowTrainer, self).load_model(
-            model=model, call=call, **model_kwargs
+            model=model, call=callable(model) or call, **model_kwargs
         )
-        if not isinstance(self.model, tf.keras.Model):
+        if not isinstance(self.model, (tf.keras.Model, FunctionType)):
             assert (
                 "num_classes" in model_kwargs
             ), "Unable to infer how to construct {!r}".format(self.model)
 
             if isinstance(self.model, str):
-                self.model = getattr(tf.keras.applications, self.model)(
-                    include_top=False,
+                if self.model.startswith("tf.keras.applications.") or self.model in dir(
+                    tf.keras.applications
+                ):
+                    self.model = getattr(
+                        tf.keras.applications, self.model.rpartition(".")[2]
+                    )
+                else:
+                    raise NotImplementedError(
+                        "`tf.keras.Model` from {!r}".format(self.model)
+                    )
+
+                extra_model_kwargs = (
+                    next(
+                        (
+                            {"input_shape": v.shape}
+                            for k, v in self.ds_info.features.items()
+                            if hasattr(v, "shape") and v.shape
+                        ),
+                        {},
+                    )
+                    if self.ds_info is not None and self.ds_info.features
+                    else {}
+                )
+                self.model = self.model(
+                    include_top=model_kwargs.get("include_top", False),
+                    **extra_model_kwargs,
                     **{
                         k: v
                         for k, v in model_kwargs.items()
@@ -154,11 +182,14 @@ class TensorFlowTrainer(BaseTrainer):
                     }
                 )
                 self.model.trainable = False
+            assert isinstance(
+                self.model, tf.keras.Model
+            ), "Expected `tf.keras.Model` got {!r}".format(type(self.model))
             # elif isinstance(self.model, tf.keras.Layer):
             self.model = tf.keras.Sequential(
                 [
                     self.model,
-                    tf.keras.layers.Dense(model_kwargs["num_classes"]),
+                    tf.keras.layers.Dense(self.ds_info.features["label"].num_classes),
                 ]
             )
         return self.model
@@ -274,13 +305,16 @@ class TensorFlowTrainer(BaseTrainer):
         :rtype: ```Any```
         """
         super(TensorFlowTrainer, self).train(epochs=epochs)
+
         assert self.data is not None
         assert self.model is not None
 
         self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         self.model.fit(self.data[0], epochs=epochs, validation_data=self.data[1])
+
         return self.model
 
 
 del get_logger
+
 __all__ = ["TensorFlowTrainer"]

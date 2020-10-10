@@ -5,11 +5,10 @@ MNIST classification test(s)
 from os import path
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import Optional
+from typing import Optional, Callable, Union, AnyStr
 from unittest import TestCase
 
 import tensorflow as tf
-
 from ml_params_tensorflow.example_model import get_model
 from ml_params_tensorflow.ml_params.trainer import TensorFlowTrainer
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main
@@ -43,6 +42,50 @@ class TestMnist(TestCase):
         """
         Tests classification roundtrip
         """
+        self.mnist_test(model=get_model)
+
+    def test_mnist_with_transfer_learning(self) -> None:
+        """
+        Tests classification roundtrip, using a builtin transfer-learning model
+        """
+        epochs = 3
+
+        trainer = TensorFlowTrainer()
+        trainer.load_data(dataset_name="cifar10", tfds_dir=TestMnist.tfds_dir)
+        trainer.load_model(
+            model="MobileNet", num_classes=trainer.ds_info.features["label"].num_classes
+        )
+        self.assertIsInstance(
+            trainer.train(
+                epochs=epochs,
+                model_dir=TestMnist.model_dir,
+                loss="SparseCategoricalCrossentropy",
+                optimizer="Adam",
+                metrics=["categorical_accuracy"],
+                callbacks=None,
+                save_directory=None,
+                metric_emit_freq=None,
+            ),
+            tf.keras.Sequential,
+        )
+
+    def test_mnist_fails_transfer_learning(self) -> None:
+        """
+        Tests classification roundtrip, using a builtin transfer-learning model
+        """
+        self.assertRaises(
+            NotImplementedError, lambda: self.mnist_test(model="FakeModelIsFake")
+        )
+
+    def mnist_test(
+        self, model: Union[Callable[[], tf.keras.Model], tf.keras.Model, AnyStr]
+    ) -> None:
+        """
+        Tests classification roundtrip
+
+        :param model: The model, can be a function that returns a tf.Model, a tf.Model,
+         or a string repr of a known transfer class
+        """
         num_classes = 10
         epochs = 3
 
@@ -50,7 +93,7 @@ class TestMnist(TestCase):
         trainer.load_data(
             dataset_name="mnist", tfds_dir=TestMnist.tfds_dir, num_classes=num_classes
         )
-        trainer.load_model(model=get_model, num_classes=num_classes)
+        trainer.load_model(model=model, num_classes=num_classes)
         self.assertIsInstance(
             trainer.train(
                 epochs=epochs,

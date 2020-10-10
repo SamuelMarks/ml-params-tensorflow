@@ -65,12 +65,16 @@ def load_data_from_tfds_or_ml_prepare(
     **data_loader_kwargs
 ) -> Tuple[
     Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset],
-        Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
+        Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
+        Tuple[
+            Iterator[NumpyElem], Iterator[NumpyElem], Union[tfds.core.DatasetInfo, Any]
+        ],
     ],
     Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset],
-        Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
+        Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
+        Tuple[
+            Iterator[NumpyElem], Iterator[NumpyElem], Union[tfds.core.DatasetInfo, Any]
+        ],
     ],
 ]:
     """
@@ -155,22 +159,27 @@ def load_data_from_tfds_or_ml_prepare(
     )
     num_parallel_calls = tf.data.experimental.AUTOTUNE if "tf" in globals() else 10
     normalize_img_at_scale = partial(normalize_img, scale=data_loader_kwargs["scale"])
-    ds_train = ds_train.map(
-        normalize_img_at_scale, num_parallel_calls=num_parallel_calls
+    ds_train = (
+        ds_train.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
+        .cache()
+        .shuffle(ds_info.splits["train"].num_examples)
+        .batch(data_loader_kwargs["batch_size"])
+        .prefetch(tf.data.experimental.AUTOTUNE)
     )
-    ds_train = ds_train.cache()
-    ds_train = ds_train.shuffle(ds_info.splits["train"].num_examples)
-    ds_train = ds_train.batch(data_loader_kwargs["batch_size"])
-    ds_train = ds_train.prefetch(tf.data.experimental.AUTOTUNE)
-    ds_test = ds_test.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
-    ds_test = ds_test.batch(data_loader_kwargs["batch_size"])
-    ds_test = ds_test.cache()
-    ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
+
+    ds_test = (
+        ds_test.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
+        .batch(data_loader_kwargs["batch_size"])
+        .cache()
+        .prefetch(tf.data.experimental.AUTOTUNE)
+    )
+
     splits = ds_train, ds_test
     if as_numpy:
         _ds_train, _ds_test = tuple(map(tfds.as_numpy, splits))
     else:
-        _ds_train, _ds_test = tuple(splits)
+        _ds_train, _ds_test = splits
+
     ds_train: Union[
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
@@ -179,4 +188,5 @@ def load_data_from_tfds_or_ml_prepare(
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
     ] = _ds_test
-    return ds_train, ds_test
+
+    return ds_train, ds_test, ds_info
