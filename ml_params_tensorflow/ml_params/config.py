@@ -3,10 +3,11 @@ Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-para
 """
 
 from collections import namedtuple
-from typing import Any, Literal, Optional, List, Callable, AnyStr, Union, Tuple, Dict
+from typing import Any, Optional, List, Callable, AnyStr, Union, Tuple, Dict
 
 import numpy as np
 import tensorflow as tf
+from typing_extensions import Literal
 
 # TODO
 self = namedtuple("State", ("model", "data"))
