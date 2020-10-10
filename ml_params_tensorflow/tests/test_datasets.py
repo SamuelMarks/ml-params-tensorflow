@@ -7,7 +7,6 @@ from unittest.mock import patch, MagicMock
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from tensorflow_datasets.core.dataset_utils import _IterableDataset
 
 from ml_params_tensorflow.ml_params.datasets import (
     normalize_img,
