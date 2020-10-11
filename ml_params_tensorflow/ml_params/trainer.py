@@ -9,9 +9,10 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from ml_params.base import BaseTrainer
+from typing_extensions import Literal
+
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare
-from typing_extensions import Literal
 
 logger = get_logger(
     ".".join(
@@ -144,10 +145,6 @@ class TensorFlowTrainer(BaseTrainer):
             model=model, call=callable(model) or call, **model_kwargs
         )
         if not isinstance(self.model, (tf.keras.Model, FunctionType)):
-            assert (
-                "num_classes" in model_kwargs
-            ), "Unable to infer how to construct {!r}".format(self.model)
-
             if isinstance(self.model, str):
                 if self.model.startswith("tf.keras.applications.") or self.model in dir(
                     tf.keras.applications
@@ -178,7 +175,7 @@ class TensorFlowTrainer(BaseTrainer):
                     **{
                         k: v
                         for k, v in model_kwargs.items()
-                        if k not in frozenset(("num_classes", "include_top"))
+                        if k != "include_top"
                     }
                 )
                 self.model.trainable = False

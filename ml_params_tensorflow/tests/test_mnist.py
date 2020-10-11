@@ -9,6 +9,7 @@ from typing import Optional, Callable, Union, AnyStr
 from unittest import TestCase
 
 import tensorflow as tf
+
 from ml_params_tensorflow.example_model import get_model
 from ml_params_tensorflow.ml_params.trainer import TensorFlowTrainer
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main
@@ -43,31 +44,6 @@ class TestMnist(TestCase):
         Tests classification roundtrip
         """
         self.mnist_test(model=get_model)
-
-    def test_mnist_with_transfer_learning(self) -> None:
-        """
-        Tests classification roundtrip, using a builtin transfer-learning model
-        """
-        epochs = 3
-
-        trainer = TensorFlowTrainer()
-        trainer.load_data(dataset_name="cifar10", tfds_dir=TestMnist.tfds_dir)
-        trainer.load_model(
-            model="MobileNet", num_classes=trainer.ds_info.features["label"].num_classes
-        )
-        self.assertIsInstance(
-            trainer.train(
-                epochs=epochs,
-                model_dir=TestMnist.model_dir,
-                loss="SparseCategoricalCrossentropy",
-                optimizer="Adam",
-                metrics=["categorical_accuracy"],
-                callbacks=None,
-                save_directory=None,
-                metric_emit_freq=None,
-            ),
-            tf.keras.Sequential,
-        )
 
     def test_mnist_fails_transfer_learning(self) -> None:
         """
