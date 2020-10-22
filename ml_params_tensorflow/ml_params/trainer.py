@@ -9,10 +9,9 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from ml_params.base import BaseTrainer
-from typing_extensions import Literal
-
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare
+from typing_extensions import Literal
 
 logger = get_logger(
     ".".join(
@@ -86,7 +85,8 @@ class TensorFlowTrainer(BaseTrainer):
             K=K,
             **data_loader_kwargs
         )
-        self.ds_info: tfds.core.DatasetInfo = self.data[2]
+        if len(self.data) > 2:
+            self.ds_info: tfds.core.DatasetInfo = self.data[2]
         return self.data
 
     def load_model(
@@ -172,17 +172,14 @@ class TensorFlowTrainer(BaseTrainer):
                 self.model = self.model(
                     include_top=model_kwargs.get("include_top", False),
                     **extra_model_kwargs,
-                    **{
-                        k: v
-                        for k, v in model_kwargs.items()
-                        if k != "include_top"
-                    }
+                    **{k: v for k, v in model_kwargs.items() if k != "include_top"}
                 )
                 self.model.trainable = False
             assert isinstance(
                 self.model, tf.keras.Model
             ), "Expected `tf.keras.Model` got {!r}".format(type(self.model))
             # elif isinstance(self.model, tf.keras.Layer):
+            assert self.ds_info is not None
             self.model = tf.keras.Sequential(
                 [
                     self.model,
@@ -194,26 +191,6 @@ class TensorFlowTrainer(BaseTrainer):
     def train(
         self,
         *,
-        callbacks: Optional[
-            List[
-                Literal[
-                    "BaseLogger",
-                    "CSVLogger",
-                    "Callback",
-                    "CallbackList",
-                    "EarlyStopping",
-                    "History",
-                    "LambdaCallback",
-                    "LearningRateScheduler",
-                    "ModelCheckpoint",
-                    "ProgbarLogger",
-                    "ReduceLROnPlateau",
-                    "RemoteMonitor",
-                    "TensorBoard",
-                    "TerminateOnNaN",
-                ]
-            ]
-        ],
         epochs: int,
         loss: Literal[
             "BinaryCrossentropy",
@@ -233,6 +210,29 @@ class TensorFlowTrainer(BaseTrainer):
             "SparseCategoricalCrossentropy",
             "SquaredHinge",
         ],
+        optimizer: Literal[
+            "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
+        ],
+        callbacks: Optional[
+            List[
+                Literal[
+                    "BaseLogger",
+                    "CSVLogger",
+                    "Callback",
+                    "CallbackList",
+                    "EarlyStopping",
+                    "History",
+                    "LambdaCallback",
+                    "LearningRateScheduler",
+                    "ModelCheckpoint",
+                    "ProgbarLogger",
+                    "ReduceLROnPlateau",
+                    "RemoteMonitor",
+                    "TensorBoard",
+                    "TerminateOnNaN",
+                ]
+            ]
+        ] = None,
         metrics: Optional[
             List[
                 Literal[
@@ -260,10 +260,7 @@ class TensorFlowTrainer(BaseTrainer):
                     "top_k_categorical_accuracy",
                 ]
             ]
-        ],
-        optimizer: Literal[
-            "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
-        ],
+        ] = None,
         metric_emit_freq: Optional[Callable[[int], bool]] = None,
         save_directory: Optional[str] = None,
         output_type: str = "infer",
@@ -276,15 +273,15 @@ class TensorFlowTrainer(BaseTrainer):
 
         :param *: syntactic note indicating everything after is a keyword-only argument
 
-        :param callbacks: Collection of callables that are run inside the training loop
-
         :param epochs: number of epochs (must be greater than 0)
 
         :param loss: Loss function, can be a string (depending on the framework) or an instance of a class
 
-        :param metrics: Collection of metrics to monitor, e.g., accuracy, f1
-
         :param optimizer: Optimizer, can be a string (depending on the framework) or an instance of a class
+
+        :param callbacks: Collection of callables that are run inside the training loop
+
+        :param metrics: Collection of metrics to monitor, e.g., accuracy, f1
 
         :param metric_emit_freq: `None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10. Defaults to None
 
@@ -306,10 +303,33 @@ class TensorFlowTrainer(BaseTrainer):
         assert self.data is not None
         assert self.model is not None
 
-        self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-        self.model.fit(self.data[0], epochs=epochs, validation_data=self.data[1])
+        # print('train::self.data:', self.data, type(self.data), len(self.data), ';')
+        print("callbacks:", str(callbacks), ";")
+        print(
+            "set_from(callbacks, tf.keras.callbacks):",
+            set_from(callbacks, tf.keras.callbacks),
+            ";",
+        )
+        self.model.compile(
+            loss=loss,
+            optimizer=set_from((optimizer,), tf.keras.optimizers)[0](),
+            metrics=set_from(metrics, tf.keras.metrics),
+        )
+        self.model.fit(
+            self.data[0],
+            validation_data=self.data[1],
+            epochs=epochs,
+            callbacks=set_from(callbacks, tf.keras.callbacks),
+            batch_size=batch_size,
+        )
 
         return self.model
+
+
+def set_from(l, o):
+    return ((lambda typ: tuple if typ == map else typ)(type(l)))(
+        map(lambda k: getattr(o, k.rpartition(".")[2]), l)
+    )
 
 
 del get_logger

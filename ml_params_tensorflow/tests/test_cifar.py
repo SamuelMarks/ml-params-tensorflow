@@ -46,9 +46,7 @@ class TestCifar(TestCase):
 
         trainer = TensorFlowTrainer()
         trainer.load_data(dataset_name="cifar10", tfds_dir=TestCifar.tfds_dir)
-        trainer.load_model(
-            model="MobileNet"
-        )
+        trainer.load_model(model="MobileNet")
         self.assertIsInstance(
             trainer.train(
                 epochs=epochs,

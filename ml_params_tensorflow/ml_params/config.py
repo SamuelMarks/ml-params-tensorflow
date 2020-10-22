@@ -1,15 +1,14 @@
 """
 Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
 """
-
 from collections import namedtuple
 from typing import Any, Optional, List, Callable, AnyStr, Union, Tuple, Dict
 
 import numpy as np
 import tensorflow as tf
+import tensorflow_datasets as tfds
 from typing_extensions import Literal
 
-# TODO
 self = namedtuple("State", ("model", "data"))
 
 
@@ -17,11 +16,11 @@ class TrainConfig(object):
     """
     Run the training loop for your ML pipeline.
 
-    :cvar callbacks: Collection of callables that are run inside the training loop
     :cvar epochs: number of epochs (must be greater than 0)
     :cvar loss: Loss function, can be a string (depending on the framework) or an instance of a class
-    :cvar metrics: Collection of metrics to monitor, e.g., accuracy, f1
     :cvar optimizer: Optimizer, can be a string (depending on the framework) or an instance of a class
+    :cvar callbacks: Collection of callables that are run inside the training loop. Defaults to None
+    :cvar metrics: Collection of metrics to monitor, e.g., accuracy, f1. Defaults to None
     :cvar metric_emit_freq: `None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10. Defaults to None
     :cvar save_directory: Directory to save output in, e.g., weights in h5 files. If None, don't save. Defaults to None
     :cvar output_type: `if save_directory is not None` then save in this format, e.g., 'h5'. Defaults to infer
@@ -30,6 +29,28 @@ class TrainConfig(object):
     :cvar kwargs: additional keyword arguments
     :cvar return_type: the model. Defaults to self.model"""
 
+    epochs: int = 0
+    loss: Literal[
+        "BinaryCrossentropy",
+        "CategoricalCrossentropy",
+        "CategoricalHinge",
+        "CosineSimilarity",
+        "Hinge",
+        "Huber",
+        "KLDivergence",
+        "LogCosh",
+        "MeanAbsoluteError",
+        "MeanAbsolutePercentageError",
+        "MeanSquaredError",
+        "MeanSquaredLogarithmicError",
+        "Poisson",
+        "Reduction",
+        "SparseCategoricalCrossentropy",
+        "SquaredHinge",
+    ] = None
+    optimizer: Literal[
+        "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
+    ] = None
     callbacks: Optional[
         List[
             Literal[
@@ -49,25 +70,6 @@ class TrainConfig(object):
                 "TerminateOnNaN",
             ]
         ]
-    ] = None
-    epochs: int = 0
-    loss: Literal[
-        "BinaryCrossentropy",
-        "CategoricalCrossentropy",
-        "CategoricalHinge",
-        "CosineSimilarity",
-        "Hinge",
-        "Huber",
-        "KLDivergence",
-        "LogCosh",
-        "MeanAbsoluteError",
-        "MeanAbsolutePercentageError",
-        "MeanSquaredError",
-        "MeanSquaredLogarithmicError",
-        "Poisson",
-        "Reduction",
-        "SparseCategoricalCrossentropy",
-        "SquaredHinge",
     ] = None
     metrics: Optional[
         List[
@@ -96,9 +98,6 @@ class TrainConfig(object):
                 "top_k_categorical_accuracy",
             ]
         ]
-    ] = None
-    optimizer: Literal[
-        "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
     ] = None
     metric_emit_freq: Optional[Callable[[int], bool]] = None
     save_directory: Optional[str] = None
@@ -134,9 +133,9 @@ class LoadDataConfig(object):
         Callable[
             [AnyStr, AnyStr, Literal["np", "tf"], bool, Dict],
             Union[
-                Tuple[tf.data.Dataset, tf.data.Dataset],
-                Tuple[np.ndarray, np.ndarray],
-                Tuple[Any, Any],
+                Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
+                Tuple[np.ndarray, np.ndarray, Any],
+                Tuple[Any, Any, Any],
             ],
         ]
     ] = None
@@ -151,13 +150,13 @@ class LoadDataConfig(object):
 
 class LoadModelConfig(object):
     """
-    Load the model.
+        Load the model.
     Takes a model object, or a pipeline that downloads & configures before returning a model object.
 
-    :cvar model: model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance
-    :cvar call: whether to call `model()` even if `len(model_kwargs) == 0`. Defaults to False
-    :cvar model_kwargs: to be passed into the model. If empty, doesn't call, unless call=True.
-    :cvar return_type: self.model, e.g., the result of applying `model_kwargs` on model. Defaults to self.model"""
+        :cvar model: model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance
+        :cvar call: whether to call `model()` even if `len(model_kwargs) == 0`. Defaults to False
+        :cvar model_kwargs: to be passed into the model. If empty, doesn't call, unless call=True.
+        :cvar return_type: self.model, e.g., the result of applying `model_kwargs` on model. Defaults to self.model"""
 
     model: Union[
         Literal[
@@ -191,3 +190,6 @@ class LoadModelConfig(object):
     call: bool = False
     model_kwargs: dict = {}
     return_type: tf.keras.Model = self.model
+
+
+__all__ = ["LoadDataConfig", "LoadModelConfig", "TrainConfig"]

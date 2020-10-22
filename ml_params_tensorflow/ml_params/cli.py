@@ -21,27 +21,6 @@ def train_parser(argument_parser):
     """
     argument_parser.description = "Run the training loop for your ML pipeline."
     argument_parser.add_argument(
-        "--callbacks",
-        type=str,
-        choices=(
-            "BaseLogger",
-            "CSVLogger",
-            "Callback",
-            "CallbackList",
-            "EarlyStopping",
-            "History",
-            "LambdaCallback",
-            "LearningRateScheduler",
-            "ModelCheckpoint",
-            "ProgbarLogger",
-            "ReduceLROnPlateau",
-            "RemoteMonitor",
-            "TensorBoard",
-            "TerminateOnNaN",
-        ),
-        help="Collection of callables that are run inside the training loop",
-    )
-    argument_parser.add_argument(
         "--epochs",
         type=int,
         help="number of epochs (must be greater than 0)",
@@ -72,6 +51,35 @@ def train_parser(argument_parser):
         required=True,
     )
     argument_parser.add_argument(
+        "--optimizer",
+        type=str,
+        choices=("Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"),
+        help="Optimizer, can be a string (depending on the framework) or an instance of a class",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--callbacks",
+        type=str,
+        choices=(
+            "BaseLogger",
+            "CSVLogger",
+            "Callback",
+            "CallbackList",
+            "EarlyStopping",
+            "History",
+            "LambdaCallback",
+            "LearningRateScheduler",
+            "ModelCheckpoint",
+            "ProgbarLogger",
+            "ReduceLROnPlateau",
+            "RemoteMonitor",
+            "TensorBoard",
+            "TerminateOnNaN",
+        ),
+        action="append",
+        help="Collection of callables that are run inside the training loop",
+    )
+    argument_parser.add_argument(
         "--metrics",
         type=str,
         choices=(
@@ -98,14 +106,8 @@ def train_parser(argument_parser):
             "squared_hinge",
             "top_k_categorical_accuracy",
         ),
+        action="append",
         help="Collection of metrics to monitor, e.g., accuracy, f1",
-    )
-    argument_parser.add_argument(
-        "--optimizer",
-        type=str,
-        choices=("Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"),
-        help="Optimizer, can be a string (depending on the framework) or an instance of a class",
-        required=True,
     )
     argument_parser.add_argument(
         "--metric_emit_freq",
@@ -245,6 +247,7 @@ Takes a model object, or a pipeline that downloads & configures before returning
         "--call",
         type=bool,
         help="whether to call `model()` even if `len(model_kwargs) == 0`",
+        required=True,
         default=False,
     )
     argument_parser.add_argument(
@@ -255,4 +258,4 @@ Takes a model object, or a pipeline that downloads & configures before returning
     return argument_parser, self.model
 
 
-__all__ = ["train_parser", "load_data_parser", "load_model_parser"]
+__all__ = ["load_data_parser", "load_model_parser", "train_parser"]
