@@ -99,7 +99,7 @@ def _expose_module(
 
 
 _global_exclude: frozenset = frozenset(
-    ("deserialize", "serialize", "get", "experimental")
+    ("deserialize", "serialize", "get", "experimental", "schedules")
 )
 
 exposed_activations: Dict[str, Any] = {
@@ -135,9 +135,13 @@ exposed_layers: Dict[str, Any] = {
 }
 exposed_layers_keys: Tuple[str, ...] = tuple(sorted(exposed_layers.keys()))
 
-exposed_loss: Dict[str, Any] = _expose_module(
-    tf.keras.losses, frozenset(("Loss",)), lambda s: not s.isupper()
-)
+exposed_loss: Dict[str, Any] = {
+    name: getattr(tf.keras.losses, name)
+    for name in dir(tf.keras.losses)
+    if not name.startswith("_")
+    and name not in frozenset(("Loss",)) | _global_exclude
+    and "_" in name
+}
 exposed_loss_keys: Tuple[str, ...] = tuple(sorted(exposed_loss.keys()))
 
 exposed_metrics: Dict[str, Any] = {
@@ -149,10 +153,10 @@ exposed_metrics: Dict[str, Any] = {
 }
 exposed_metrics_keys: Tuple[str, ...] = tuple(sorted(exposed_metrics.keys()))
 
-exposed_optimizer: Dict[str, Any] = _expose_module(
+exposed_optimizers: Dict[str, Any] = _expose_module(
     tf.keras.optimizers, frozenset(("Optimizer",))
 )
-exposed_optimizer_keys: Tuple[str, ...] = tuple(sorted(exposed_optimizer.keys()))
+exposed_optimizer_keys: Tuple[str, ...] = tuple(sorted(exposed_optimizers.keys()))
 
 exposed_regularizers: Dict[str, Any] = _expose_module(tf.keras.regularizers)
 exposed_regularizers_keys: Tuple[str, ...] = tuple(sorted(exposed_regularizers.keys()))

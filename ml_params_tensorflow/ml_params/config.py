@@ -1,17 +1,38 @@
 """
 Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
 """
-from collections import namedtuple
+
+from dataclasses import dataclass
+from json import loads
 from typing import Any, Optional, List, Callable, AnyStr, Union, Tuple, Dict
 
 import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
+from enforce import runtime_validation
 from typing_extensions import Literal
 
-self = namedtuple("State", ("model", "data"))
+
+# @dataclass()
+class self(object):
+    model: Any = None
+    data: Any = None
 
 
+def from_string(cls, s):
+    return cls(**loads(s))
+
+
+def run_typed(f):
+    f.from_string = classmethod(from_string)
+    f.__argparse__ = dict(from_string=f.from_string)
+    return runtime_validation(dataclass(f))
+
+
+# @s(auto_attribs=True)
+# @run_typed
+@runtime_validation
+@dataclass
 class TrainConfig(object):
     """
     Run the training loop for your ML pipeline.
@@ -104,10 +125,11 @@ class TrainConfig(object):
     output_type: str = "infer"
     validation_split: float = 0.1
     batch_size: int = 128
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     return_type: Any = self.model
 
 
+@run_typed
 class LoadDataConfig(object):
     """
     Load the data for your ML pipeline. Will be fed into `train`.
@@ -142,12 +164,13 @@ class LoadDataConfig(object):
     data_type: str = "infer"
     output_type: Optional[Literal["np"]] = None
     K: Optional[Literal["np", "tf"]] = None
-    data_loader_kwargs: dict = {}
+    data_loader_kwargs: Optional[dict] = None
     return_type: Union[
         Tuple[tf.data.Dataset, tf.data.Dataset], Tuple[np.ndarray, np.ndarray]
     ] = self.data
 
 
+@run_typed
 class LoadModelConfig(object):
     """
         Load the model.
@@ -188,7 +211,7 @@ class LoadModelConfig(object):
         AnyStr,
     ] = None
     call: bool = False
-    model_kwargs: dict = {}
+    model_kwargs: Optional[dict] = None
     return_type: tf.keras.Model = self.model
 
 

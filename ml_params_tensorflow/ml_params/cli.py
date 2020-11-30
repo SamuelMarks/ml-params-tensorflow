@@ -2,11 +2,15 @@
 CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 """
 
-from collections import namedtuple
+from dataclasses import dataclass
 from json import loads
+from typing import Any
 
-# TODO
-self = namedtuple("State", ("model", "data"))
+
+@dataclass  # TODO
+class self(object):
+    model: Any = None
+    data: Any = None
 
 
 def train_parser(argument_parser):

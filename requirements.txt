@@ -1,7 +1,9 @@
-tensorflow
+desert
 numpy
+tensorflow
 typing-extensions
 http://github.com/SamuelMarks/ml-params/zipball/master#egg=ml_params
 -r https://raw.githubusercontent.com/SamuelMarks/ml-params/master/requirements.txt
 http://github.com/SamuelMarks/ml-prepare/zipball/master#egg=ml_prepare
 -r https://raw.githubusercontent.com/SamuelMarks/ml-prepare/master/requirements.txt
+http://github.com/SamuelMarks/enforce/zipball/dev#egg=enforce

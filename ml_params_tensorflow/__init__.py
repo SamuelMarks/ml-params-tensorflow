@@ -12,7 +12,7 @@ from typing import Optional
 import yaml
 
 __author__ = "Samuel Marks"
-__version__ = "0.0.8"
+__version__ = "0.0.9-alpha"
 
 
 def get_logger(name: Optional[str] = None) -> logging.Logger:

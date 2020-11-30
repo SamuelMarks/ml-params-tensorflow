@@ -9,9 +9,10 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from ml_params.base import BaseTrainer
+from typing_extensions import Literal
+
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare
-from typing_extensions import Literal
 
 logger = get_logger(
     ".".join(
@@ -304,12 +305,12 @@ class TensorFlowTrainer(BaseTrainer):
         assert self.model is not None
 
         # print('train::self.data:', self.data, type(self.data), len(self.data), ';')
-        print("callbacks:", str(callbacks), ";")
-        print(
-            "set_from(callbacks, tf.keras.callbacks):",
-            set_from(callbacks, tf.keras.callbacks),
-            ";",
-        )
+        # print("callbacks:", str(callbacks), ";")
+        # print(
+        #    "set_from(callbacks, tf.keras.callbacks):",
+        #    set_from(callbacks, tf.keras.callbacks),
+        #    ";",
+        # )
         self.model.compile(
             loss=loss,
             optimizer=set_from((optimizer,), tf.keras.optimizers)[0](),
@@ -319,7 +320,7 @@ class TensorFlowTrainer(BaseTrainer):
             self.data[0],
             validation_data=self.data[1],
             epochs=epochs,
-            callbacks=set_from(callbacks, tf.keras.callbacks),
+            callbacks=set_from(callbacks, tf.keras.callbacks) if callbacks else None,
             batch_size=batch_size,
         )
 
