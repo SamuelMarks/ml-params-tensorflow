@@ -1,15 +1,10 @@
-""" Generated Loss config classes """
+""" Generated Callback config classes """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from tensorflow.python.framework import ops
-from tensorflow.python.framework import smart_cond
-from tensorflow.python.keras import backend as K
-from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import math_ops
-from tensorflow.python.ops import nn
 
 
 class binary_crossentropyConfig(object):
@@ -37,28 +32,6 @@ class binary_crossentropyConfig(object):
     from_logits: bool = False
     label_smoothing: int = 0
     return_type = "```(y_true * (1.0 - label_smoothing) + 0.5 * label_smoothing)```"
-
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        self.label_smoothing = ops.convert_to_tensor_v2(
-            self.label_smoothing, dtype=K.floatx()
-        )
-
-        def _smooth_labels():
-            return (
-                self.y_true * (1.0 - self.label_smoothing) + 0.5 * self.label_smoothing
-            )
-
-        self.y_true = smart_cond.smart_cond(
-            self.label_smoothing, _smooth_labels, lambda: self.y_true
-        )
-        return K.mean(
-            K.binary_crossentropy(
-                self.y_true, self.y_pred, from_logits=self.from_logits
-            ),
-            axis=-1,
-        )
 
 
 class categorical_crossentropyConfig(object):
@@ -89,29 +62,6 @@ class categorical_crossentropyConfig(object):
         "```(y_true * (1.0 - label_smoothing) + label_smoothing / num_classes)```"
     )
 
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        self.label_smoothing = ops.convert_to_tensor_v2(
-            self.label_smoothing, dtype=K.floatx()
-        )
-
-        def _smooth_labels():
-            num_classes = math_ops.cast(
-                array_ops.shape(self.y_true)[-1], self.y_pred.dtype
-            )
-            return (
-                self.y_true * (1.0 - self.label_smoothing)
-                + self.label_smoothing / num_classes
-            )
-
-        self.y_true = smart_cond.smart_cond(
-            self.label_smoothing, _smooth_labels, lambda: self.y_true
-        )
-        return K.categorical_crossentropy(
-            self.y_true, self.y_pred, from_logits=self.from_logits
-        )
-
 
 class categorical_hingeConfig(object):
     """
@@ -138,14 +88,6 @@ class categorical_hingeConfig(object):
     y_true = None
     y_pred = None
     return_type = "```math_ops.maximum(neg - pos + 1.0, zero)```"
-
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        pos = math_ops.reduce_sum(self.y_true * self.y_pred, axis=-1)
-        neg = math_ops.reduce_max((1.0 - self.y_true) * self.y_pred, axis=-1)
-        zero = math_ops.cast(0.0, self.y_pred.dtype)
-        return math_ops.maximum(neg - pos + 1.0, zero)
 
 
 class cosine_similarityConfig(object):
@@ -181,11 +123,6 @@ class cosine_similarityConfig(object):
     axis: int = -1
     return_type = "```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"
 
-    def __call__(self):
-        self.y_true = nn.l2_normalize(self.y_true, axis=self.axis)
-        self.y_pred = nn.l2_normalize(self.y_pred, axis=self.axis)
-        return -math_ops.reduce_sum(self.y_true * self.y_pred, axis=self.axis)
-
 
 class kl_divergenceConfig(object):
     """
@@ -216,15 +153,6 @@ class kl_divergenceConfig(object):
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
 
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        self.y_true = K.clip(self.y_true, K.epsilon(), 1)
-        self.y_pred = K.clip(self.y_pred, K.epsilon(), 1)
-        return math_ops.reduce_sum(
-            self.y_true * math_ops.log(self.y_true / self.y_pred), axis=-1
-        )
-
 
 class kullback_leibler_divergenceConfig(object):
     """
@@ -254,15 +182,6 @@ class kullback_leibler_divergenceConfig(object):
     return_type = (
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
-
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        self.y_true = K.clip(self.y_true, K.epsilon(), 1)
-        self.y_pred = K.clip(self.y_pred, K.epsilon(), 1)
-        return math_ops.reduce_sum(
-            self.y_true * math_ops.log(self.y_true / self.y_pred), axis=-1
-        )
 
 
 class log_coshConfig(object):
@@ -296,15 +215,6 @@ class log_coshConfig(object):
         "```(x + nn.softplus(-2.0 * x) - math_ops.cast(math_ops.log(2.0), x.dtype))```"
     )
 
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-
-        def _logcosh(x):
-            return x + nn.softplus(-2.0 * x) - math_ops.cast(math_ops.log(2.0), x.dtype)
-
-        return K.mean(_logcosh(self.y_pred - self.y_true), axis=-1)
-
 
 class mean_absolute_errorConfig(object):
     """
@@ -328,11 +238,6 @@ class mean_absolute_errorConfig(object):
     y_true = None
     y_pred = None
     return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
-
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        return K.mean(math_ops.abs(self.y_pred - self.y_true), axis=-1)
 
 
 class mean_absolute_percentage_errorConfig(object):
@@ -360,15 +265,6 @@ class mean_absolute_percentage_errorConfig(object):
     y_pred = None
     return_type = "```(100.0 * K.mean(diff, axis=-1))```"
 
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        diff = math_ops.abs(
-            (self.y_true - self.y_pred)
-            / K.maximum(math_ops.abs(self.y_true), K.epsilon())
-        )
-        return 100.0 * K.mean(diff, axis=-1)
-
 
 class mean_squared_errorConfig(object):
     """
@@ -395,11 +291,6 @@ class mean_squared_errorConfig(object):
     y_true = None
     y_pred = None
     return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
-
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        return K.mean(math_ops.squared_difference(self.y_pred, self.y_true), axis=-1)
 
 
 class mean_squared_logarithmic_errorConfig(object):
@@ -431,13 +322,6 @@ class mean_squared_logarithmic_errorConfig(object):
         "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"
     )
 
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        first_log = math_ops.log(K.maximum(self.y_pred, K.epsilon()) + 1.0)
-        second_log = math_ops.log(K.maximum(self.y_true, K.epsilon()) + 1.0)
-        return K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)
-
 
 class sparse_categorical_crossentropyConfig(object):
     """
@@ -468,13 +352,6 @@ class sparse_categorical_crossentropyConfig(object):
     return_type = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
     axis=axis)```"""
 
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        return K.sparse_categorical_crossentropy(
-            self.y_true, self.y_pred, from_logits=self.from_logits, axis=self.axis
-        )
-
 
 class squared_hingeConfig(object):
     """
@@ -501,12 +378,3 @@ class squared_hingeConfig(object):
     y_true = None
     y_pred = None
     return_type = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
-
-    def __call__(self):
-        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
-        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        self.y_true = _maybe_convert_labels(self.y_true)
-        return K.mean(
-            math_ops.square(math_ops.maximum(1.0 - self.y_true * self.y_pred, 0.0)),
-            axis=-1,
-        )

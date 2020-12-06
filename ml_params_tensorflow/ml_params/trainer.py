@@ -9,9 +9,10 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from ml_params.base import BaseTrainer
+from typing_extensions import Literal
+
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare
-from typing_extensions import Literal
 
 logger = get_logger(
     ".".join(

@@ -73,7 +73,7 @@ As an example, using the `class TensorFlowTrainer` methods as truth, this will u
                             --argparse-function-name 'load_model_parser' \
                             --truth 'function'
 
-Another example, that you'd run before ^, to generate custom config classes for members of `tf.keras.losses`, `tf.keras.optimizers`, and `tf.keras.callbacks.Callback`:
+Another example, that you'd run before ^, to generate custom config classes for members of `tf.keras.losses`:
 
     $ python -m doctrans gen --name-tpl '{name}Config' \
                              --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_losses' \
@@ -82,21 +82,12 @@ Another example, that you'd run before ^, to generate custom config classes for 
                              --type 'class' \
                              --output-filename 'ml_params_tensorflow/ml_params/losses.py'
 
-    $ python -m doctrans gen --name-tpl '{name}Config' \
-                             --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_optimizers' \
-                             --prepend '""" Generated Optimizer config classes """\nimport tensorflow as tf\n' \
-                             --imports-from-file 'tf.keras.optimizers.Optimizer' \
-                             --type 'class' \
-                             --output-filename 'ml_params_tensorflow/ml_params/optimizers.py'
+There's a bit of boilerplate here, so let's automate it:
 
-    $ python -m doctrans gen --name-tpl '{name}Config' \
-                             --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_callbacks' \
-                             --prepend '""" Generated Callback config classes """\nimport tensorflow as tf\n' \
-                             --imports-from-file 'tf.keras.callbacks.Callback' \
-                             --type 'class' \
-                             --output-filename 'ml_params_tensorflow/ml_params/callbacks.py'
-
-    $ # ^ Or in a loop, just cycle through `{$plural, exposed_$plural, $plural.$capital($singular), $plural.py}`
+    $ for name in 'callbacks' 'losses' 'metrics' 'optimizers'; do
+        rm 'ml_params_tensorflow/ml_params/'"$name"'.py';        
+        python -m ml_params_tensorflow.ml_params.doctrans_cli_gen "$name" 2>/dev/null | xargs python -m doctrans gen;
+      done
 
 ---
 
