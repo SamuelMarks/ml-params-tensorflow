@@ -1,15 +1,45 @@
-""" Generated Loss config classes """
+""" Generated Metric config classes """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import numpy as np
 import tensorflow as tf
 from tensorflow.python.framework import ops
-from tensorflow.python.framework import smart_cond
 from tensorflow.python.keras import backend as K
 from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import nn
+
+
+class binary_accuracyConfig(object):
+    """
+    Calculates how often predictions matches binary labels.
+
+    Standalone usage:
+    >>> y_true = [[1], [1], [0], [0]]
+    >>> y_pred = [[1], [1], [0], [0]]
+    >>> m = tf.keras.metrics.binary_accuracy(y_true, y_pred)
+    >>> assert m.shape == (4,)
+    >>> m.numpy()
+    array([1., 1., 1., 1.], dtype=float32)
+
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar threshold: (Optional) Float representing the threshold for deciding whether
+    prediction values are 1 or 0. Defaults to 0.5
+    :cvar return_type: Binary accuracy values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"""
+
+    y_true = None
+    y_pred = None
+    threshold: float = 0.5
+    return_type = "```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.threshold = math_ops.cast(self.threshold, self.y_pred.dtype)
+        self.y_pred = math_ops.cast(self.y_pred > self.threshold, self.y_pred.dtype)
+        return K.mean(math_ops.equal(self.y_true, self.y_pred), axis=-1)
 
 
 class binary_crossentropyConfig(object):
@@ -58,6 +88,41 @@ class binary_crossentropyConfig(object):
                 self.y_true, self.y_pred, from_logits=self.from_logits
             ),
             axis=-1,
+        )
+
+
+class categorical_accuracyConfig(object):
+    """
+    Calculates how often predictions matches one-hot labels.
+
+    Standalone usage:
+    >>> y_true = [[0, 0, 1], [0, 1, 0]]
+    >>> y_pred = [[0.1, 0.9, 0.8], [0.05, 0.95, 0]]
+    >>> m = tf.keras.metrics.categorical_accuracy(y_true, y_pred)
+    >>> assert m.shape == (2,)
+    >>> m.numpy()
+    array([0., 1.], dtype=float32)
+
+    You can provide logits of classes as `y_pred`, since argmax of
+    logits and probabilities are same.
+
+    :cvar y_true: One-hot ground truth values.
+    :cvar y_pred: The prediction values.
+    :cvar return_type: Categorical accuracy values. Defaults to ```math_ops.cast(math_ops.equal(math_ops.argmax(y_true, axis=-1), math_ops.
+    argmax(y_pred, axis=-1)), K.floatx())```"""
+
+    y_true = None
+    y_pred = None
+    return_type = """```math_ops.cast(math_ops.equal(math_ops.argmax(y_true, axis=-1), math_ops.
+    argmax(y_pred, axis=-1)), K.floatx())```"""
+
+    def __call__(self):
+        return math_ops.cast(
+            math_ops.equal(
+                math_ops.argmax(self.y_true, axis=-1),
+                math_ops.argmax(self.y_pred, axis=-1),
+            ),
+            K.floatx(),
         )
 
 
@@ -113,81 +178,79 @@ class categorical_crossentropyConfig(object):
         )
 
 
-class categorical_hingeConfig(object):
+class hingeConfig(object):
     """
-    Computes the categorical hinge loss between `y_true` and `y_pred`.
+    Computes the hinge loss between `y_true` and `y_pred`.
 
-    `loss = maximum(neg - pos + 1, 0)`
-    where `neg=maximum((1-y_true)*y_pred) and pos=sum(y_true*y_pred)`
+    `loss = mean(maximum(1 - y_true * y_pred, 0), axis=-1)`
 
     Standalone usage:
 
-    >>> y_true = np.random.randint(0, 3, size=(2,))
-    >>> y_true = tf.keras.utils.to_categorical(y_true, num_classes=3)
+    >>> y_true = np.random.choice([-1, 1], size=(2, 3))
     >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.categorical_hinge(y_true, y_pred)
+    >>> loss = tf.keras.losses.hinge(y_true, y_pred)
     >>> assert loss.shape == (2,)
-    >>> pos = np.sum(y_true * y_pred, axis=-1)
-    >>> neg = np.amax((1. - y_true) * y_pred, axis=-1)
-    >>> assert np.array_equal(loss.numpy(), np.maximum(0., neg - pos + 1.))
+    >>> assert np.array_equal(
+    ...     loss.numpy(),
+    ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))
 
-    :cvar y_true: The ground truth values. `y_true` values are expected to be 0 or 1.
-    :cvar y_pred: The predicted values.
-    :cvar return_type: Categorical hinge loss values. Defaults to ```math_ops.maximum(neg - pos + 1.0, zero)```"""
+    :cvar y_true: The ground truth values. `y_true` values are expected to be -1 or 1.
+    If binary (0 or 1) labels are provided they will be converted to -1 or 1.
+    shape = `[batch_size, d0, .. dN]`.
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar return_type: Hinge loss values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.maximum(1.0 - y_true * y_pred, 0.0), axis=-1)```"""
 
     y_true = None
     y_pred = None
-    return_type = "```math_ops.maximum(neg - pos + 1.0, zero)```"
+    return_type = "```K.mean(math_ops.maximum(1.0 - y_true * y_pred, 0.0), axis=-1)```"
 
     def __call__(self):
         self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
         self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
-        pos = math_ops.reduce_sum(self.y_true * self.y_pred, axis=-1)
-        neg = math_ops.reduce_max((1.0 - self.y_true) * self.y_pred, axis=-1)
-        zero = math_ops.cast(0.0, self.y_pred.dtype)
-        return math_ops.maximum(neg - pos + 1.0, zero)
-
-
-class cosine_similarityConfig(object):
-    """
-    Computes the cosine similarity between labels and predictions.
-
-    Note that it is a number between -1 and 1. When it is a negative number
-    between -1 and 0, 0 indicates orthogonality and values closer to -1
-    indicate greater similarity. The values closer to 1 indicate greater
-    dissimilarity. This makes it usable as a loss function in a setting
-    where you try to maximize the proximity between predictions and
-    targets. If either `y_true` or `y_pred` is a zero vector, cosine
-    similarity will be 0 regardless of the proximity between predictions
-    and targets.
-
-    `loss = -sum(l2_norm(y_true) * l2_norm(y_pred))`
-
-    Standalone usage:
-
-    >>> y_true = [[0., 1.], [1., 1.], [1., 1.]]
-    >>> y_pred = [[1., 0.], [1., 1.], [-1., -1.]]
-    >>> loss = tf.keras.losses.cosine_similarity(y_true, y_pred, axis=1)
-    >>> loss.numpy()
-    array([-0., -0.999, 0.999], dtype=float32)
-
-    :cvar y_true: Tensor of true targets.
-    :cvar y_pred: Tensor of predicted targets.
-    :cvar axis: Axis along which to determine similarity. Defaults to -1
-    :cvar return_type: Cosine similarity tensor. Defaults to ```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"""
-
-    y_true = None
-    y_pred = None
-    axis: int = -1
-    return_type = "```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"
-
-    def __call__(self):
-        self.y_true = nn.l2_normalize(self.y_true, axis=self.axis)
-        self.y_pred = nn.l2_normalize(self.y_pred, axis=self.axis)
-        return -math_ops.reduce_sum(self.y_true * self.y_pred, axis=self.axis)
+        self.y_true = _maybe_convert_labels(self.y_true)
+        return K.mean(math_ops.maximum(1.0 - self.y_true * self.y_pred, 0.0), axis=-1)
 
 
 class kl_divergenceConfig(object):
+    """
+    Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
+
+    `loss = y_true * log(y_true / y_pred)`
+
+    See: https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+
+    Standalone usage:
+
+    >>> y_true = np.random.randint(0, 2, size=(2, 3)).astype(np.float64)
+    >>> y_pred = np.random.random(size=(2, 3))
+    >>> loss = tf.keras.losses.kullback_leibler_divergence(y_true, y_pred)
+    >>> assert loss.shape == (2,)
+    >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
+    >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
+    >>> assert np.array_equal(
+    ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+
+    :cvar y_true: Tensor of true targets.
+    :cvar y_pred: Tensor of predicted targets.
+    :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
+
+    y_true = None
+    y_pred = None
+    return_type = (
+        "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
+    )
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
+        self.y_true = K.clip(self.y_true, K.epsilon(), 1)
+        self.y_pred = K.clip(self.y_pred, K.epsilon(), 1)
+        return math_ops.reduce_sum(
+            self.y_true * math_ops.log(self.y_true / self.y_pred), axis=-1
+        )
+
+
+class kldConfig(object):
     """
     Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
 
@@ -265,45 +328,68 @@ class kullback_leibler_divergenceConfig(object):
         )
 
 
-class log_coshConfig(object):
+class maeConfig(object):
     """
-    Logarithm of the hyperbolic cosine of the prediction error.
+    Computes the mean absolute error between labels and predictions.
 
-    `log(cosh(x))` is approximately equal to `(x ** 2) / 2` for small `x` and
-    to `abs(x) - log(2)` for large `x`. This means that 'logcosh' works mostly
-    like the mean squared error, but will not be so strongly affected by the
-    occasional wildly incorrect prediction.
+    `loss = mean(abs(y_true - y_pred), axis=-1)`
 
     Standalone usage:
 
-    >>> y_true = np.random.random(size=(2, 3))
+    >>> y_true = np.random.randint(0, 2, size=(2, 3))
     >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.logcosh(y_true, y_pred)
+    >>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
     >>> assert loss.shape == (2,)
-    >>> x = y_pred - y_true
-    >>> assert np.allclose(
-    ...     loss.numpy(),
-    ...     np.mean(x + np.log(np.exp(-2. * x) + 1.) - math_ops.log(2.), axis=-1),
-    ...     atol=1e-5)
+    >>> assert np.array_equal(
+    ...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))
 
     :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Logcosh error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(x + nn.softplus(-2.0 * x) - math_ops.cast(math_ops.log(2.0), x.dtype))```"""
+    :cvar return_type: Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"""
 
     y_true = None
     y_pred = None
-    return_type = (
-        "```(x + nn.softplus(-2.0 * x) - math_ops.cast(math_ops.log(2.0), x.dtype))```"
-    )
+    return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
 
     def __call__(self):
         self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
         self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
+        return K.mean(math_ops.abs(self.y_pred - self.y_true), axis=-1)
 
-        def _logcosh(x):
-            return x + nn.softplus(-2.0 * x) - math_ops.cast(math_ops.log(2.0), x.dtype)
 
-        return K.mean(_logcosh(self.y_pred - self.y_true), axis=-1)
+class mapeConfig(object):
+    """
+    Computes the mean absolute percentage error between `y_true` and `y_pred`.
+
+    `loss = 100 * mean(abs((y_true - y_pred) / y_true), axis=-1)`
+
+    Standalone usage:
+
+    >>> y_true = np.random.random(size=(2, 3))
+    >>> y_true = np.maximum(y_true, 1e-7)  # Prevent division by zero
+    >>> y_pred = np.random.random(size=(2, 3))
+    >>> loss = tf.keras.losses.mean_absolute_percentage_error(y_true, y_pred)
+    >>> assert loss.shape == (2,)
+    >>> assert np.array_equal(
+    ...     loss.numpy(),
+    ...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))
+
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar return_type: Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(100.0 * K.mean(diff, axis=-1))```"""
+
+    y_true = None
+    y_pred = None
+    return_type = "```(100.0 * K.mean(diff, axis=-1))```"
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
+        diff = math_ops.abs(
+            (self.y_true - self.y_pred)
+            / K.maximum(math_ops.abs(self.y_true), K.epsilon())
+        )
+        return 100.0 * K.mean(diff, axis=-1)
 
 
 class mean_absolute_errorConfig(object):
@@ -439,6 +525,151 @@ class mean_squared_logarithmic_errorConfig(object):
         return K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)
 
 
+class mseConfig(object):
+    """
+    Computes the mean squared error between labels and predictions.
+
+    After computing the squared distance between the inputs, the mean value over
+    the last dimension is returned.
+
+    `loss = mean(square(y_true - y_pred), axis=-1)`
+
+    Standalone usage:
+
+    >>> y_true = np.random.randint(0, 2, size=(2, 3))
+    >>> y_pred = np.random.random(size=(2, 3))
+    >>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
+    >>> assert loss.shape == (2,)
+    >>> assert np.array_equal(
+    ...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))
+
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar return_type: Mean squared error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"""
+
+    y_true = None
+    y_pred = None
+    return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
+        return K.mean(math_ops.squared_difference(self.y_pred, self.y_true), axis=-1)
+
+
+class msleConfig(object):
+    """
+    Computes the mean squared logarithmic error between `y_true` and `y_pred`.
+
+    `loss = mean(square(log(y_true + 1) - log(y_pred + 1)), axis=-1)`
+
+    Standalone usage:
+
+    >>> y_true = np.random.randint(0, 2, size=(2, 3))
+    >>> y_pred = np.random.random(size=(2, 3))
+    >>> loss = tf.keras.losses.mean_squared_logarithmic_error(y_true, y_pred)
+    >>> assert loss.shape == (2,)
+    >>> y_true = np.maximum(y_true, 1e-7)
+    >>> y_pred = np.maximum(y_pred, 1e-7)
+    >>> assert np.array_equal(
+    ...     loss.numpy(),
+    ...     np.mean(
+    ...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))
+
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar return_type: Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"""
+
+    y_true = None
+    y_pred = None
+    return_type = (
+        "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"
+    )
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
+        first_log = math_ops.log(K.maximum(self.y_pred, K.epsilon()) + 1.0)
+        second_log = math_ops.log(K.maximum(self.y_true, K.epsilon()) + 1.0)
+        return K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)
+
+
+class poissonConfig(object):
+    """
+    Computes the Poisson loss between y_true and y_pred.
+
+    The Poisson loss is the mean of the elements of the `Tensor`
+    `y_pred - y_true * log(y_pred)`.
+
+    Standalone usage:
+
+    >>> y_true = np.random.randint(0, 2, size=(2, 3))
+    >>> y_pred = np.random.random(size=(2, 3))
+    >>> loss = tf.keras.losses.poisson(y_true, y_pred)
+    >>> assert loss.shape == (2,)
+    >>> y_pred = y_pred + 1e-7
+    >>> assert np.allclose(
+    ...     loss.numpy(), np.mean(y_pred - y_true * np.log(y_pred), axis=-1),
+    ...     atol=1e-5)
+
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar return_type: Poisson loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(y_pred - y_true * math_ops.log(y_pred + K.epsilon()), axis=-1)```"""
+
+    y_true = None
+    y_pred = None
+    return_type = (
+        "```K.mean(y_pred - y_true * math_ops.log(y_pred + K.epsilon()), axis=-1)```"
+    )
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.y_true = math_ops.cast(self.y_true, self.y_pred.dtype)
+        return K.mean(
+            self.y_pred - self.y_true * math_ops.log(self.y_pred + K.epsilon()), axis=-1
+        )
+
+
+class sparse_categorical_accuracyConfig(object):
+    """
+    Calculates how often predictions matches integer labels.
+
+    Standalone usage:
+    >>> y_true = [2, 1]
+    >>> y_pred = [[0.1, 0.9, 0.8], [0.05, 0.95, 0]]
+    >>> m = tf.keras.metrics.sparse_categorical_accuracy(y_true, y_pred)
+    >>> assert m.shape == (2,)
+    >>> m.numpy()
+    array([0., 1.], dtype=float32)
+
+    You can provide logits of classes as `y_pred`, since argmax of
+    logits and probabilities are same.
+
+    :cvar y_true: Integer ground truth values.
+    :cvar y_pred: The prediction values.
+    :cvar return_type: Sparse categorical accuracy values. Defaults to ```math_ops.cast(math_ops.equal(y_true, y_pred), K.floatx())```"""
+
+    y_true = None
+    y_pred = None
+    return_type = "```math_ops.cast(math_ops.equal(y_true, y_pred), K.floatx())```"
+
+    def __call__(self):
+        self.y_pred = ops.convert_to_tensor_v2(self.y_pred)
+        self.y_true = ops.convert_to_tensor_v2(self.y_true)
+        y_pred_rank = self.y_pred.shape.ndims
+        y_true_rank = self.y_true.shape.ndims
+        if (
+            y_true_rank is not None
+            and y_pred_rank is not None
+            and len(K.int_shape(self.y_true)) == len(K.int_shape(self.y_pred))
+        ):
+            self.y_true = array_ops.squeeze(self.y_true, [-1])
+        self.y_pred = math_ops.argmax(self.y_pred, axis=-1)
+        if K.dtype(self.y_pred) != K.dtype(self.y_true):
+            self.y_pred = math_ops.cast(self.y_pred, K.dtype(self.y_true))
+        return math_ops.cast(math_ops.equal(self.y_true, self.y_pred), K.floatx())
+
+
 class sparse_categorical_crossentropyConfig(object):
     """
     Computes the sparse categorical crossentropy loss.
@@ -476,6 +707,48 @@ class sparse_categorical_crossentropyConfig(object):
         )
 
 
+class sparse_top_k_categorical_accuracyConfig(object):
+    """
+     Computes how often integer targets are in the top `K` predictions.
+
+     Standalone usage:
+     >>> y_true = [2, 1]
+     >>> y_pred = [[0.1, 0.9, 0.8], [0.05, 0.95, 0]]
+     >>> m = tf.keras.metrics.sparse_top_k_categorical_accuracy(
+     ...     y_true, y_pred, k=3)
+     >>> assert m.shape == (2,)
+     >>> m.numpy()
+     array([1., 1.], dtype=float32)
+
+     :cvar y_true: tensor of true targets.
+     :cvar y_pred: tensor of predicted targets.
+     :cvar k: (Optional) Number of top elements to look at for computing accuracy.
+    . Defaults to 5
+     :cvar return_type: Sparse top K categorical accuracy value. Defaults to ```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
+     floatx())```"""
+
+    y_true = None
+    y_pred = None
+    k: int = 5
+    return_type = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
+    floatx())```"""
+
+    def __call__(self):
+        y_pred_rank = ops.convert_to_tensor_v2(self.y_pred).shape.ndims
+        y_true_rank = ops.convert_to_tensor_v2(self.y_true).shape.ndims
+        if y_true_rank is not None and y_pred_rank is not None:
+            if y_pred_rank > 2:
+                self.y_pred = array_ops.reshape(
+                    self.y_pred, [-1, self.y_pred.shape[-1]]
+                )
+            if y_true_rank > 1:
+                self.y_true = array_ops.reshape(self.y_true, [-1])
+        return math_ops.cast(
+            nn.in_top_k(self.y_pred, math_ops.cast(self.y_true, "int32"), self.k),
+            K.floatx(),
+        )
+
+
 class squared_hingeConfig(object):
     """
     Computes the squared hinge loss between `y_true` and `y_pred`.
@@ -509,4 +782,36 @@ class squared_hingeConfig(object):
         return K.mean(
             math_ops.square(math_ops.maximum(1.0 - self.y_true * self.y_pred, 0.0)),
             axis=-1,
+        )
+
+
+class top_k_categorical_accuracyConfig(object):
+    """
+     Computes how often targets are in the top `K` predictions.
+
+     Standalone usage:
+     >>> y_true = [[0, 0, 1], [0, 1, 0]]
+     >>> y_pred = [[0.1, 0.9, 0.8], [0.05, 0.95, 0]]
+     >>> m = tf.keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
+     >>> assert m.shape == (2,)
+     >>> m.numpy()
+     array([1., 1.], dtype=float32)
+
+     :cvar y_true: The ground truth values.
+     :cvar y_pred: The prediction values.
+     :cvar k: (Optional) Number of top elements to look at for computing accuracy.
+    . Defaults to 5
+     :cvar return_type: Top K categorical accuracy value. Defaults to ```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
+     floatx())```"""
+
+    y_true = None
+    y_pred = None
+    k: int = 5
+    return_type = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
+    floatx())```"""
+
+    def __call__(self):
+        return math_ops.cast(
+            nn.in_top_k(self.y_pred, math_ops.argmax(self.y_true, axis=-1), self.k),
+            K.floatx(),
         )

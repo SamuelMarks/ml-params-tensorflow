@@ -9,7 +9,6 @@ from typing import Optional, Callable, Union, AnyStr
 from unittest import TestCase
 
 import tensorflow as tf
-
 from ml_params_tensorflow.example_model import get_model
 from ml_params_tensorflow.ml_params.trainer import TensorFlowTrainer
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main

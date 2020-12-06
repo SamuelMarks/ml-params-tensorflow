@@ -7,7 +7,6 @@ from unittest.mock import patch, MagicMock
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-
 from ml_params_tensorflow.ml_params.datasets import (
     normalize_img,
     load_data_from_tfds_or_ml_prepare,

@@ -135,14 +135,14 @@ exposed_layers: Dict[str, Any] = {
 }
 exposed_layers_keys: Tuple[str, ...] = tuple(sorted(exposed_layers.keys()))
 
-exposed_loss: Dict[str, Any] = {
+exposed_losses: Dict[str, Any] = {
     name: getattr(tf.keras.losses, name)
     for name in dir(tf.keras.losses)
     if not name.startswith("_")
     and name not in frozenset(("Loss",)) | _global_exclude
     and "_" in name
 }
-exposed_loss_keys: Tuple[str, ...] = tuple(sorted(exposed_loss.keys()))
+exposed_loss_keys: Tuple[str, ...] = tuple(sorted(exposed_losses.keys()))
 
 exposed_metrics: Dict[str, Any] = {
     metric: getattr(tf.keras.metrics, metric)
