@@ -15,15 +15,43 @@ from typing_extensions import Literal
 
 # @dataclass()
 class self(object):
+    """
+    Simple class to proxy object expected by code generated from `train` function
+
+    :cvar model: The model (probably a `tf.keras.models.Sequential`)
+    :cvar data: The data (probably a `tf.data.Dataset`)
+    """
+
     model: Any = None
     data: Any = None
 
 
 def from_string(cls, s):
+    """
+    Generate a new object of the class using a loaded s
+
+    :param cls: The class to create
+    :type cls: ```Callable[[Any, ...], Any]```
+
+    :param s: The arguments string to be parsed
+    :type s: ```str```
+
+    :return: Constructed class
+    :rtype: ```Any```
+    """
     return cls(**loads(s))
 
 
 def run_typed(f):
+    """
+    Decorate to validate the input class properties
+
+    :param f: Function or class
+    :type f: ```Any```
+
+    :return: Object that will now validate its input
+    :rtype: ```Any```
+    """
     f.from_string = classmethod(from_string)
     f.__argparse__ = dict(from_string=f.from_string)
     return runtime_validation(dataclass(f))

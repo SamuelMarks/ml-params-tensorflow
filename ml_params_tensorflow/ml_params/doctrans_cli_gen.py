@@ -3,17 +3,35 @@
 Basic helper to generate CLI arguments for `doctrans` (see README.md)
 """
 
+import sys
 from argparse import ArgumentError
 from os import path
-from sys import argv, executable
+from collections import namedtuple
+from importlib import import_module, find_loader
 
-import inflect
+from ml_params_tensorflow import get_logger
 
-p = inflect.engine()
+p = (
+    get_logger("doctrans_cli_gen").warning(
+        "For `doctrans_cli_gen` to work well, you should `pip install inflect`"
+    )
+    or namedtuple("NotInflect", ("singular_noun",))(
+        lambda s: s[:-2] if s.endswith("es") else s[:-1]
+    )
+    if find_loader("inflect") is None
+    else getattr(import_module("inflect"), "engine")()
+)
 
-if __name__ == "__main__":
+
+def main(argv=sys.argv):
+    """
+    CLI main function for doctrans_cli_gen
+
+    :param argv: argv, defaults to ```sys.argv```
+    :type argv: ```Optional[List[str]]```
+    """
     usage = "Usage: {executable} {script} <module_name>".format(
-        executable=executable, script=argv[0]
+        executable=sys.executable, script=argv[0]
     )
     if len(argv) != 2:
         raise ArgumentError(None, usage)
@@ -22,7 +40,7 @@ if __name__ == "__main__":
         exit()
 
     mod_pl = argv[1]
-    mod = p.singular_noun(mod_pl)
+    mod = (lambda s: mod_pl if s is False else s)(p.singular_noun(mod_pl))
     mod_cap = mod.capitalize()
     tab = " " * 4
 
@@ -47,3 +65,12 @@ if __name__ == "__main__":
             ).items()
         )
     )
+
+
+def run_main():
+    """" Run the `main` function if `__name__ == "__main__"` """
+    if __name__ == "__main__":
+        main()
+
+
+run_main()

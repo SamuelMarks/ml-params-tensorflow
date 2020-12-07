@@ -44,7 +44,7 @@ class TestDatasetsUtils(TestCase):
         )
         self.assertEqual(res[1], label)
 
-    def test_load_data_from_tfds_or_ml_prepare_in_datasets2classes(self):
+    def test_load_data_from_tfds_or_ml_prepare_in_datasets2classes(self) -> None:
         """
         Tests `load_data_from_tfds_or_ml_prepare` when `dataset_name in datasets2classes`
         """

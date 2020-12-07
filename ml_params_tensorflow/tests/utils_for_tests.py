@@ -11,4 +11,10 @@ def unittest_main():
         main()
 
 
+# From https://github.com/Suor/funcy/blob/0ee7ae8/funcy/funcs.py#L34-L36
+def rpartial(func, *args):
+    """Partially applies last arguments."""
+    return lambda *a: func(*(a + args))
+
+
 __all__ = ["unittest_main"]

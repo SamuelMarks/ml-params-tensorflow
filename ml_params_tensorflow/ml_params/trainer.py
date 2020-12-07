@@ -328,6 +328,9 @@ class TensorFlowTrainer(BaseTrainer):
 
 
 def set_from(l, o):
+    """
+    Helper function for generating
+    """
     return ((lambda typ: tuple if typ == map else typ)(type(l)))(
         map(lambda k: getattr(o, k.rpartition(".")[2]), l)
     )
