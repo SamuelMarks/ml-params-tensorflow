@@ -3,9 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import tensorflow as tf
-from tensorflow.python.ops import math_ops
-
 
 class binary_crossentropyConfig(object):
     """
@@ -378,3 +375,20 @@ class squared_hingeConfig(object):
     y_true = None
     y_pred = None
     return_type = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
+
+
+__all__ = [
+    "binary_crossentropyConfig",
+    "categorical_crossentropyConfig",
+    "categorical_hingeConfig",
+    "cosine_similarityConfig",
+    "kl_divergenceConfig",
+    "kullback_leibler_divergenceConfig",
+    "log_coshConfig",
+    "mean_absolute_errorConfig",
+    "mean_absolute_percentage_errorConfig",
+    "mean_squared_errorConfig",
+    "mean_squared_logarithmic_errorConfig",
+    "sparse_categorical_crossentropyConfig",
+    "squared_hingeConfig",
+]

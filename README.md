@@ -89,6 +89,11 @@ There's a bit of boilerplate here, so let's automate it:
         python -m ml_params_tensorflow.ml_params.doctrans_cli_gen "$name" 2>/dev/null | xargs python -m doctrans gen;
       done
 
+Cleanup the code everywhere, removing unused imports and autolinting/autoformatting:
+
+    $ fd -epy -x autoflake --remove-all-unused-imports -i {} \;
+    $ python -m black .
+
 ---
 
 ## License

@@ -3,8 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import tensorflow as tf
-
 
 class AdadeltaConfig(object):
     """
@@ -395,3 +393,14 @@ class RMSpropConfig(object):
     name: str = "RMSprop"
     kwargs: dict = {}
     _HAS_AGGREGATE_GRAD = True
+
+
+__all__ = [
+    "AdadeltaConfig",
+    "AdagradConfig",
+    "AdamConfig",
+    "AdamaxConfig",
+    "FtrlConfig",
+    "NadamConfig",
+    "RMSpropConfig",
+]

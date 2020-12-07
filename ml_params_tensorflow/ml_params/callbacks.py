@@ -3,9 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import numpy as np
-import tensorflow as tf
-
 
 class BaseLoggerConfig(object):
     """
@@ -508,3 +505,21 @@ class TensorBoardConfig(object):
 class TerminateOnNaNConfig(object):
     """
     Callback that terminates training when a NaN loss is encountered."""
+
+
+__all__ = [
+    "BaseLoggerConfig",
+    "CSVLoggerConfig",
+    "CallbackConfig",
+    "CallbackListConfig",
+    "EarlyStoppingConfig",
+    "HistoryConfig",
+    "LambdaCallbackConfig",
+    "LearningRateSchedulerConfig",
+    "ModelCheckpointConfig",
+    "ProgbarLoggerConfig",
+    "ReduceLROnPlateauConfig",
+    "RemoteMonitorConfig",
+    "TensorBoardConfig",
+    "TerminateOnNaNConfig",
+]
