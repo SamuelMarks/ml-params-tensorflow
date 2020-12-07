@@ -327,12 +327,12 @@ class TensorFlowTrainer(BaseTrainer):
         return self.model
 
 
-def set_from(l, o):
+def set_from(iterable, o):
     """
     Helper function for generating
     """
-    return ((lambda typ: tuple if typ == map else typ)(type(l)))(
-        map(lambda k: getattr(o, k.rpartition(".")[2]), l)
+    return ((lambda typ: tuple if typ == map else typ)(type(iterable)))(
+        map(lambda k: getattr(o, k.rpartition(".")[2]), iterable)
     )
 
 

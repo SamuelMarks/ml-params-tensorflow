@@ -3,10 +3,6 @@ Tests for the doctrans_cli_gen script
 """
 
 from unittest import TestCase
-from inspect import getmembers
-from operator import itemgetter, contains
-from itertools import filterfalse
-from functools import partial
 from unittest.mock import MagicMock, patch
 from argparse import ArgumentError
 from io import StringIO
@@ -17,7 +13,7 @@ import ml_params_tensorflow.ml_params.metrics
 import ml_params_tensorflow.ml_params.optimizers
 
 import ml_params_tensorflow.ml_params.doctrans_cli_gen
-from ml_params_tensorflow.tests.utils_for_tests import unittest_main, rpartial
+from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 
 
 class TestCliGen(TestCase):
@@ -46,9 +42,7 @@ class TestCliGen(TestCase):
                 ["python", "bar", "foo"]
             ),
         )
-        with self.assertRaises(SystemExit) as e, patch(
-            "sys.stdout", new_callable=StringIO
-        ):
+        with self.assertRaises(SystemExit), patch("sys.stdout", new_callable=StringIO):
             self.assertIsNone(
                 ml_params_tensorflow.ml_params.doctrans_cli_gen.main(["bar", "-h"])
             )
