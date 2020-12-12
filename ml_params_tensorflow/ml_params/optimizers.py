@@ -61,7 +61,7 @@ class AdadeltaConfig(object):
     epsilon: float = 1e-07
     name: str = "Adadelta"
     kwargs: Optional[dict] = None
-    _HAS_AGGREGATE_GRAD = True
+    _HAS_AGGREGATE_GRAD: bool = True
 
 
 @dataclass
@@ -97,7 +97,7 @@ class AdagradConfig(object):
     epsilon: float = 1e-07
     name: str = "Adagrad"
     kwargs: Optional[dict] = None
-    _HAS_AGGREGATE_GRAD = True
+    _HAS_AGGREGATE_GRAD: bool = True
 
 
 @dataclass
@@ -179,7 +179,7 @@ class AdamConfig(object):
     amsgrad: bool = False
     name: str = "Adam"
     kwargs: Optional[dict] = None
-    _HAS_AGGREGATE_GRAD = True
+    _HAS_AGGREGATE_GRAD: bool = True
 
 
 @dataclass
@@ -247,7 +247,7 @@ class AdamaxConfig(object):
     epsilon: float = 1e-07
     name: str = "Adamax"
     kwargs: Optional[dict] = None
-    _HAS_AGGREGATE_GRAD = True
+    _HAS_AGGREGATE_GRAD: bool = True
 
 
 @dataclass
@@ -330,7 +330,7 @@ class NadamConfig(object):
     epsilon: float = 1e-07
     name: str = "Nadam"
     kwargs: Optional[dict] = None
-    _HAS_AGGREGATE_GRAD = True
+    _HAS_AGGREGATE_GRAD: bool = True
 
 
 @dataclass
@@ -402,7 +402,7 @@ class RMSpropConfig(object):
     centered: bool = False
     name: str = "RMSprop"
     kwargs: Optional[dict] = None
-    _HAS_AGGREGATE_GRAD = True
+    _HAS_AGGREGATE_GRAD: bool = True
 
 
 __all__ = [

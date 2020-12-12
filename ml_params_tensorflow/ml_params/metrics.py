@@ -25,10 +25,10 @@ class binary_accuracyConfig(object):
     prediction values are 1 or 0. Defaults to 0.5
     :cvar return_type: Binary accuracy values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"""
 
-    y_true = 0.5
-    y_pred = None
+    y_true: float = 0.5
+    y_pred: object = None
     threshold: float = 0.5
-    return_type = "```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"
+    return_type: str = "```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"
 
 
 @dataclass
@@ -52,11 +52,11 @@ class binary_crossentropyConfig(object):
     :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
     :cvar return_type: Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
+    y_true: bool = False
+    y_pred: int = 0
     from_logits: bool = False
     label_smoothing: int = 0
-    return_type = "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"
+    return_type: str = "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"
 
 
 @dataclass
@@ -80,9 +80,9 @@ class categorical_accuracyConfig(object):
     :cvar return_type: Categorical accuracy values. Defaults to ```math_ops.cast(math_ops.equal(math_ops.argmax(y_true, axis=-1), math_ops.
     argmax(y_pred, axis=-1)), K.floatx())```"""
 
-    y_true = None
-    y_pred = None
-    return_type = """```math_ops.cast(math_ops.equal(math_ops.argmax(y_true, axis=-1), math_ops.
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = """```math_ops.cast(math_ops.equal(math_ops.argmax(y_true, axis=-1), math_ops.
     argmax(y_pred, axis=-1)), K.floatx())```"""
 
 
@@ -107,11 +107,11 @@ class categorical_crossentropyConfig(object):
     :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
     :cvar return_type: Categorical crossentropy loss value. Defaults to ```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"""
 
-    y_true = None
-    y_pred = None
+    y_true: bool = False
+    y_pred: int = 0
     from_logits: bool = False
     label_smoothing: int = 0
-    return_type = (
+    return_type: str = (
         "```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"
     )
 
@@ -139,9 +139,11 @@ class hingeConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Hinge loss values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.maximum(1.0 - y_true * y_pred, 0.0), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.maximum(1.0 - y_true * y_pred, 0.0), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
+        "```K.mean(math_ops.maximum(1.0 - y_true * y_pred, 0.0), axis=-1)```"
+    )
 
 
 @dataclass
@@ -168,9 +170,9 @@ class kl_divergenceConfig(object):
     :cvar y_pred: Tensor of predicted targets.
     :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
 
@@ -199,9 +201,9 @@ class kldConfig(object):
     :cvar y_pred: Tensor of predicted targets.
     :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
 
@@ -230,9 +232,9 @@ class kullback_leibler_divergenceConfig(object):
     :cvar y_pred: Tensor of predicted targets.
     :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
 
@@ -257,9 +259,9 @@ class maeConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
 
 
 @dataclass
@@ -284,9 +286,9 @@ class mapeConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(100.0 * K.mean(diff, axis=-1))```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```(100.0 * K.mean(diff, axis=-1))```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```(100.0 * K.mean(diff, axis=-1))```"
 
 
 @dataclass
@@ -309,9 +311,9 @@ class mean_absolute_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
 
 
 @dataclass
@@ -336,9 +338,9 @@ class mean_absolute_percentage_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(100.0 * K.mean(diff, axis=-1))```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```(100.0 * K.mean(diff, axis=-1))```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```(100.0 * K.mean(diff, axis=-1))```"
 
 
 @dataclass
@@ -364,9 +366,11 @@ class mean_squared_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean squared error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
+        "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+    )
 
 
 @dataclass
@@ -393,9 +397,9 @@ class mean_squared_logarithmic_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"
     )
 
@@ -423,9 +427,11 @@ class mseConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean squared error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
+        "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+    )
 
 
 @dataclass
@@ -452,9 +458,9 @@ class msleConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"
     )
 
@@ -482,9 +488,9 @@ class poissonConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Poisson loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(y_pred - y_true * math_ops.log(y_pred + K.epsilon()), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```K.mean(y_pred - y_true * math_ops.log(y_pred + K.epsilon()), axis=-1)```"
     )
 
@@ -509,9 +515,9 @@ class sparse_categorical_accuracyConfig(object):
     :cvar y_pred: The prediction values.
     :cvar return_type: Sparse categorical accuracy values. Defaults to ```math_ops.cast(math_ops.equal(y_true, y_pred), K.floatx())```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```math_ops.cast(math_ops.equal(y_true, y_pred), K.floatx())```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```math_ops.cast(math_ops.equal(y_true, y_pred), K.floatx())```"
 
 
 @dataclass
@@ -537,11 +543,11 @@ class sparse_categorical_crossentropyConfig(object):
     :cvar return_type: Sparse categorical crossentropy loss value. Defaults to ```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
     axis=axis)```"""
 
-    y_true = None
-    y_pred = "```(-1)```"
+    y_true: bool = False
+    y_pred: str = "```(-1)```"
     from_logits: bool = False
     axis: int = -1
-    return_type = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
+    return_type: str = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
     axis=axis)```"""
 
 
@@ -566,10 +572,10 @@ class sparse_top_k_categorical_accuracyConfig(object):
      :cvar return_type: Sparse top K categorical accuracy value. Defaults to ```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
      floatx())```"""
 
-    y_true = 5
-    y_pred = None
+    y_true: int = 5
+    y_pred: object = None
     k: int = 5
-    return_type = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
+    return_type: str = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
     floatx())```"""
 
 
@@ -596,9 +602,9 @@ class squared_hingeConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Squared hinge loss values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
 
 
 @dataclass
@@ -621,10 +627,10 @@ class top_k_categorical_accuracyConfig(object):
      :cvar return_type: Top K categorical accuracy value. Defaults to ```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
      floatx())```"""
 
-    y_true = 5
-    y_pred = None
+    y_true: int = 5
+    y_pred: object = None
     k: int = 5
-    return_type = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
+    return_type: str = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
     floatx())```"""
 
 

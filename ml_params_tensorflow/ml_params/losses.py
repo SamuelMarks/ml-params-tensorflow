@@ -27,11 +27,11 @@ class binary_crossentropyConfig(object):
     :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
     :cvar return_type: Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
+    y_true: bool = False
+    y_pred: int = 0
     from_logits: bool = False
     label_smoothing: int = 0
-    return_type = "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"
+    return_type: str = "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"
 
 
 @dataclass
@@ -55,11 +55,11 @@ class categorical_crossentropyConfig(object):
     :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
     :cvar return_type: Categorical crossentropy loss value. Defaults to ```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"""
 
-    y_true = None
-    y_pred = None
+    y_true: bool = False
+    y_pred: int = 0
     from_logits: bool = False
     label_smoothing: int = 0
-    return_type = (
+    return_type: str = (
         "```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"
     )
 
@@ -87,9 +87,9 @@ class categorical_hingeConfig(object):
     :cvar y_pred: The predicted values.
     :cvar return_type: Categorical hinge loss values. Defaults to ```math_ops.maximum(neg - pos + 1.0, zero)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```math_ops.maximum(neg - pos + 1.0, zero)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```math_ops.maximum(neg - pos + 1.0, zero)```"
 
 
 @dataclass
@@ -121,10 +121,10 @@ class cosine_similarityConfig(object):
     :cvar axis: Axis along which to determine similarity. Defaults to -1
     :cvar return_type: Cosine similarity tensor. Defaults to ```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"""
 
-    y_true = "```(-1)```"
-    y_pred = None
+    y_true: str = "```(-1)```"
+    y_pred: object = None
     axis: int = -1
-    return_type = "```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"
+    return_type: str = "```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"
 
 
 @dataclass
@@ -151,9 +151,9 @@ class kl_divergenceConfig(object):
     :cvar y_pred: Tensor of predicted targets.
     :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
 
@@ -182,9 +182,9 @@ class kullback_leibler_divergenceConfig(object):
     :cvar y_pred: Tensor of predicted targets.
     :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
     )
 
@@ -215,9 +215,9 @@ class log_coshConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Logcosh error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(_logcosh(y_pred - y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(_logcosh(y_pred - y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```K.mean(_logcosh(y_pred - y_true), axis=-1)```"
 
 
 @dataclass
@@ -240,9 +240,9 @@ class mean_absolute_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
 
 
 @dataclass
@@ -267,9 +267,9 @@ class mean_absolute_percentage_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(100.0 * K.mean(diff, axis=-1))```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```(100.0 * K.mean(diff, axis=-1))```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```(100.0 * K.mean(diff, axis=-1))```"
 
 
 @dataclass
@@ -295,9 +295,11 @@ class mean_squared_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean squared error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
+        "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+    )
 
 
 @dataclass
@@ -324,9 +326,9 @@ class mean_squared_logarithmic_errorConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = (
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = (
         "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"
     )
 
@@ -354,11 +356,11 @@ class sparse_categorical_crossentropyConfig(object):
     :cvar return_type: Sparse categorical crossentropy loss value. Defaults to ```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
     axis=axis)```"""
 
-    y_true = None
-    y_pred = "```(-1)```"
+    y_true: bool = False
+    y_pred: str = "```(-1)```"
     from_logits: bool = False
     axis: int = -1
-    return_type = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
+    return_type: str = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
     axis=axis)```"""
 
 
@@ -385,9 +387,9 @@ class squared_hingeConfig(object):
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar return_type: Squared hinge loss values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"""
 
-    y_true = None
-    y_pred = None
-    return_type = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
+    y_true: object = None
+    y_pred: object = None
+    return_type: str = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
 
 
 __all__ = [

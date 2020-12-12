@@ -42,7 +42,7 @@ class CSVLoggerConfig(object):
     :cvar append: Boolean. True: append if file exists (useful for continuing
         training). False: overwrite existing file. Defaults to False"""
 
-    filename = ","
+    filename: str = ","
     separator: str = ","
     append: bool = False
 
@@ -77,10 +77,10 @@ class CallbackListConfig(object):
     :cvar params: If provided, parameters will be passed to each `Callback` via
     `Callback.set_params`."""
 
-    callbacks = None
-    add_history = None
-    add_progbar = None
-    model = None
+    callbacks: NoneType = None
+    add_history: bool = False
+    add_progbar: bool = False
+    model: NoneType = None
     params: Optional[dict] = None
 
 
@@ -255,7 +255,7 @@ class LearningRateSchedulerConfig(object):
       learning rate as output (float). Defaults to 0
     :cvar verbose: int. 0: quiet, 1: update messages. Defaults to 0"""
 
-    schedule = None
+    schedule: int = 0
     verbose: int = 0
 
 
@@ -335,7 +335,7 @@ class ModelCheckpointConfig(object):
     :cvar kwargs: Additional arguments for backwards compatibility. Possible key
       is `period`."""
 
-    filepath = "val_loss"
+    filepath: str = "val_loss"
     monitor: str = "val_loss"
     verbose: int = 0
     save_best_only: bool = False
@@ -528,14 +528,14 @@ class TensorBoardConfig(object):
       used for all embedding layers, string can be passed.
     :cvar kwargs: None"""
 
-    log_dir = "logs"
-    histogram_freq = None
-    write_graph = True
-    write_images = None
-    update_freq = "epoch"
-    profile_batch = 2
-    embeddings_freq = None
-    embeddings_metadata = None
+    log_dir: str = "logs"
+    histogram_freq: int = 0
+    write_graph: bool = True
+    write_images: bool = False
+    update_freq: str = "epoch"
+    profile_batch: int = 2
+    embeddings_freq: int = 0
+    embeddings_metadata: object = None
     kwargs: Optional[dict] = None
 
 

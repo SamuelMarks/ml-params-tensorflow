@@ -1,6 +1,9 @@
 """
 Implementation of ml_params BaseTrainer API
 """
+from functools import partial
+from itertools import filterfalse
+from operator import eq
 from os import path
 from types import FunctionType
 from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
@@ -336,8 +339,13 @@ def set_from(iterable, o):
     return (
         None
         if iterable is None
-        else ((lambda typ: tuple if typ == map else typ)(type(iterable)))(
-            map(lambda k: getattr(o, k.rpartition(".")[2]), iterable)
+        else list(
+            getattr(o, obj.rpartition(".")[2])
+            if isinstance(obj, str)
+            else getattr(o, obj.__class__.__name__[: -len("Config")])(
+                **dict(filterfalse(partial(eq, ("kwargs", None)), vars(obj).items()))
+            )
+            for obj in iterable
         )
     )
 
