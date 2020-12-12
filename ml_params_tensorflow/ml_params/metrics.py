@@ -1,9 +1,12 @@
 """ Generated Callback config classes """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+from dataclasses import dataclass
+
+NoneType = type(None)
 
 
+@dataclass
 class binary_accuracyConfig(object):
     """
     Calculates how often predictions matches binary labels.
@@ -16,18 +19,19 @@ class binary_accuracyConfig(object):
     >>> m.numpy()
     array([1., 1., 1., 1.], dtype=float32)
 
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`. Defaults to 0.5
     :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
     :cvar threshold: (Optional) Float representing the threshold for deciding whether
     prediction values are 1 or 0. Defaults to 0.5
     :cvar return_type: Binary accuracy values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"""
 
-    y_true = None
+    y_true = 0.5
     y_pred = None
     threshold: float = 0.5
     return_type = "```K.mean(math_ops.equal(y_true, y_pred), axis=-1)```"
 
 
+@dataclass
 class binary_crossentropyConfig(object):
     """
     Computes the binary crossentropy loss.
@@ -41,20 +45,21 @@ class binary_crossentropyConfig(object):
     >>> loss.numpy()
     array([0.916 , 0.714], dtype=float32)
 
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
+    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`. Defaults to False
+    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`. Defaults to 0
     :cvar from_logits: Whether `y_pred` is expected to be a logits tensor. By default,
     we assume that `y_pred` encodes a probability distribution. Defaults to False
     :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
-    :cvar return_type: Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(y_true * (1.0 - label_smoothing) + 0.5 * label_smoothing)```"""
+    :cvar return_type: Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"""
 
     y_true = None
     y_pred = None
     from_logits: bool = False
     label_smoothing: int = 0
-    return_type = "```(y_true * (1.0 - label_smoothing) + 0.5 * label_smoothing)```"
+    return_type = "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"
 
 
+@dataclass
 class categorical_accuracyConfig(object):
     """
     Calculates how often predictions matches one-hot labels.
@@ -81,6 +86,7 @@ class categorical_accuracyConfig(object):
     argmax(y_pred, axis=-1)), K.floatx())```"""
 
 
+@dataclass
 class categorical_crossentropyConfig(object):
     """
     Computes the categorical crossentropy loss.
@@ -94,22 +100,23 @@ class categorical_crossentropyConfig(object):
     >>> loss.numpy()
     array([0.0513, 2.303], dtype=float32)
 
-    :cvar y_true: Tensor of one-hot true targets.
-    :cvar y_pred: Tensor of predicted targets.
+    :cvar y_true: Tensor of one-hot true targets. Defaults to False
+    :cvar y_pred: Tensor of predicted targets. Defaults to 0
     :cvar from_logits: Whether `y_pred` is expected to be a logits tensor. By default,
     we assume that `y_pred` encodes a probability distribution. Defaults to False
     :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
-    :cvar return_type: Categorical crossentropy loss value. Defaults to ```(y_true * (1.0 - label_smoothing) + label_smoothing / num_classes)```"""
+    :cvar return_type: Categorical crossentropy loss value. Defaults to ```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"""
 
     y_true = None
     y_pred = None
     from_logits: bool = False
     label_smoothing: int = 0
     return_type = (
-        "```(y_true * (1.0 - label_smoothing) + label_smoothing / num_classes)```"
+        "```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"
     )
 
 
+@dataclass
 class hingeConfig(object):
     """
     Computes the hinge loss between `y_true` and `y_pred`.
@@ -137,6 +144,7 @@ class hingeConfig(object):
     return_type = "```K.mean(math_ops.maximum(1.0 - y_true * y_pred, 0.0), axis=-1)```"
 
 
+@dataclass
 class kl_divergenceConfig(object):
     """
     Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -167,6 +175,7 @@ class kl_divergenceConfig(object):
     )
 
 
+@dataclass
 class kldConfig(object):
     """
     Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -197,6 +206,7 @@ class kldConfig(object):
     )
 
 
+@dataclass
 class kullback_leibler_divergenceConfig(object):
     """
     Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -227,6 +237,7 @@ class kullback_leibler_divergenceConfig(object):
     )
 
 
+@dataclass
 class maeConfig(object):
     """
     Computes the mean absolute error between labels and predictions.
@@ -251,6 +262,7 @@ class maeConfig(object):
     return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
 
 
+@dataclass
 class mapeConfig(object):
     """
     Computes the mean absolute percentage error between `y_true` and `y_pred`.
@@ -277,6 +289,7 @@ class mapeConfig(object):
     return_type = "```(100.0 * K.mean(diff, axis=-1))```"
 
 
+@dataclass
 class mean_absolute_errorConfig(object):
     """
     Computes the mean absolute error between labels and predictions.
@@ -301,6 +314,7 @@ class mean_absolute_errorConfig(object):
     return_type = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
 
 
+@dataclass
 class mean_absolute_percentage_errorConfig(object):
     """
     Computes the mean absolute percentage error between `y_true` and `y_pred`.
@@ -327,6 +341,7 @@ class mean_absolute_percentage_errorConfig(object):
     return_type = "```(100.0 * K.mean(diff, axis=-1))```"
 
 
+@dataclass
 class mean_squared_errorConfig(object):
     """
     Computes the mean squared error between labels and predictions.
@@ -354,6 +369,7 @@ class mean_squared_errorConfig(object):
     return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
 
 
+@dataclass
 class mean_squared_logarithmic_errorConfig(object):
     """
     Computes the mean squared logarithmic error between `y_true` and `y_pred`.
@@ -384,6 +400,7 @@ class mean_squared_logarithmic_errorConfig(object):
     )
 
 
+@dataclass
 class mseConfig(object):
     """
     Computes the mean squared error between labels and predictions.
@@ -411,6 +428,7 @@ class mseConfig(object):
     return_type = "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
 
 
+@dataclass
 class msleConfig(object):
     """
     Computes the mean squared logarithmic error between `y_true` and `y_pred`.
@@ -441,6 +459,7 @@ class msleConfig(object):
     )
 
 
+@dataclass
 class poissonConfig(object):
     """
     Computes the Poisson loss between y_true and y_pred.
@@ -470,6 +489,7 @@ class poissonConfig(object):
     )
 
 
+@dataclass
 class sparse_categorical_accuracyConfig(object):
     """
     Calculates how often predictions matches integer labels.
@@ -494,6 +514,7 @@ class sparse_categorical_accuracyConfig(object):
     return_type = "```math_ops.cast(math_ops.equal(y_true, y_pred), K.floatx())```"
 
 
+@dataclass
 class sparse_categorical_crossentropyConfig(object):
     """
     Computes the sparse categorical crossentropy loss.
@@ -507,8 +528,8 @@ class sparse_categorical_crossentropyConfig(object):
     >>> loss.numpy()
     array([0.0513, 2.303], dtype=float32)
 
-    :cvar y_true: Ground truth values.
-    :cvar y_pred: The predicted values.
+    :cvar y_true: Ground truth values. Defaults to False
+    :cvar y_pred: The predicted values. Defaults to ```(-1)```
     :cvar from_logits: Whether `y_pred` is expected to be a logits tensor. By default,
     we assume that `y_pred` encodes a probability distribution. Defaults to False
     :cvar axis: (Optional)The dimension along which the entropy is
@@ -517,13 +538,14 @@ class sparse_categorical_crossentropyConfig(object):
     axis=axis)```"""
 
     y_true = None
-    y_pred = None
+    y_pred = "```(-1)```"
     from_logits: bool = False
     axis: int = -1
     return_type = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
     axis=axis)```"""
 
 
+@dataclass
 class sparse_top_k_categorical_accuracyConfig(object):
     """
      Computes how often integer targets are in the top `K` predictions.
@@ -537,20 +559,21 @@ class sparse_top_k_categorical_accuracyConfig(object):
      >>> m.numpy()
      array([1., 1.], dtype=float32)
 
-     :cvar y_true: tensor of true targets.
+     :cvar y_true: tensor of true targets. Defaults to 5
      :cvar y_pred: tensor of predicted targets.
      :cvar k: (Optional) Number of top elements to look at for computing accuracy.
     . Defaults to 5
      :cvar return_type: Sparse top K categorical accuracy value. Defaults to ```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
      floatx())```"""
 
-    y_true = None
+    y_true = 5
     y_pred = None
     k: int = 5
     return_type = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
     floatx())```"""
 
 
+@dataclass
 class squared_hingeConfig(object):
     """
     Computes the squared hinge loss between `y_true` and `y_pred`.
@@ -578,6 +601,7 @@ class squared_hingeConfig(object):
     return_type = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
 
 
+@dataclass
 class top_k_categorical_accuracyConfig(object):
     """
      Computes how often targets are in the top `K` predictions.
@@ -590,14 +614,14 @@ class top_k_categorical_accuracyConfig(object):
      >>> m.numpy()
      array([1., 1.], dtype=float32)
 
-     :cvar y_true: The ground truth values.
+     :cvar y_true: The ground truth values. Defaults to 5
      :cvar y_pred: The prediction values.
      :cvar k: (Optional) Number of top elements to look at for computing accuracy.
     . Defaults to 5
      :cvar return_type: Top K categorical accuracy value. Defaults to ```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
      floatx())```"""
 
-    y_true = None
+    y_true = 5
     y_pred = None
     k: int = 5
     return_type = """```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.

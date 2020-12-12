@@ -2,17 +2,16 @@
 Tests for the doctrans_cli_gen script
 """
 
-from unittest import TestCase
-from unittest.mock import MagicMock, patch
 from argparse import ArgumentError
 from io import StringIO
+from unittest import TestCase
+from unittest.mock import MagicMock, patch
 
 import ml_params_tensorflow.ml_params.callbacks
+import ml_params_tensorflow.ml_params.doctrans_cli_gen
 import ml_params_tensorflow.ml_params.losses
 import ml_params_tensorflow.ml_params.metrics
 import ml_params_tensorflow.ml_params.optimizers
-
-import ml_params_tensorflow.ml_params.doctrans_cli_gen
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 
 

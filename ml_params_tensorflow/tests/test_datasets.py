@@ -3,14 +3,14 @@ Datasets tests
 """
 
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
 from ml_params_tensorflow.ml_params.datasets import (
-    normalize_img,
     load_data_from_tfds_or_ml_prepare,
+    normalize_img,
 )
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 

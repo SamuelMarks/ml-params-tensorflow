@@ -5,9 +5,9 @@ from argparse import ArgumentParser
 from unittest import TestCase
 
 from ml_params_tensorflow.ml_params.cli import (
-    train_parser,
     load_data_parser,
     load_model_parser,
+    train_parser,
 )
 from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 

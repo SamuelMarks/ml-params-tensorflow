@@ -4,15 +4,15 @@
 import os
 from functools import partial
 from typing import (
-    Union,
-    Tuple,
+    Any,
     AnyStr,
     Callable,
-    Optional,
-    List,
-    Any,
-    Iterator,
     Iterable,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    Union,
 )
 
 import numpy as np

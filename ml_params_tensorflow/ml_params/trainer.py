@@ -3,7 +3,7 @@ Implementation of ml_params BaseTrainer API
 """
 from os import path
 from types import FunctionType
-from typing import Tuple, Optional, List, Callable, Union, Any, Dict, AnyStr
+from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import tensorflow as tf
@@ -316,11 +316,13 @@ class TensorFlowTrainer(BaseTrainer):
             optimizer=set_from((optimizer,), tf.keras.optimizers)[0](),
             metrics=set_from(metrics, tf.keras.metrics),
         )
+        callbacks = set_from(callbacks, tf.keras.callbacks) if callbacks else None
+        print("callbacks:", callbacks, ";")
         self.model.fit(
             self.data[0],
             validation_data=self.data[1],
             epochs=epochs,
-            callbacks=set_from(callbacks, tf.keras.callbacks) if callbacks else None,
+            callbacks=callbacks,
             batch_size=batch_size,
         )
 
@@ -331,8 +333,12 @@ def set_from(iterable, o):
     """
     Helper function for generating
     """
-    return ((lambda typ: tuple if typ == map else typ)(type(iterable)))(
-        map(lambda k: getattr(o, k.rpartition(".")[2]), iterable)
+    return (
+        None
+        if iterable is None
+        else ((lambda typ: tuple if typ == map else typ)(type(iterable)))(
+            map(lambda k: getattr(o, k.rpartition(".")[2]), iterable)
+        )
     )
 
 

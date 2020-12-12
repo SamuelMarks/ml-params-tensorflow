@@ -51,7 +51,7 @@ Install doctrans then run, for example:
                        --input-param 'exposed_datasets_keys' \
                        --output-param 'load_data_from_tfds_or_ml_prepare.dataset_name'
 """
-from typing import AnyStr, Any, Dict, Tuple
+from typing import Any, AnyStr, Dict, Tuple
 
 import tensorflow as tf
 

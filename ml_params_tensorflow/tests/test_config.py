@@ -4,9 +4,9 @@ Tests for the config
 
 from unittest import TestCase
 
-from ml_params_tensorflow.tests.utils_for_tests import unittest_main
-from ml_params_tensorflow.ml_params.config import from_string
 from ml_params_tensorflow.ml_params.cli import self as Self
+from ml_params_tensorflow.ml_params.config import from_string
+from ml_params_tensorflow.tests.utils_for_tests import unittest_main
 
 
 class TestConfig(TestCase):

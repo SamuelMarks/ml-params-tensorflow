@@ -1,11 +1,13 @@
 """ Generated Callback config classes """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+from dataclasses import dataclass
+from typing import Optional
 
 NoneType = type(None)
 
 
+@dataclass
 class BaseLoggerConfig(object):
     """
     Callback that accumulates epoch averages of metrics.
@@ -20,6 +22,7 @@ class BaseLoggerConfig(object):
     stateful_metrics: NoneType = None
 
 
+@dataclass
 class CSVLoggerConfig(object):
     """
     Callback that streams epoch results to a CSV file.
@@ -34,16 +37,17 @@ class CSVLoggerConfig(object):
     model.fit(X_train, Y_train, callbacks=[csv_logger])
     ```
 
-    :cvar filename: Filename of the CSV file, e.g. `'run/log.csv'`.
-    :cvar separator: String used to separate elements in the CSV file. Defaults to ,
+    :cvar filename: Filename of the CSV file, e.g. `'run/log.csv'`. Defaults to ,
+    :cvar separator: String used to separate elements in the CSV file. Defaults to ","
     :cvar append: Boolean. True: append if file exists (useful for continuing
         training). False: overwrite existing file. Defaults to False"""
 
-    filename = None
+    filename = ","
     separator: str = ","
     append: bool = False
 
 
+@dataclass
 class CallbackConfig(object):
     """
     Abstract base class used to build new callbacks.
@@ -59,11 +63,28 @@ class CallbackConfig(object):
     the current batch or epoch (see method-specific docstrings)."""
 
 
+@dataclass
 class CallbackListConfig(object):
     """
-    Container abstracting a list of callbacks."""
+    Container abstracting a list of callbacks.
+
+    :cvar callbacks: List of `Callback` instances. Defaults to None
+    :cvar add_history: Whether a `History` callback should be added, if one does not
+    already exist in the `callbacks` list. Defaults to False
+    :cvar add_progbar: Whether a `ProgbarLogger` callback should be added, if one
+    does not already exist in the `callbacks` list. Defaults to False
+    :cvar model: The `Model` these callbacks are used with. Defaults to None
+    :cvar params: If provided, parameters will be passed to each `Callback` via
+    `Callback.set_params`."""
+
+    callbacks = None
+    add_history = None
+    add_progbar = None
+    model = None
+    params: Optional[dict] = None
 
 
+@dataclass
 class EarlyStoppingConfig(object):
     """
     Stop training when a monitored metric has stopped improving.
@@ -92,7 +113,7 @@ class EarlyStoppingConfig(object):
     >>> len(history.history['loss'])  # Only 4 epochs are run.
     4
 
-    :cvar monitor: Quantity to be monitored. Defaults to val_loss
+    :cvar monitor: Quantity to be monitored. Defaults to "val_loss"
     :cvar min_delta: Minimum change in the monitored quantity
       to qualify as an improvement, i.e. an absolute
       change of less than min_delta, will count as no
@@ -106,7 +127,7 @@ class EarlyStoppingConfig(object):
       mode it will stop when the quantity
       monitored has stopped increasing; in `"auto"`
       mode, the direction is automatically inferred
-      from the name of the monitored quantity. Defaults to auto
+      from the name of the monitored quantity. Defaults to "auto"
     :cvar baseline: Baseline value for the monitored quantity.
       Training will stop if the model doesn't show improvement over the
       baseline. Defaults to None
@@ -124,6 +145,7 @@ class EarlyStoppingConfig(object):
     restore_best_weights: bool = False
 
 
+@dataclass
 class HistoryConfig(object):
     """
     Callback that records events into a `History` object.
@@ -133,6 +155,7 @@ class HistoryConfig(object):
     gets returned by the `fit` method of models."""
 
 
+@dataclass
 class LambdaCallbackConfig(object):
     """
     Callback for creating simple, custom callbacks on-the-fly.
@@ -183,7 +206,8 @@ class LambdaCallbackConfig(object):
     :cvar on_batch_begin: called at the beginning of every batch. Defaults to None
     :cvar on_batch_end: called at the end of every batch. Defaults to None
     :cvar on_train_begin: called at the beginning of model training. Defaults to None
-    :cvar on_train_end: called at the end of model training. Defaults to None"""
+    :cvar on_train_end: called at the end of model training. Defaults to None
+    :cvar kwargs: None"""
 
     on_epoch_begin: NoneType = None
     on_epoch_end: NoneType = None
@@ -191,8 +215,10 @@ class LambdaCallbackConfig(object):
     on_batch_end: NoneType = None
     on_train_begin: NoneType = None
     on_train_end: NoneType = None
+    kwargs: Optional[dict] = None
 
 
+@dataclass
 class LearningRateSchedulerConfig(object):
     """
     Learning rate scheduler.
@@ -226,13 +252,14 @@ class LearningRateSchedulerConfig(object):
 
     :cvar schedule: a function that takes an epoch index (integer, indexed from 0)
       and current learning rate (float) as inputs and returns a new
-      learning rate as output (float).
+      learning rate as output (float). Defaults to 0
     :cvar verbose: int. 0: quiet, 1: update messages. Defaults to 0"""
 
     schedule = None
     verbose: int = 0
 
 
+@dataclass
 class ModelCheckpointConfig(object):
     """
     Callback to save the Keras model or model weights at some frequency.
@@ -278,8 +305,8 @@ class ModelCheckpointConfig(object):
       `epoch` and keys in `logs` (passed in `on_epoch_end`). For example: if
       `filepath` is `weights.{epoch:02d}-{val_loss:.2f}.hdf5`, then the model
       checkpoints will be saved with the epoch number and the validation loss
-      in the filename.
-    :cvar monitor: quantity to monitor. Defaults to val_loss
+      in the filename. Defaults to val_loss
+    :cvar monitor: quantity to monitor. Defaults to "val_loss"
     :cvar verbose: verbosity mode, 0 or 1. Defaults to 0
     :cvar save_best_only: if `save_best_only=True`, the latest best model according
       to the quantity monitored will not be overwritten.
@@ -290,7 +317,7 @@ class ModelCheckpointConfig(object):
       or the minimization of the monitored quantity. For `val_acc`, this
       should be `max`, for `val_loss` this should be `min`, etc. In `auto`
       mode, the direction is automatically inferred from the name of the
-      monitored quantity. Defaults to auto
+      monitored quantity. Defaults to "auto"
     :cvar save_weights_only: if True, then only the model's weights will be saved
       (`model.save_weights(filepath)`), else the full model is saved
       (`model.save(filepath)`). Defaults to False
@@ -301,14 +328,14 @@ class ModelCheckpointConfig(object):
       checked every Nth batch. Note that if the saving isn't aligned to
       epochs, the monitored metric may potentially be less reliable (it
       could reflect as little as 1 batch, since the metrics get reset every
-      epoch). Defaults to 'epoch'
+      epoch). Defaults to "epoch"
     :cvar options: Optional `tf.train.CheckpointOptions` object if
       `save_weights_only` is true or optional `tf.saved_model.SavedOptions`
       object if `save_weights_only` is false. Defaults to None
     :cvar kwargs: Additional arguments for backwards compatibility. Possible key
       is `period`."""
 
-    filepath = None
+    filepath = "val_loss"
     monitor: str = "val_loss"
     verbose: int = 0
     save_best_only: bool = False
@@ -316,9 +343,10 @@ class ModelCheckpointConfig(object):
     save_weights_only: bool = False
     save_freq: str = "epoch"
     options: NoneType = None
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
 
 
+@dataclass
 class ProgbarLoggerConfig(object):
     """
     Callback that prints metrics to stdout.
@@ -329,7 +357,7 @@ class ProgbarLoggerConfig(object):
 
     :cvar count_mode: One of `"steps"` or `"samples"`.
         Whether the progress bar should
-        count samples seen or steps (batches) seen. Defaults to samples
+        count samples seen or steps (batches) seen. Defaults to "samples"
     :cvar stateful_metrics: Iterable of string names of metrics that
         should *not* be averaged over an epoch.
         Metrics in this list will be logged as-is.
@@ -340,6 +368,7 @@ class ProgbarLoggerConfig(object):
     stateful_metrics: NoneType = "```the `Model`'s metrics```"
 
 
+@dataclass
 class ReduceLROnPlateauConfig(object):
     """
     Reduce learning rate when a metric has stopped improving.
@@ -357,7 +386,7 @@ class ReduceLROnPlateauConfig(object):
     model.fit(X_train, Y_train, callbacks=[reduce_lr])
     ```
 
-    :cvar monitor: quantity to be monitored. Defaults to val_loss
+    :cvar monitor: quantity to be monitored. Defaults to "val_loss"
     :cvar factor: factor by which the learning rate will be reduced.
       `new_lr = lr * factor`. Defaults to 0.1
     :cvar patience: number of epochs with no improvement after which learning rate
@@ -368,12 +397,13 @@ class ReduceLROnPlateauConfig(object):
       quantity monitored has stopped decreasing; in `'max'` mode it will be
       reduced when the quantity monitored has stopped increasing; in `'auto'`
       mode, the direction is automatically inferred from the name of the
-      monitored quantity. Defaults to auto
+      monitored quantity. Defaults to "auto"
     :cvar min_delta: threshold for measuring the new optimum, to only focus on
       significant changes. Defaults to 0.0001
     :cvar cooldown: number of epochs to wait before resuming normal operation after
       lr has been reduced. Defaults to 0
-    :cvar min_lr: lower bound on the learning rate. Defaults to 0"""
+    :cvar min_lr: lower bound on the learning rate. Defaults to 0
+    :cvar kwargs: None"""
 
     monitor: str = "val_loss"
     factor: float = 0.1
@@ -383,8 +413,10 @@ class ReduceLROnPlateauConfig(object):
     min_delta: float = 0.0001
     cooldown: int = 0
     min_lr: int = 0
+    kwargs: Optional[dict] = None
 
 
+@dataclass
 class RemoteMonitorConfig(object):
     """
     Callback used to stream events to a server.
@@ -397,11 +429,11 @@ class RemoteMonitorConfig(object):
     `"application/json"`.
     Otherwise the serialized JSON will be sent within a form.
 
-    :cvar root: String; root url of the target server. Defaults to http://localhost:9000
-    :cvar path: String; path relative to `root` to which the events will be sent. Defaults to /publish/epoch/end/
+    :cvar root: String; root url of the target server. Defaults to "http://localhost:9000"
+    :cvar path: String; path relative to `root` to which the events will be sent. Defaults to "/publish/epoch/end/"
     :cvar field: String; JSON field under which the data will be stored.
       The field is used only if the payload is sent within a form
-      (i.e. send_as_json is set to False). Defaults to data
+      (i.e. send_as_json is set to False). Defaults to "data"
     :cvar headers: Dictionary; optional custom HTTP headers. Defaults to None
     :cvar send_as_json: Boolean; whether the request should be
       sent as `"application/json"`. Defaults to False"""
@@ -413,6 +445,7 @@ class RemoteMonitorConfig(object):
     send_as_json: bool = False
 
 
+@dataclass
 class TensorBoardConfig(object):
     """
     Enable visualizations for TensorBoard.
@@ -465,45 +498,48 @@ class TensorBoardConfig(object):
         ValueError: If histogram_freq is set and no validation data is provided.
 
     :cvar log_dir: the path of the directory where to save the log files to be
-      parsed by TensorBoard.
+      parsed by TensorBoard. Defaults to logs
     :cvar histogram_freq: frequency (in epochs) at which to compute activation and
       weight histograms for the layers of the model. If set to 0, histograms
       won't be computed. Validation data (or split) must be specified for
-      histogram visualizations.
+      histogram visualizations. Defaults to 0
     :cvar write_graph: whether to visualize the graph in TensorBoard. The log file
-      can become quite large when write_graph is set to True.
+      can become quite large when write_graph is set to True. Defaults to True
     :cvar write_images: whether to write model weights to visualize as image in
-      TensorBoard.
+      TensorBoard. Defaults to False
     :cvar update_freq: `'batch'` or `'epoch'` or integer. When using `'batch'`,
       writes the losses and metrics to TensorBoard after each batch. The same
       applies for `'epoch'`. If using an integer, let's say `1000`, the
       callback will write the metrics and losses to TensorBoard every 1000
       batches. Note that writing too frequently to TensorBoard can slow down
-      your training.
+      your training. Defaults to epoch
     :cvar profile_batch: Profile the batch(es) to sample compute characteristics.
       profile_batch must be a non-negative integer or a tuple of integers.
       A pair of positive integers signify a range of batches to profile.
       By default, it will profile the second batch. Set profile_batch=0
-      to disable profiling.
+      to disable profiling. Defaults to 2
     :cvar embeddings_freq: frequency (in epochs) at which embedding layers will be
-      visualized. If set to 0, embeddings won't be visualized.
+      visualized. If set to 0, embeddings won't be visualized. Defaults to 0
     :cvar embeddings_metadata: a dictionary which maps layer name to a file name in
       which metadata for this embedding layer is saved. See the
       [details](
         https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
       about metadata files format. In case if the same metadata file is
-      used for all embedding layers, string can be passed."""
+      used for all embedding layers, string can be passed.
+    :cvar kwargs: None"""
 
-    log_dir = None
+    log_dir = "logs"
     histogram_freq = None
-    write_graph = None
+    write_graph = True
     write_images = None
-    update_freq = None
-    profile_batch = None
+    update_freq = "epoch"
+    profile_batch = 2
     embeddings_freq = None
     embeddings_metadata = None
+    kwargs: Optional[dict] = None
 
 
+@dataclass
 class TerminateOnNaNConfig(object):
     """
     Callback that terminates training when a NaN loss is encountered."""

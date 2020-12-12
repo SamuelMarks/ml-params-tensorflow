@@ -5,7 +5,7 @@ MNIST classification test(s)
 from os import path
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import Optional, Callable, Union, AnyStr
+from typing import AnyStr, Callable, Optional, Union
 from unittest import TestCase
 
 import tensorflow as tf

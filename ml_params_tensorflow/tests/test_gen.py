@@ -2,18 +2,17 @@
 Tests for the generated files
 """
 
-from unittest import TestCase
-from inspect import getmembers
-from operator import itemgetter, contains
-from itertools import filterfalse
 from functools import partial
+from inspect import getmembers
+from itertools import filterfalse
+from operator import contains, itemgetter
+from unittest import TestCase
 
 import ml_params_tensorflow.ml_params.callbacks
 import ml_params_tensorflow.ml_params.losses
 import ml_params_tensorflow.ml_params.metrics
 import ml_params_tensorflow.ml_params.optimizers
-
-from ml_params_tensorflow.tests.utils_for_tests import unittest_main, rpartial
+from ml_params_tensorflow.tests.utils_for_tests import rpartial, unittest_main
 
 
 class TestGen(TestCase):

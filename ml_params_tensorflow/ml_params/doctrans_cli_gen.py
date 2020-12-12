@@ -5,9 +5,10 @@ Basic helper to generate CLI arguments for `doctrans` (see README.md)
 
 import sys
 from argparse import ArgumentError
-from os import path
 from collections import namedtuple
-from importlib import import_module, find_loader
+from importlib import import_module
+from importlib.util import find_spec
+from os import path
 
 from ml_params_tensorflow import get_logger
 
@@ -18,18 +19,19 @@ p = (
     or namedtuple("NotInflect", ("singular_noun",))(
         lambda s: s[:-2] if s.endswith("es") else s[:-1]
     )
-    if find_loader("inflect") is None
+    if find_spec("inflect") is None
     else getattr(import_module("inflect"), "engine")()
 )
 
 
-def main(argv=sys.argv):
+def main(argv=None):
     """
     CLI main function for doctrans_cli_gen
 
     :param argv: argv, defaults to ```sys.argv```
     :type argv: ```Optional[List[str]]```
     """
+    argv = argv or sys.argv
     usage = "Usage: {executable} {script} <module_name>".format(
         executable=sys.executable, script=argv[0]
     )
@@ -52,7 +54,11 @@ def main(argv=sys.argv):
                 input_mapping="ml_params_tensorflow.ml_params.type_generators.exposed_{mod_pl}".format(
                     mod_pl=mod_pl
                 ),
-                prepend='""" Generated Callback config classes """\\nimport tensorflow as tf\\n',
+                prepend='""" Generated Callback config classes """\\n'
+                "import tensorflow as tf\\n"
+                "from typing import Literal, Optional, Union\\n\\n"
+                "from dataclasses import dataclass\\n\\n"
+                "NoneType = type(None)\\n",
                 imports_from_file="tf.keras.{mod_pl}.{mod_cap}".format(
                     mod_pl=mod_pl, mod_cap=mod_cap
                 ),
@@ -62,6 +68,7 @@ def main(argv=sys.argv):
                     "ml_params",
                     "{mod_pl}.py".format(mod_pl=mod_pl),
                 ),
+                decorator="dataclass",
             ).items()
         )
     )

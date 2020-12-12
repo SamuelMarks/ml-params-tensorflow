@@ -4,7 +4,7 @@ Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-para
 
 from dataclasses import dataclass
 from json import loads
-from typing import Any, Optional, List, Callable, AnyStr, Union, Tuple, Dict
+from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import tensorflow as tf

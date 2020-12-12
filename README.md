@@ -92,6 +92,7 @@ There's a bit of boilerplate here, so let's automate it:
 Cleanup the code everywhere, removing unused imports and autolinting/autoformatting:
 
     $ fd -epy -x autoflake --remove-all-unused-imports -i {} \;
+    $ isort --atomic .
     $ python -m black .
 
 ---

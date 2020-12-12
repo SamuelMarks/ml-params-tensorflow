@@ -1,9 +1,13 @@
 """ Generated Callback config classes """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+from dataclasses import dataclass
+from typing import Optional
+
+NoneType = type(None)
 
 
+@dataclass
 class AdadeltaConfig(object):
     """
     Optimizer that implements the Adadelta algorithm.
@@ -56,10 +60,11 @@ class AdadeltaConfig(object):
     rho: float = 0.95
     epsilon: float = 1e-07
     name: str = "Adadelta"
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     _HAS_AGGREGATE_GRAD = True
 
 
+@dataclass
 class AdagradConfig(object):
     """
     Optimizer that implements the Adagrad algorithm.
@@ -91,10 +96,11 @@ class AdagradConfig(object):
     initial_accumulator_value: float = 0.1
     epsilon: float = 1e-07
     name: str = "Adagrad"
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     _HAS_AGGREGATE_GRAD = True
 
 
+@dataclass
 class AdamConfig(object):
     """
      Optimizer that implements the Adam algorithm.
@@ -172,10 +178,11 @@ class AdamConfig(object):
     epsilon: float = 1e-07
     amsgrad: bool = False
     name: str = "Adam"
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     _HAS_AGGREGATE_GRAD = True
 
 
+@dataclass
 class AdamaxConfig(object):
     """
      Optimizer that implements the Adamax algorithm.
@@ -239,10 +246,11 @@ class AdamaxConfig(object):
     beta_2: float = 0.999
     epsilon: float = 1e-07
     name: str = "Adamax"
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     _HAS_AGGREGATE_GRAD = True
 
 
+@dataclass
 class FtrlConfig(object):
     """
     Optimizer that implements the FTRL algorithm.
@@ -287,9 +295,10 @@ class FtrlConfig(object):
     l2_regularization_strength: float = 0.0
     name: str = "Ftrl"
     l2_shrinkage_regularization_strength: float = 0.0
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
 
 
+@dataclass
 class NadamConfig(object):
     """
      Optimizer that implements the NAdam algorithm.
@@ -320,10 +329,11 @@ class NadamConfig(object):
     beta_2: float = 0.999
     epsilon: float = 1e-07
     name: str = "Nadam"
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     _HAS_AGGREGATE_GRAD = True
 
 
+@dataclass
 class RMSpropConfig(object):
     """
     Optimizer that implements the RMSprop algorithm.
@@ -391,7 +401,7 @@ class RMSpropConfig(object):
     epsilon: float = 1e-07
     centered: bool = False
     name: str = "RMSprop"
-    kwargs: dict = {}
+    kwargs: Optional[dict] = None
     _HAS_AGGREGATE_GRAD = True
 
 
