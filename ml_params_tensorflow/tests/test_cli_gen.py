@@ -46,7 +46,7 @@ class TestCliGen(TestCase):
                 ml_params_tensorflow.ml_params.doctrans_cli_gen.main(["bar", "-h"])
             )
 
-        with patch("sys.stdout", new_callable=StringIO) as f:
+        with patch("sys.stdout", new_callable=StringIO):
             self.assertIsNone(
                 ml_params_tensorflow.ml_params.doctrans_cli_gen.main(["bar", "howzat"])
             )
