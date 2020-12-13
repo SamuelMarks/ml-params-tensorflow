@@ -51,7 +51,7 @@ Install doctrans then run, for example:
                        --input-param 'exposed_datasets_keys' \
                        --output-param 'load_data_from_tfds_or_ml_prepare.dataset_name'
 """
-from typing import Any, AnyStr, Dict, Tuple
+from typing import Any, AnyStr, Callable, Dict, Optional, Tuple
 
 import tensorflow as tf
 
@@ -79,7 +79,7 @@ def _is_main_name(param: str, extra_filter=None) -> bool:
 def _expose_module(
     mod: Any,
     exclusions: frozenset = frozenset(),
-    extra_filter=None,
+    extra_filter: Optional[Callable[[AnyStr], bool]] = None,
 ) -> Dict[AnyStr, Any]:
     """
     :param mod: Any module
@@ -87,7 +87,6 @@ def _expose_module(
     :param exclusions: Any attributes to exclude
 
     :param extra_filter: Any additional filter to run
-    :type extra_filter: Optional[Callable[[AnyStr], bool]]
 
     :return: Mapping from name to object at identified by that name
     """

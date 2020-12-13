@@ -50,8 +50,6 @@ class TestCliGen(TestCase):
             self.assertIsNone(
                 ml_params_tensorflow.ml_params.doctrans_cli_gen.main(["bar", "howzat"])
             )
-            for attr in dir(f):
-                print(attr, getattr(f, attr))
 
 
 unittest_main()

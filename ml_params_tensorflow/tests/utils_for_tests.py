@@ -2,6 +2,7 @@
 Shared utility functions used by tests
 """
 
+from sys import version_info
 from unittest import main
 
 
@@ -17,4 +18,6 @@ def rpartial(func, *args):
     return lambda *a: func(*(a + args))
 
 
-__all__ = ["unittest_main"]
+TF_SUPPORTED = (3, 8) >= version_info[:2] > (3, 5)
+
+__all__ = ["rpartial", "TF_SUPPORTED", "unittest_main"]

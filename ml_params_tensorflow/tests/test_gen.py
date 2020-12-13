@@ -38,7 +38,9 @@ class TestGen(TestCase):
                     frozenset(
                         (
                             "NoneType",
+                            "Optional",
                             "absolute_import",
+                            "dataclass",
                             "division",
                             "print_function",
                         )
