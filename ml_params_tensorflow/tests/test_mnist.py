@@ -77,9 +77,6 @@ class TestMnist(TestCase):
                 loss="SparseCategoricalCrossentropy",
                 optimizer="Adam",
                 metrics=["categorical_accuracy"],
-                callbacks=None,
-                save_directory=None,
-                metric_emit_freq=None,
             ),
             tf.keras.Sequential,
         )

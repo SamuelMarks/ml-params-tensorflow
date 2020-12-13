@@ -266,7 +266,6 @@ class TensorFlowTrainer(BaseTrainer):
             ]
         ] = None,
         metric_emit_freq: Optional[Callable[[int], bool]] = None,
-        save_directory: Optional[str] = None,
         output_type: str = "infer",
         validation_split: float = 0.1,
         batch_size: int = 128,
@@ -289,8 +288,6 @@ class TensorFlowTrainer(BaseTrainer):
 
         :param metric_emit_freq: `None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10. Defaults to None
 
-        :param save_directory: Directory to save output in, e.g., weights in h5 files. If None, don't save.
-
         :param output_type: `if save_directory is not None` then save in this format, e.g., 'h5'.
 
         :param validation_split: Optional float between 0 and 1, fraction of data to reserve for validation.
@@ -307,25 +304,24 @@ class TensorFlowTrainer(BaseTrainer):
         assert self.data is not None
         assert self.model is not None
 
-        # print('train::self.data:', self.data, type(self.data), len(self.data), ';')
-        # print("callbacks:", str(callbacks), ";")
-        # print(
-        #    "set_from(callbacks, tf.keras.callbacks):",
-        #    set_from(callbacks, tf.keras.callbacks),
-        #    ";",
-        # )
         self.model.compile(
             loss=loss,
             optimizer=set_from((optimizer,), tf.keras.optimizers)[0](),
             metrics=set_from(metrics, tf.keras.metrics),
         )
         callbacks = set_from(callbacks, tf.keras.callbacks) if callbacks else None
-        print("callbacks:", callbacks, ";")
         self.model.fit(
             self.data[0],
             validation_data=self.data[1],
             epochs=epochs,
+            # loss=loss,
+            # optimizer=optimizer,
             callbacks=callbacks,
+            # metrics=metrics,
+            validation_split=validation_split
+            if tf.is_tensor(self.data[1])
+            or type(self.data[1]).__module__ == np.__name__
+            else None,
             batch_size=batch_size,
         )
 

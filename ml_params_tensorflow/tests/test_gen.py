@@ -2,6 +2,7 @@
 Tests for the generated files
 """
 
+from argparse import ArgumentParser
 from functools import partial
 from inspect import getmembers
 from itertools import filterfalse
@@ -43,6 +44,7 @@ class TestGen(TestCase):
                             "dataclass",
                             "division",
                             "print_function",
+                            "loads",
                         )
                     ),
                 ),
@@ -56,6 +58,24 @@ class TestGen(TestCase):
             )
         )
 
+    def _call_all(self, module):
+        """
+        :param module: The module
+        :type module: ```object```
+
+        :return: Whether all the symbols in `__all__` resolve to a callable returning an instance of Argparse
+        :rtype: ```bool```
+        """
+        self.assertIn("__all__", dir(module))
+        return all(
+            filterfalse(
+                lambda name: isinstance(
+                    getattr(module, name)(ArgumentParser()), ArgumentParser
+                ),
+                module.__all__,
+            )
+        )
+
     def test_callbacks(self) -> None:
         """
         Tests whether `callbacks` has correct `__all__`
@@ -64,6 +84,7 @@ class TestGen(TestCase):
             ml_params_tensorflow.ml_params.callbacks.__all__,
             self.gen_all(ml_params_tensorflow.ml_params.callbacks),
         )
+        self.assertTrue(self._call_all(ml_params_tensorflow.ml_params.callbacks))
 
     def test_losses(self) -> None:
         """
@@ -73,6 +94,7 @@ class TestGen(TestCase):
             ml_params_tensorflow.ml_params.losses.__all__,
             self.gen_all(ml_params_tensorflow.ml_params.losses),
         )
+        self.assertTrue(self._call_all(ml_params_tensorflow.ml_params.losses))
 
     def test_metrics(self) -> None:
         """
@@ -82,6 +104,7 @@ class TestGen(TestCase):
             ml_params_tensorflow.ml_params.metrics.__all__,
             self.gen_all(ml_params_tensorflow.ml_params.metrics),
         )
+        self.assertTrue(self._call_all(ml_params_tensorflow.ml_params.metrics))
 
     def test_optimizers(self) -> None:
         """
@@ -91,6 +114,7 @@ class TestGen(TestCase):
             ml_params_tensorflow.ml_params.optimizers.__all__,
             self.gen_all(ml_params_tensorflow.ml_params.optimizers),
         )
+        self.assertTrue(self._call_all(ml_params_tensorflow.ml_params.optimizers))
 
 
 unittest_main()
