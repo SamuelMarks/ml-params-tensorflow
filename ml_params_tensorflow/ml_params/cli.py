@@ -16,8 +16,8 @@ class self(object):
     :cvar data: The data (probably a `tf.data.Dataset`)
     """
 
-    model: Any = None
-    data: Any = None
+    model = None  # type: object
+    data = None  # type: object
 
 
 def train_parser(argument_parser):
