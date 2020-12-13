@@ -16,9 +16,11 @@ jobs:
                     -   name: Linux
                         runs-on: ubuntu-latest
                         python_platform: linux
-                    -   name: Windows
-                        runs-on: windows-latest
-                        python_platform: win32
+                    #-   name: Windows
+                    #    runs-on: windows-latest
+                    #    python_platform: win32
+                    # Windows is supported from my https://github.com/tensorflow/datasets/pull/2840
+                    # But no new TensorFlow release (yet) from this merge
                     -   name: macOS
                         runs-on: macos-latest
                         python_platform: darwin

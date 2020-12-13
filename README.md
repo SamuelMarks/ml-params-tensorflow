@@ -3,7 +3,7 @@ ml_params_tensorflow
 ![Python version range](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-blue.svg)
 [![License](https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Linting, testing, and coverage](https://github.com/SamuelMarks/ml-params-tensorflow/workflows/Linting,%20testing,%20and%20coverage/badge.svg)](https://github.com/SamuelMarks/ml-params-tensorflow/actions)
-![Tested OSs, others may work](https://img.shields.io/badge/Tested%20on-Linux%20|%20macOS%20|%20Windows-green)
+![Tested OSs, others may work](https://img.shields.io/badge/Tested%20on-Linux%20|%20macOS-green)
 ![Documentation coverage](.github/doccoverage.svg)
 [![codecov](https://codecov.io/gh/SamuelMarks/ml-params-tensorflow/branch/master/graph/badge.svg)](https://codecov.io/gh/SamuelMarks/ml-params-tensorflow)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
