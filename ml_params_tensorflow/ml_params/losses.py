@@ -1,395 +1,582 @@
 """ Generated Callback config classes """
 from __future__ import absolute_import, division, print_function
 
-from dataclasses import dataclass
-
 NoneType = type(None)
 
 
-@dataclass
-class binary_crossentropyConfig(object):
+def binary_crossentropyConfig(argument_parser):
     """
-    Computes the binary crossentropy loss.
+    Set CLI arguments
 
-    Standalone usage:
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
 
-    >>> y_true = [[0, 1], [0, 0]]
-    >>> y_pred = [[0.6, 0.4], [0.4, 0.6]]
-    >>> loss = tf.keras.losses.binary_crossentropy(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> loss.numpy()
-    array([0.916 , 0.714], dtype=float32)
-
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`. Defaults to False
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`. Defaults to 0
-    :cvar from_logits: Whether `y_pred` is expected to be a logits tensor. By default,
-    we assume that `y_pred` encodes a probability distribution. Defaults to False
-    :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
-    :cvar return_type: Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"""
-
-    y_true: bool = False
-    y_pred: int = 0
-    from_logits: bool = False
-    label_smoothing: int = 0
-    return_type: str = "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```"
-
-
-@dataclass
-class categorical_crossentropyConfig(object):
+    :return: argument_parser, Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
     """
-    Computes the categorical crossentropy loss.
+    argument_parser.description = """Computes the binary crossentropy loss.
 
-    Standalone usage:
+Standalone usage:
 
-    >>> y_true = [[0, 1, 0], [0, 0, 1]]
-    >>> y_pred = [[0.05, 0.95, 0], [0.1, 0.8, 0.1]]
-    >>> loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> loss.numpy()
-    array([0.0513, 2.303], dtype=float32)
-
-    :cvar y_true: Tensor of one-hot true targets. Defaults to False
-    :cvar y_pred: Tensor of predicted targets. Defaults to 0
-    :cvar from_logits: Whether `y_pred` is expected to be a logits tensor. By default,
-    we assume that `y_pred` encodes a probability distribution. Defaults to False
-    :cvar label_smoothing: Float in [0, 1]. If > `0` then smooth the labels. Defaults to 0
-    :cvar return_type: Categorical crossentropy loss value. Defaults to ```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"""
-
-    y_true: bool = False
-    y_pred: int = 0
-    from_logits: bool = False
-    label_smoothing: int = 0
-    return_type: str = (
-        "```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```"
+>>> y_true = [[0, 1], [0, 0]]
+>>> y_pred = [[0.6, 0.4], [0.4, 0.6]]
+>>> loss = tf.keras.losses.binary_crossentropy(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> loss.numpy()
+array([0.916 , 0.714], dtype=float32)"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=bool,
+        help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+        default=False,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=int,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+        default=0,
+    )
+    argument_parser.add_argument(
+        "--from_logits",
+        type=bool,
+        help="""Whether `y_pred` is expected to be a logits tensor. By default,
+    we assume that `y_pred` encodes a probability distribution.""",
+        required=True,
+        default=False,
+    )
+    argument_parser.add_argument(
+        "--label_smoothing",
+        type=int,
+        help="Float in [0, 1]. If > `0` then smooth the labels.",
+        required=True,
+        default=0,
+    )
+    return (
+        argument_parser,
+        "```K.mean(K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)```",
     )
 
 
-@dataclass
-class categorical_hingeConfig(object):
+def categorical_crossentropyConfig(argument_parser):
     """
-    Computes the categorical hinge loss between `y_true` and `y_pred`.
+    Set CLI arguments
 
-    `loss = maximum(neg - pos + 1, 0)`
-    where `neg=maximum((1-y_true)*y_pred) and pos=sum(y_true*y_pred)`
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
 
-    Standalone usage:
-
-    >>> y_true = np.random.randint(0, 3, size=(2,))
-    >>> y_true = tf.keras.utils.to_categorical(y_true, num_classes=3)
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.categorical_hinge(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> pos = np.sum(y_true * y_pred, axis=-1)
-    >>> neg = np.amax((1. - y_true) * y_pred, axis=-1)
-    >>> assert np.array_equal(loss.numpy(), np.maximum(0., neg - pos + 1.))
-
-    :cvar y_true: The ground truth values. `y_true` values are expected to be 0 or 1.
-    :cvar y_pred: The predicted values.
-    :cvar return_type: Categorical hinge loss values. Defaults to ```math_ops.maximum(neg - pos + 1.0, zero)```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = "```math_ops.maximum(neg - pos + 1.0, zero)```"
-
-
-@dataclass
-class cosine_similarityConfig(object):
+    :return: argument_parser, Categorical crossentropy loss value.
+    :rtype: ```ArgumentParser```
     """
-    Computes the cosine similarity between labels and predictions.
+    argument_parser.description = """Computes the categorical crossentropy loss.
 
-    Note that it is a number between -1 and 1. When it is a negative number
-    between -1 and 0, 0 indicates orthogonality and values closer to -1
-    indicate greater similarity. The values closer to 1 indicate greater
-    dissimilarity. This makes it usable as a loss function in a setting
-    where you try to maximize the proximity between predictions and
-    targets. If either `y_true` or `y_pred` is a zero vector, cosine
-    similarity will be 0 regardless of the proximity between predictions
-    and targets.
+Standalone usage:
 
-    `loss = -sum(l2_norm(y_true) * l2_norm(y_pred))`
-
-    Standalone usage:
-
-    >>> y_true = [[0., 1.], [1., 1.], [1., 1.]]
-    >>> y_pred = [[1., 0.], [1., 1.], [-1., -1.]]
-    >>> loss = tf.keras.losses.cosine_similarity(y_true, y_pred, axis=1)
-    >>> loss.numpy()
-    array([-0., -0.999, 0.999], dtype=float32)
-
-    :cvar y_true: Tensor of true targets. Defaults to ```(-1)```
-    :cvar y_pred: Tensor of predicted targets.
-    :cvar axis: Axis along which to determine similarity. Defaults to -1
-    :cvar return_type: Cosine similarity tensor. Defaults to ```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"""
-
-    y_true: str = "```(-1)```"
-    y_pred: object = None
-    axis: int = -1
-    return_type: str = "```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```"
-
-
-@dataclass
-class kl_divergenceConfig(object):
-    """
-    Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
-
-    `loss = y_true * log(y_true / y_pred)`
-
-    See: https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
-
-    Standalone usage:
-
-    >>> y_true = np.random.randint(0, 2, size=(2, 3)).astype(np.float64)
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.kullback_leibler_divergence(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
-    >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
-    >>> assert np.array_equal(
-    ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
-
-    :cvar y_true: Tensor of true targets.
-    :cvar y_pred: Tensor of predicted targets.
-    :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = (
-        "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
+>>> y_true = [[0, 1, 0], [0, 0, 1]]
+>>> y_pred = [[0.05, 0.95, 0], [0.1, 0.8, 0.1]]
+>>> loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> loss.numpy()
+array([0.0513, 2.303], dtype=float32)"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=bool,
+        help="Tensor of one-hot true targets.",
+        required=True,
+        default=False,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=int,
+        help="Tensor of predicted targets.",
+        required=True,
+        default=0,
+    )
+    argument_parser.add_argument(
+        "--from_logits",
+        type=bool,
+        help="""Whether `y_pred` is expected to be a logits tensor. By default,
+    we assume that `y_pred` encodes a probability distribution.""",
+        required=True,
+        default=False,
+    )
+    argument_parser.add_argument(
+        "--label_smoothing",
+        type=int,
+        help="Float in [0, 1]. If > `0` then smooth the labels.",
+        required=True,
+        default=0,
+    )
+    return (
+        argument_parser,
+        "```K.categorical_crossentropy(y_true, y_pred, from_logits=from_logits)```",
     )
 
 
-@dataclass
-class kullback_leibler_divergenceConfig(object):
+def categorical_hingeConfig(argument_parser):
     """
-    Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
+    Set CLI arguments
 
-    `loss = y_true * log(y_true / y_pred)`
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
 
-    See: https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+    :return: argument_parser, Categorical hinge loss values.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the categorical hinge loss between `y_true` and `y_pred`.
 
-    Standalone usage:
+`loss = maximum(neg - pos + 1, 0)`
+where `neg=maximum((1-y_true)*y_pred) and pos=sum(y_true*y_pred)`
 
-    >>> y_true = np.random.randint(0, 2, size=(2, 3)).astype(np.float64)
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.kullback_leibler_divergence(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
-    >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
-    >>> assert np.array_equal(
-    ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+Standalone usage:
 
-    :cvar y_true: Tensor of true targets.
-    :cvar y_pred: Tensor of predicted targets.
-    :cvar return_type: A `Tensor` with loss. Defaults to ```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"""
+>>> y_true = np.random.randint(0, 3, size=(2,))
+>>> y_true = tf.keras.utils.to_categorical(y_true, num_classes=3)
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.categorical_hinge(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> pos = np.sum(y_true * y_pred, axis=-1)
+>>> neg = np.amax((1. - y_true) * y_pred, axis=-1)
+>>> assert np.array_equal(loss.numpy(), np.maximum(0., neg - pos + 1.))"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="The ground truth values. `y_true` values are expected to be 0 or 1.",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred", type=str, help="The predicted values.", required=True
+    )
+    return argument_parser, "```math_ops.maximum(neg - pos + 1.0, zero)```"
 
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = (
-        "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```"
+
+def cosine_similarityConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, Cosine similarity tensor.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the cosine similarity between labels and predictions.
+
+Note that it is a number between -1 and 1. When it is a negative number
+between -1 and 0, 0 indicates orthogonality and values closer to -1
+indicate greater similarity. The values closer to 1 indicate greater
+dissimilarity. This makes it usable as a loss function in a setting
+where you try to maximize the proximity between predictions and
+targets. If either `y_true` or `y_pred` is a zero vector, cosine
+similarity will be 0 regardless of the proximity between predictions
+and targets.
+
+`loss = -sum(l2_norm(y_true) * l2_norm(y_pred))`
+
+Standalone usage:
+
+>>> y_true = [[0., 1.], [1., 1.], [1., 1.]]
+>>> y_pred = [[1., 0.], [1., 1.], [-1., -1.]]
+>>> loss = tf.keras.losses.cosine_similarity(y_true, y_pred, axis=1)
+>>> loss.numpy()
+array([-0., -0.999, 0.999], dtype=float32)"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="Tensor of true targets.",
+        required=True,
+        default="```(-1)```",
+    )
+    argument_parser.add_argument(
+        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+    )
+    argument_parser.add_argument(
+        "--axis",
+        type=int,
+        help="Axis along which to determine similarity.",
+        required=True,
+        default=-1,
+    )
+    return (argument_parser, "```(-math_ops.reduce_sum(y_true * y_pred, axis=axis))```")
+
+
+def kl_divergenceConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, A `Tensor` with loss.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
+
+`loss = y_true * log(y_true / y_pred)`
+
+See: https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+
+Standalone usage:
+
+>>> y_true = np.random.randint(0, 2, size=(2, 3)).astype(np.float64)
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.kullback_leibler_divergence(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
+>>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
+>>> assert np.array_equal(
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true", type=str, help="Tensor of true targets.", required=True
+    )
+    argument_parser.add_argument(
+        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+    )
+    return (
+        argument_parser,
+        "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```",
     )
 
 
-@dataclass
-class log_coshConfig(object):
+def kullback_leibler_divergenceConfig(argument_parser):
     """
-    Logarithm of the hyperbolic cosine of the prediction error.
+    Set CLI arguments
 
-    `log(cosh(x))` is approximately equal to `(x ** 2) / 2` for small `x` and
-    to `abs(x) - log(2)` for large `x`. This means that 'logcosh' works mostly
-    like the mean squared error, but will not be so strongly affected by the
-    occasional wildly incorrect prediction.
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
 
-    Standalone usage:
-
-    >>> y_true = np.random.random(size=(2, 3))
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.logcosh(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> x = y_pred - y_true
-    >>> assert np.allclose(
-    ...     loss.numpy(),
-    ...     np.mean(x + np.log(np.exp(-2. * x) + 1.) - math_ops.log(2.), axis=-1),
-    ...     atol=1e-5)
-
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Logcosh error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(_logcosh(y_pred - y_true), axis=-1)```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = "```K.mean(_logcosh(y_pred - y_true), axis=-1)```"
-
-
-@dataclass
-class mean_absolute_errorConfig(object):
+    :return: argument_parser, A `Tensor` with loss.
+    :rtype: ```ArgumentParser```
     """
-    Computes the mean absolute error between labels and predictions.
+    argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
 
-    `loss = mean(abs(y_true - y_pred), axis=-1)`
+`loss = y_true * log(y_true / y_pred)`
 
-    Standalone usage:
+See: https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
 
-    >>> y_true = np.random.randint(0, 2, size=(2, 3))
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> assert np.array_equal(
-    ...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))
+Standalone usage:
 
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```"
-
-
-@dataclass
-class mean_absolute_percentage_errorConfig(object):
-    """
-    Computes the mean absolute percentage error between `y_true` and `y_pred`.
-
-    `loss = 100 * mean(abs((y_true - y_pred) / y_true), axis=-1)`
-
-    Standalone usage:
-
-    >>> y_true = np.random.random(size=(2, 3))
-    >>> y_true = np.maximum(y_true, 1e-7)  # Prevent division by zero
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.mean_absolute_percentage_error(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> assert np.array_equal(
-    ...     loss.numpy(),
-    ...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))
-
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```(100.0 * K.mean(diff, axis=-1))```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = "```(100.0 * K.mean(diff, axis=-1))```"
-
-
-@dataclass
-class mean_squared_errorConfig(object):
-    """
-    Computes the mean squared error between labels and predictions.
-
-    After computing the squared distance between the inputs, the mean value over
-    the last dimension is returned.
-
-    `loss = mean(square(y_true - y_pred), axis=-1)`
-
-    Standalone usage:
-
-    >>> y_true = np.random.randint(0, 2, size=(2, 3))
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> assert np.array_equal(
-    ...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))
-
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Mean squared error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = (
-        "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```"
+>>> y_true = np.random.randint(0, 2, size=(2, 3)).astype(np.float64)
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.kullback_leibler_divergence(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
+>>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
+>>> assert np.array_equal(
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true", type=str, help="Tensor of true targets.", required=True
+    )
+    argument_parser.add_argument(
+        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+    )
+    return (
+        argument_parser,
+        "```math_ops.reduce_sum(y_true * math_ops.log(y_true / y_pred), axis=-1)```",
     )
 
 
-@dataclass
-class mean_squared_logarithmic_errorConfig(object):
+def log_coshConfig(argument_parser):
     """
-    Computes the mean squared logarithmic error between `y_true` and `y_pred`.
+    Set CLI arguments
 
-    `loss = mean(square(log(y_true + 1) - log(y_pred + 1)), axis=-1)`
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
 
-    Standalone usage:
+    :return: argument_parser, Logcosh error values. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Logarithm of the hyperbolic cosine of the prediction error.
 
-    >>> y_true = np.random.randint(0, 2, size=(2, 3))
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.mean_squared_logarithmic_error(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> y_true = np.maximum(y_true, 1e-7)
-    >>> y_pred = np.maximum(y_pred, 1e-7)
-    >>> assert np.array_equal(
-    ...     loss.numpy(),
-    ...     np.mean(
-    ...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))
+`log(cosh(x))` is approximately equal to `(x ** 2) / 2` for small `x` and
+to `abs(x) - log(2)` for large `x`. This means that 'logcosh' works mostly
+like the mean squared error, but will not be so strongly affected by the
+occasional wildly incorrect prediction.
 
-    :cvar y_true: Ground truth values. shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"""
+Standalone usage:
 
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = (
-        "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```"
+>>> y_true = np.random.random(size=(2, 3))
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.logcosh(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> x = y_pred - y_true
+>>> assert np.allclose(
+...     loss.numpy(),
+...     np.mean(x + np.log(np.exp(-2. * x) + 1.) - math_ops.log(2.), axis=-1),
+...     atol=1e-5)"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    return argument_parser, "```K.mean(_logcosh(y_pred - y_true), axis=-1)```"
+
+
+def mean_absolute_errorConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the mean absolute error between labels and predictions.
+
+`loss = mean(abs(y_true - y_pred), axis=-1)`
+
+Standalone usage:
+
+>>> y_true = np.random.randint(0, 2, size=(2, 3))
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> assert np.array_equal(
+...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    return (argument_parser, "```K.mean(math_ops.abs(y_pred - y_true), axis=-1)```")
+
+
+def mean_absolute_percentage_errorConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the mean absolute percentage error between `y_true` and `y_pred`.
+
+`loss = 100 * mean(abs((y_true - y_pred) / y_true), axis=-1)`
+
+Standalone usage:
+
+>>> y_true = np.random.random(size=(2, 3))
+>>> y_true = np.maximum(y_true, 1e-7)  # Prevent division by zero
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.mean_absolute_percentage_error(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> assert np.array_equal(
+...     loss.numpy(),
+...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    return argument_parser, "```(100.0 * K.mean(diff, axis=-1))```"
+
+
+def mean_squared_errorConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, Mean squared error values. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the mean squared error between labels and predictions.
+
+After computing the squared distance between the inputs, the mean value over
+the last dimension is returned.
+
+`loss = mean(square(y_true - y_pred), axis=-1)`
+
+Standalone usage:
+
+>>> y_true = np.random.randint(0, 2, size=(2, 3))
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> assert np.array_equal(
+...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    return (
+        argument_parser,
+        "```K.mean(math_ops.squared_difference(y_pred, y_true), axis=-1)```",
     )
 
 
-@dataclass
-class sparse_categorical_crossentropyConfig(object):
+def mean_squared_logarithmic_errorConfig(argument_parser):
     """
-    Computes the sparse categorical crossentropy loss.
+    Set CLI arguments
 
-    Standalone usage:
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
 
-    >>> y_true = [1, 2]
-    >>> y_pred = [[0.05, 0.95, 0], [0.1, 0.8, 0.1]]
-    >>> loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> loss.numpy()
-    array([0.0513, 2.303], dtype=float32)
-
-    :cvar y_true: Ground truth values. Defaults to False
-    :cvar y_pred: The predicted values. Defaults to ```(-1)```
-    :cvar from_logits: Whether `y_pred` is expected to be a logits tensor. By default,
-    we assume that `y_pred` encodes a probability distribution. Defaults to False
-    :cvar axis: (Optional)The dimension along which the entropy is
-    computed. Defaults to -1
-    :cvar return_type: Sparse categorical crossentropy loss value. Defaults to ```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
-    axis=axis)```"""
-
-    y_true: bool = False
-    y_pred: str = "```(-1)```"
-    from_logits: bool = False
-    axis: int = -1
-    return_type: str = """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
-    axis=axis)```"""
-
-
-@dataclass
-class squared_hingeConfig(object):
+    :return: argument_parser, Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
     """
-    Computes the squared hinge loss between `y_true` and `y_pred`.
+    argument_parser.description = """Computes the mean squared logarithmic error between `y_true` and `y_pred`.
 
-    `loss = mean(square(maximum(1 - y_true * y_pred, 0)), axis=-1)`
+`loss = mean(square(log(y_true + 1) - log(y_pred + 1)), axis=-1)`
 
-    Standalone usage:
+Standalone usage:
 
-    >>> y_true = np.random.choice([-1, 1], size=(2, 3))
-    >>> y_pred = np.random.random(size=(2, 3))
-    >>> loss = tf.keras.losses.squared_hinge(y_true, y_pred)
-    >>> assert loss.shape == (2,)
-    >>> assert np.array_equal(
-    ...     loss.numpy(),
-    ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))
+>>> y_true = np.random.randint(0, 2, size=(2, 3))
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.mean_squared_logarithmic_error(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> y_true = np.maximum(y_true, 1e-7)
+>>> y_pred = np.maximum(y_pred, 1e-7)
+>>> assert np.array_equal(
+...     loss.numpy(),
+...     np.mean(
+...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    return (
+        argument_parser,
+        "```K.mean(math_ops.squared_difference(first_log, second_log), axis=-1)```",
+    )
 
-    :cvar y_true: The ground truth values. `y_true` values are expected to be -1 or 1.
+
+def sparse_categorical_crossentropyConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, Sparse categorical crossentropy loss value.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the sparse categorical crossentropy loss.
+
+Standalone usage:
+
+>>> y_true = [1, 2]
+>>> y_pred = [[0.05, 0.95, 0], [0.1, 0.8, 0.1]]
+>>> loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> loss.numpy()
+array([0.0513, 2.303], dtype=float32)"""
+    argument_parser.add_argument(
+        "--y_true", type=bool, help="Ground truth values.", required=True, default=False
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values.",
+        required=True,
+        default="```(-1)```",
+    )
+    argument_parser.add_argument(
+        "--from_logits",
+        type=bool,
+        help="""Whether `y_pred` is expected to be a logits tensor. By default,
+    we assume that `y_pred` encodes a probability distribution.""",
+        required=True,
+        default=False,
+    )
+    argument_parser.add_argument(
+        "--axis",
+        type=int,
+        help="""(Optional)The dimension along which the entropy is
+    computed.""",
+        required=True,
+        default=-1,
+    )
+    return (
+        argument_parser,
+        """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
+    axis=axis)```""",
+    )
+
+
+def squared_hingeConfig(argument_parser):
+    """
+    Set CLI arguments
+
+    :param argument_parser: argument parser
+    :type argument_parser: ```ArgumentParser```
+
+    :return: argument_parser, Squared hinge loss values. shape = `[batch_size, d0, .. dN-1]`.
+    :rtype: ```ArgumentParser```
+    """
+    argument_parser.description = """Computes the squared hinge loss between `y_true` and `y_pred`.
+
+`loss = mean(square(maximum(1 - y_true * y_pred, 0)), axis=-1)`
+
+Standalone usage:
+
+>>> y_true = np.random.choice([-1, 1], size=(2, 3))
+>>> y_pred = np.random.random(size=(2, 3))
+>>> loss = tf.keras.losses.squared_hinge(y_true, y_pred)
+>>> assert loss.shape == (2,)
+>>> assert np.array_equal(
+...     loss.numpy(),
+...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
+    argument_parser.add_argument(
+        "--y_true",
+        type=str,
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
     If binary (0 or 1) labels are provided we will convert them to -1 or 1.
-    shape = `[batch_size, d0, .. dN]`.
-    :cvar y_pred: The predicted values. shape = `[batch_size, d0, .. dN]`.
-    :cvar return_type: Squared hinge loss values. shape = `[batch_size, d0, .. dN-1]`. Defaults to ```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"""
-
-    y_true: object = None
-    y_pred: object = None
-    return_type: str = "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```"
+    shape = `[batch_size, d0, .. dN]`.""",
+        required=True,
+    )
+    argument_parser.add_argument(
+        "--y_pred",
+        type=str,
+        help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
+        required=True,
+    )
+    return (
+        argument_parser,
+        "```K.mean(math_ops.square(math_ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)```",
+    )
 
 
 __all__ = [

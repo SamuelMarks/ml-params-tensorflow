@@ -342,7 +342,7 @@ def set_from(iterable, o):
         else list(
             getattr(o, obj.rpartition(".")[2])
             if isinstance(obj, str)
-            else getattr(o, obj.__class__.__name__[: -len("Config")])(
+            else getattr(o, obj.__class__.__name__)(
                 **dict(filterfalse(partial(eq, ("kwargs", None)), vars(obj).items()))
             )
             for obj in iterable

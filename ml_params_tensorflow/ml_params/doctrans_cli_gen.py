@@ -56,13 +56,19 @@ def main(argv=None):
                 ),
                 prepend='""" Generated Callback config classes """\\n'
                 "import tensorflow as tf\\n"
-                "from typing import Literal, Optional, Union\\n\\n"
+                "from typing import Optional, Union\\n"
+                "from {typing} import Literal\\n\\n"
                 "from dataclasses import dataclass\\n\\n"
-                "NoneType = type(None)\\n",
+                "from yaml import safe_load as loads\\n\\n"
+                "NoneType = type(None)\\n".format(
+                    typing="typing"
+                    if sys.version_info[:2] < (3, 8)
+                    else "typing_extensions"
+                ),
                 imports_from_file="tf.keras.{mod_pl}.{mod_cap}".format(
                     mod_pl=mod_pl, mod_cap=mod_cap
                 ),
-                type="class",
+                type="argparse",
                 output_filename=path.join(
                     "ml_params_tensorflow",
                     "ml_params",
