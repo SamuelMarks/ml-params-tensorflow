@@ -4,10 +4,9 @@ CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 
 from dataclasses import dataclass
 from json import loads
-from typing import Any
 
 
-@dataclass  # TODO
+@dataclass
 class self(object):
     """
     Simple class to proxy object expected by code generated from `train` function
@@ -16,8 +15,8 @@ class self(object):
     :cvar data: The data (probably a `tf.data.Dataset`)
     """
 
-    model = None  # type: object
-    data = None  # type: object
+    model: object = None
+    data: object = None
 
 
 def train_parser(argument_parser):
