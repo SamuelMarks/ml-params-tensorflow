@@ -73,13 +73,13 @@ As an example, using the `class TensorFlowTrainer` methods as truth, this will u
                             --argparse-function-name 'load_model_parser' \
                             --truth 'function'
 
-Another example, that you'd run before ^, to generate custom config classes for members of `tf.keras.losses`:
+Another example, that you'd run before ^, to generate custom config CLI parsers for members of `tf.keras.losses`:
 
     $ python -m doctrans gen --name-tpl '{name}Config' \
                              --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_losses' \
                              --prepend '""" Generated Loss config classes """\nimport tensorflow as tf\n' \
                              --imports-from-file 'tf.keras.losses.Loss' \
-                             --type 'class' \
+                             --type 'argparse' \
                              --output-filename 'ml_params_tensorflow/ml_params/losses.py'
 
 There's a bit of boilerplate here, so let's automate it:

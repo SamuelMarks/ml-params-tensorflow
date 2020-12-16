@@ -3,7 +3,13 @@ CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 """
 
 from dataclasses import dataclass
+from itertools import chain
 from json import loads
+
+try:
+    from ml_prepare.datasets import datasets2classes
+except ImportError:
+    datasets2classes = {}
 
 
 @dataclass
@@ -172,14 +178,23 @@ def load_data_parser(argument_parser):
     argument_parser.add_argument(
         "--dataset_name",
         type=str,
-        choices=(
-            "boston_housing",
-            "cifar10",
-            "cifar100",
-            "fashion_mnist",
-            "imdb",
-            "mnist",
-            "reuters",
+        choices=tuple(
+            sorted(
+                chain.from_iterable(
+                    (
+                        (
+                            "boston_housing",
+                            "cifar10",
+                            "cifar100",
+                            "fashion_mnist",
+                            "imdb",
+                            "mnist",
+                            "reuters",
+                        ),
+                        datasets2classes.keys(),
+                    )
+                )
+            )
         ),
         help="name of dataset",
         required=True,

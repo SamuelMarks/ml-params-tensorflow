@@ -94,6 +94,7 @@ def load_data_from_tfds_or_ml_prepare(
 
     :return: Train and tests dataset splits.
     """
+    tfds_dir = os.path.expanduser(tfds_dir)
     if dataset_name in datasets2classes:
         return load_data_from_ml_prepare(
             dataset_name=dataset_name, tfds_dir=tfds_dir, **data_loader_kwargs
