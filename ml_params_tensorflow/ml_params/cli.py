@@ -157,6 +157,10 @@ def train_parser(argument_parser):
         default=128,
     )
     argument_parser.add_argument(
+        "--tpu_address",
+        help="Address of TPU cluster. If None, don't connect & run within TPU context.",
+    )
+    argument_parser.add_argument(
         "--kwargs", type=loads, help="additional keyword arguments"
     )
     return argument_parser, self.model

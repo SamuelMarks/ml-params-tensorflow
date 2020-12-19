@@ -1,7 +1,6 @@
 """
 Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
 """
-
 from dataclasses import dataclass
 from json import loads
 from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
@@ -13,7 +12,6 @@ from enforce import runtime_validation
 from typing_extensions import Literal
 
 
-# @dataclass()
 class self(object):
     """
     Simple class to proxy object expected by code generated from `train` function
@@ -57,10 +55,6 @@ def run_typed(f):
     return runtime_validation(dataclass(f))
 
 
-# @s(auto_attribs=True)
-# @run_typed
-@runtime_validation
-@dataclass
 class TrainConfig(object):
     """
     Run the training loop for your ML pipeline.
@@ -68,15 +62,15 @@ class TrainConfig(object):
     :cvar epochs: number of epochs (must be greater than 0)
     :cvar loss: Loss function, can be a string (depending on the framework) or an instance of a class
     :cvar optimizer: Optimizer, can be a string (depending on the framework) or an instance of a class
-    :cvar callbacks: Collection of callables that are run inside the training loop. Defaults to None
-    :cvar metrics: Collection of metrics to monitor, e.g., accuracy, f1. Defaults to None
-    :cvar metric_emit_freq: `None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10. Defaults to None
-    :cvar save_directory: Directory to save output in, e.g., weights in h5 files. If None, don't save. Defaults to None
-    :cvar output_type: `if save_directory is not None` then save in this format, e.g., 'h5'. Defaults to infer
-    :cvar validation_split: Optional float between 0 and 1, fraction of data to reserve for validation. Defaults to 0.1
-    :cvar batch_size: batch size at each iteration. Defaults to 128
+    :cvar callbacks: Collection of callables that are run inside the training loop
+    :cvar metrics: Collection of metrics to monitor, e.g., accuracy, f1
+    :cvar metric_emit_freq: `None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10.
+    :cvar output_type: `if save_directory is not None` then save in this format, e.g., 'h5'.
+    :cvar validation_split: Optional float between 0 and 1, fraction of data to reserve for validation.
+    :cvar batch_size: batch size at each iteration.
+    :cvar tpu_address: Address of TPU cluster. If None, don't connect & run within TPU context.
     :cvar kwargs: additional keyword arguments
-    :cvar return_type: the model. Defaults to self.model"""
+    :cvar return_type: the model"""
 
     epochs: int = 0
     loss: Literal[
@@ -148,13 +142,13 @@ class TrainConfig(object):
             ]
         ]
     ] = None
-    metric_emit_freq: Optional[Callable[[int], bool]] = None
-    save_directory: Optional[str] = None
+    metric_emit_freq: Optional[Callable[[int], bool]] = "``````None``````"
     output_type: str = "infer"
     validation_split: float = 0.1
     batch_size: int = 128
+    tpu_address: Optional[str] = None
     kwargs: Optional[dict] = None
-    return_type: Any = self.model
+    return_type: Any = "``````self.model``````"
 
 
 @run_typed
