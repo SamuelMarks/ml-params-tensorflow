@@ -28,7 +28,7 @@ class TestMnist(TestCase):
         """
         Creates the temporary directory and sets tfds_dir before running the suite
         """
-        TestMnist.tfds_dir = path.join(path.expanduser("~"), "tensorflow_datasets")
+        TestMnist.tfds_dir = environ.get("TFDS_DATA_DIR", path.join(path.expanduser("~"), "tensorflow_datasets"))
         TestMnist.model_dir = mkdtemp("_model_dir")
 
     @classmethod
