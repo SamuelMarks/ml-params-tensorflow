@@ -2,7 +2,7 @@
 CIFAR classification test(s)
 """
 
-from os import path
+from os import environ, path
 from shutil import rmtree
 from tempfile import mkdtemp
 from typing import Optional
@@ -27,7 +27,9 @@ class TestCifar(TestCase):
         """
         Creates the temporary directory and sets tfds_dir before running the suite
         """
-        TestCifar.tfds_dir = environ.get("TFDS_DATA_DIR", path.join(path.expanduser("~"), "tensorflow_datasets"))
+        TestCifar.tfds_dir = environ.get(
+            "TFDS_DATA_DIR", path.join(path.expanduser("~"), "tensorflow_datasets")
+        )
         TestCifar.model_dir = mkdtemp("_model_dir")
 
     @classmethod

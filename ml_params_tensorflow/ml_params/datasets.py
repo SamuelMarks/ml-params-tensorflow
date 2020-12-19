@@ -59,7 +59,9 @@ def load_data_from_tfds_or_ml_prepare(
         ],
         AnyStr,
     ],
-    tfds_dir: str = os.environ.get("TFDS_DATA_DIR", os.path.join(os.path.expanduser("~"), "tensorflow_datasets")),
+    tfds_dir: str = os.environ.get(
+        "TFDS_DATA_DIR", os.path.join(os.path.expanduser("~"), "tensorflow_datasets")
+    ),
     K: Literal["np", "tf"] = "tf",
     as_numpy: bool = True,
     **data_loader_kwargs

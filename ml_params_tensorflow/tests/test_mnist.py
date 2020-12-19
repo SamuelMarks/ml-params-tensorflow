@@ -2,7 +2,7 @@
 MNIST classification test(s)
 """
 
-from os import path
+from os import environ, path
 from shutil import rmtree
 from tempfile import mkdtemp
 from typing import AnyStr, Callable, Optional, Union
@@ -28,7 +28,9 @@ class TestMnist(TestCase):
         """
         Creates the temporary directory and sets tfds_dir before running the suite
         """
-        TestMnist.tfds_dir = environ.get("TFDS_DATA_DIR", path.join(path.expanduser("~"), "tensorflow_datasets"))
+        TestMnist.tfds_dir = environ.get(
+            "TFDS_DATA_DIR", path.join(path.expanduser("~"), "tensorflow_datasets")
+        )
         TestMnist.model_dir = mkdtemp("_model_dir")
 
     @classmethod
