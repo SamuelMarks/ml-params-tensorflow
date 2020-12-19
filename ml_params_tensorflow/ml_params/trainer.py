@@ -1,7 +1,6 @@
 """
 Implementation of ml_params BaseTrainer API
 """
-from collections import namedtuple
 from functools import partial
 from itertools import filterfalse
 from operator import eq
@@ -328,10 +327,9 @@ class TensorFlowTrainer(BaseTrainer):
         assert self.get_model is not None
 
         if tpu_address is None:
-            strategy = namedtuple("FreeScope", ("scope",))(
-                lambda: memoryview(b"")  # nop
-            )
+            strategy = tf.distribute.MirroredStrategy()
         else:
+            print("Connecting to:", tpu_address, ";")
             resolver = tf.distribute.cluster_resolver.TPUClusterResolver(
                 tpu="grpc://{tpu_address}".format(tpu_address=tpu_address)
             )
