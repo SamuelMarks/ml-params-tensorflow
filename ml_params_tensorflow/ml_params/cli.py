@@ -2,7 +2,6 @@
 CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 """
 
-from dataclasses import dataclass
 from itertools import chain
 from json import loads
 
@@ -12,20 +11,7 @@ except ImportError:
     datasets2classes = {}
 
 
-@dataclass
-class self(object):
-    """
-    Simple class to proxy object expected by code generated from `train` function
-
-    :cvar model: The model (probably a `tf.keras.models.Sequential`)
-    :cvar data: The data (probably a `tf.data.Dataset`)
-    """
-
-    model: object = None
-    data: object = None
-
-
-def train_parser(argument_parser):
+def set_cli_args(argument_parser):
     """
     Set CLI arguments
 
@@ -46,22 +32,29 @@ def train_parser(argument_parser):
         "--loss",
         type=str,
         choices=(
-            "BinaryCrossentropy",
-            "CategoricalCrossentropy",
-            "CategoricalHinge",
-            "CosineSimilarity",
-            "Hinge",
-            "Huber",
-            "KLDivergence",
-            "LogCosh",
-            "MeanAbsoluteError",
-            "MeanAbsolutePercentageError",
-            "MeanSquaredError",
-            "MeanSquaredLogarithmicError",
-            "Poisson",
+            "binary_crossentropy",
+            "categorical_crossentropy",
+            "categorical_hinge",
+            "cosine_similarity",
+            "hinge",
+            "huber",
+            "kld",
+            "kl_divergence",
+            "kullback_leibler_divergence",
+            "logcosh",
+            "Loss",
+            "mae",
+            "mape",
+            "mean_absolute_error",
+            "mean_absolute_percentage_error",
+            "mean_squared_error",
+            "mean_squared_logarithmic_error",
+            "mse",
+            "msle",
+            "poisson",
             "Reduction",
-            "SparseCategoricalCrossentropy",
-            "SquaredHinge",
+            "sparse_categorical_crossentropy",
+            "squared_hinge",
         ),
         help="Loss function, can be a string (depending on the framework) or an instance of a class",
         required=True,
@@ -99,28 +92,49 @@ def train_parser(argument_parser):
         "--metrics",
         type=str,
         choices=(
+            "AUC",
             "binary_accuracy",
             "binary_crossentropy",
             "categorical_accuracy",
             "categorical_crossentropy",
+            "CategoricalHinge",
+            "CosineSimilarity",
+            "FalseNegatives",
+            "FalsePositives",
             "hinge",
-            "kl_divergence",
             "kld",
+            "kl_divergence",
             "kullback_leibler_divergence",
+            "logcosh",
+            "LogCoshError",
             "mae",
             "mape",
+            "Mean",
             "mean_absolute_error",
             "mean_absolute_percentage_error",
+            "MeanIoU",
+            "MeanRelativeError",
             "mean_squared_error",
             "mean_squared_logarithmic_error",
+            "MeanTensor",
             "mse",
             "msle",
             "poisson",
+            "Precision",
+            "PrecisionAtRecall",
+            "Recall",
+            "RecallAtPrecision",
+            "RootMeanSquaredError",
+            "SensitivityAtSpecificity",
             "sparse_categorical_accuracy",
             "sparse_categorical_crossentropy",
             "sparse_top_k_categorical_accuracy",
+            "SpecificityAtSensitivity",
             "squared_hinge",
+            "Sum",
             "top_k_categorical_accuracy",
+            "TrueNegatives",
+            "TruePositives",
         ),
         action="append",
         help="Collection of metrics to monitor, e.g., accuracy, f1",
@@ -131,11 +145,6 @@ def train_parser(argument_parser):
         help="`None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10.",
     )
     argument_parser.add_argument(
-        "--save_directory",
-        type=str,
-        help="Directory to save output in, e.g., weights in h5 files. If None, don't save.",
-    )
-    argument_parser.add_argument(
         "--output_type",
         type=str,
         help="`if save_directory is not None` then save in this format, e.g., 'h5'.",
@@ -144,7 +153,7 @@ def train_parser(argument_parser):
     )
     argument_parser.add_argument(
         "--validation_split",
-        type=str,
+        type=float,
         help="Optional float between 0 and 1, fraction of data to reserve for validation.",
         required=True,
         default=0.1,
@@ -158,12 +167,13 @@ def train_parser(argument_parser):
     )
     argument_parser.add_argument(
         "--tpu_address",
+        type=str,
         help="Address of TPU cluster. If None, don't connect & run within TPU context.",
     )
     argument_parser.add_argument(
         "--kwargs", type=loads, help="additional keyword arguments"
     )
-    return argument_parser, self.model
+    return argument_parser, model
 
 
 def load_data_parser(argument_parser):
@@ -216,7 +226,7 @@ def load_data_parser(argument_parser):
         required=True,
         default="infer",
     )
-    argument_parser.add_argument("--output_type", type=str, help="outgoing data_type")
+    argument_parser.add_argument("--output_type", type=str, help="outgoing data_type,")
     argument_parser.add_argument(
         "--K", type=str, choices=("np", "tf"), help="backend engine, e.g., `np` or `tf`"
     )
@@ -225,7 +235,7 @@ def load_data_parser(argument_parser):
         type=loads,
         help="pass this as arguments to data_loader function",
     )
-    return argument_parser, self.data
+    return argument_parser, "```self.data```"
 
 
 def load_model_parser(argument_parser):
@@ -236,7 +246,7 @@ def load_model_parser(argument_parser):
     :type argument_parser: ```ArgumentParser```
 
     :return: argument_parser, self.model, e.g., the result of applying `model_kwargs` on model
-    :rtype: ```Tuple[ArgumentParser, tf.keras.Model]```
+    :rtype: ```Tuple[ArgumentParser, Callable[[], tf.keras.Model]]```
     """
     argument_parser.description = """Load the model.
 Takes a model object, or a pipeline that downloads & configures before returning a model object."""
@@ -259,6 +269,8 @@ Takes a model object, or a pipeline that downloads & configures before returning
             "InceptionV3",
             "MobileNet",
             "MobileNetV2",
+            "MobileNetV3Large",
+            "MobileNetV3Small",
             "NASNetLarge",
             "NASNetMobile",
             "ResNet101",
@@ -284,7 +296,7 @@ Takes a model object, or a pipeline that downloads & configures before returning
         type=loads,
         help="to be passed into the model. If empty, doesn't call, unless call=True.",
     )
-    return argument_parser, self.model
+    return argument_parser, "```self.get_model```"
 
 
 __all__ = ["load_data_parser", "load_model_parser", "train_parser"]
