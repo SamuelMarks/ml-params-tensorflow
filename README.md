@@ -7,6 +7,7 @@ ml_params_tensorflow
 ![Documentation coverage](.github/doccoverage.svg)
 [![codecov](https://codecov.io/gh/SamuelMarks/ml-params-tensorflow/branch/master/graph/badge.svg)](https://codecov.io/gh/SamuelMarks/ml-params-tensorflow)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 
 [TensorFlow](https://tensorflow.org) implementation of the [ml-params](https://github.com/SamuelMarks/ml-params) API and CLI.
 

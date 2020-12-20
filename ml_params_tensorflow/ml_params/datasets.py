@@ -169,20 +169,17 @@ def load_data_from_tfds_or_ml_prepare(
         .batch(data_loader_kwargs["batch_size"])
         .prefetch(tf.data.experimental.AUTOTUNE)
     )
-
     ds_test = (
         ds_test.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
         .batch(data_loader_kwargs["batch_size"])
         .cache()
         .prefetch(tf.data.experimental.AUTOTUNE)
     )
-
     splits = ds_train, ds_test
     if as_numpy:
         _ds_train, _ds_test = tuple(map(tfds.as_numpy, splits))
     else:
         _ds_train, _ds_test = splits
-
     ds_train: Union[
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
@@ -191,5 +188,4 @@ def load_data_from_tfds_or_ml_prepare(
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
     ] = _ds_test
-
     return ds_train, ds_test, ds_info

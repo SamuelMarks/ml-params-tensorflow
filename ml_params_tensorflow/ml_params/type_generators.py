@@ -167,7 +167,11 @@ exposed_callbacks_keys: Tuple[str, ...] = tuple(sorted(exposed_callbacks.keys())
 exposed_constraints: Dict[str, Any] = _expose_module(tf.keras.constraints)
 exposed_constraints_keys: Tuple[str, ...] = tuple(sorted(exposed_constraints.keys()))
 
-exposed_datasets: Dict[str, Any] = _expose_module(tf.keras.datasets)
+exposed_datasets: Dict[str, Any] = {
+    attr: getattr(tf.keras.datasets, attr)
+    for attr in dir(tf.keras.datasets)
+    if not attr.startswith("_")
+}
 exposed_datasets_keys: Tuple[str, ...] = tuple(sorted(exposed_datasets.keys()))
 
 exposed_initializers: Dict[str, Any] = _expose_module(tf.keras.initializers)
