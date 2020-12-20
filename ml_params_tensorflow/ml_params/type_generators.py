@@ -51,7 +51,12 @@ Install doctrans then run, for example:
                        --input-param 'exposed_datasets_keys' \
                        --output-param 'load_data_from_tfds_or_ml_prepare.dataset_name'
 """
-from typing import Any, AnyStr, Callable, Dict, Optional, Tuple
+from collections import deque
+from functools import partial
+from itertools import filterfalse, groupby
+from operator import contains, itemgetter
+from types import ModuleType
+from typing import Any, AnyStr, Callable, Dict, Iterator, Optional, Tuple, Union
 
 import tensorflow as tf
 
@@ -73,6 +78,44 @@ def _is_main_name(param: str, extra_filter=None) -> bool:
         and not param.islower()
         and not param.isupper()
         and (extra_filter is None or extra_filter(param))
+    )
+
+
+def _unique_members(mod: Union[ModuleType, Any]) -> Iterator[Tuple[Any, ...]]:
+    """
+    In TensorFlow there are duplicates, like `binary_accuracy` and `BinaryAccuracy`.
+
+    To avoid over-generating so that the CLI help text is too long, this function returns only one of these.
+
+    (preference towards lowercase underscore separated form)
+
+    :param mod: The module to run `dir` or `getmembers` against
+
+    :return: Deduplicated members
+    """
+
+    def cmp(s: str) -> str:
+        """
+        Used as a comparator, returns a lowercase variant without underscores
+
+        :param s: The input string
+
+        :return: lowercase variant without underscores
+        """
+        return s.replace("_", "").casefold()
+
+    return map(
+        itemgetter(1),
+        (
+            (k, deque(g, maxlen=1)[0])
+            for k, g in groupby(
+                sorted(
+                    (attr for attr in dir(mod) if not attr.startswith("_")),
+                    key=cmp,
+                ),
+                key=cmp,
+            )
+        ),
     )
 
 
@@ -101,11 +144,18 @@ _global_exclude: frozenset = frozenset(
     ("deserialize", "serialize", "get", "experimental", "schedules")
 )
 
-exposed_activations: Dict[str, Any] = {
-    name: getattr(tf.keras.activations, name)
-    for name in dir(tf.keras.activations)
-    if name not in _global_exclude and not name.startswith("_")
-}
+exposed_activations_keys: Tuple[str, ...] = tuple(
+    filterfalse(
+        partial(contains, _global_exclude),
+        _unique_members(tf.keras.activations),
+    )
+)
+exposed_activations: Dict[str, Any] = dict(
+    map(
+        lambda attr: (attr, getattr(tf.keras.activations, attr)),
+        exposed_activations_keys,
+    )
+)
 exposed_activations_keys: Tuple[str, ...] = tuple(sorted(exposed_activations.keys()))
 
 exposed_applications: Dict[str, Any] = _expose_module(tf.keras.applications)
@@ -117,40 +167,50 @@ exposed_callbacks_keys: Tuple[str, ...] = tuple(sorted(exposed_callbacks.keys())
 exposed_constraints: Dict[str, Any] = _expose_module(tf.keras.constraints)
 exposed_constraints_keys: Tuple[str, ...] = tuple(sorted(exposed_constraints.keys()))
 
-exposed_datasets: Dict[str, Any] = {
-    name: getattr(tf.keras.datasets, name)
-    for name in dir(tf.keras.datasets)
-    if not name.startswith("_")
-}
+exposed_datasets: Dict[str, Any] = _expose_module(tf.keras.datasets)
 exposed_datasets_keys: Tuple[str, ...] = tuple(sorted(exposed_datasets.keys()))
 
 exposed_initializers: Dict[str, Any] = _expose_module(tf.keras.initializers)
 exposed_initializers_keys: Tuple[str, ...] = tuple(sorted(exposed_initializers.keys()))
 
-exposed_layers: Dict[str, Any] = {
-    name: getattr(tf.keras.layers, name)
-    for name in dir(tf.keras.layers)
-    if name not in _global_exclude and not name.startswith("_")
-}
-exposed_layers_keys: Tuple[str, ...] = tuple(sorted(exposed_layers.keys()))
+exposed_layers_keys: Tuple[str, ...] = tuple(
+    filterfalse(
+        partial(contains, _global_exclude),
+        _unique_members(tf.keras.layers),
+    )
+)
+exposed_layers: Dict[str, Any] = dict(
+    map(
+        lambda attr: (attr, getattr(tf.keras.layers, attr)),
+        exposed_layers_keys,
+    )
+)
 
-exposed_losses: Dict[str, Any] = {
-    name: getattr(tf.keras.losses, name)
-    for name in dir(tf.keras.losses)
-    if not name.startswith("_")
-    and name not in frozenset(("Loss",)) | _global_exclude
-    and "_" in name
-}
-exposed_loss_keys: Tuple[str, ...] = tuple(sorted(exposed_losses.keys()))
+exposed_loss_keys: Tuple[str, ...] = tuple(
+    filterfalse(
+        partial(contains, frozenset(("Loss")) | _global_exclude),
+        _unique_members(tf.keras.losses),
+    )
+)
+exposed_losses: Dict[str, Any] = dict(
+    map(
+        lambda attr: (attr, getattr(tf.keras.losses, attr)),
+        exposed_loss_keys,
+    )
+)
 
-exposed_metrics: Dict[str, Any] = {
-    metric: getattr(tf.keras.metrics, metric)
-    for metric in dir(tf.keras.metrics)
-    if not metric.startswith("_")
-    and metric.islower()
-    and metric not in frozenset(("Metric",)) | _global_exclude
-}
-exposed_metrics_keys: Tuple[str, ...] = tuple(sorted(exposed_metrics.keys()))
+exposed_metrics_keys: Tuple[str, ...] = tuple(
+    filterfalse(
+        partial(contains, frozenset(("Accuracy", "Metric")) | _global_exclude),
+        _unique_members(tf.keras.metrics),
+    )
+)
+exposed_metrics: Dict[str, Any] = dict(
+    map(
+        lambda attr: (attr, getattr(tf.keras.metrics, attr)),
+        exposed_metrics_keys,
+    )
+)
 
 exposed_optimizers: Dict[str, Any] = _expose_module(
     tf.keras.optimizers, frozenset(("Optimizer",))

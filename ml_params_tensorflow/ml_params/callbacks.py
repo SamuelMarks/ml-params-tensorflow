@@ -18,15 +18,14 @@ def BaseLoggerConfig(argument_parser):
     """
     argument_parser.description = """Callback that accumulates epoch averages of metrics.
 
-This callback is automatically applied to every Keras model."""
-    argument_parser.add_argument(
-        "--stateful_metrics",
-        type=str,
-        help="""Iterable of string names of metrics that
+This callback is automatically applied to every Keras model.
+
+Arguments:
+    stateful_metrics: Iterable of string names of metrics that
         should *not* be averaged over an epoch.
         Metrics in this list will be logged as-is in `on_epoch_end`.
-        All others will be averaged in `on_epoch_end`.""",
-    )
+        All others will be averaged in `on_epoch_end`."""
+    argument_parser.add_argument("--stateful_metrics", help=None)
     return argument_parser
 
 
@@ -50,29 +49,16 @@ Example:
 ```python
 csv_logger = CSVLogger('training.log')
 model.fit(X_train, Y_train, callbacks=[csv_logger])
-```"""
-    argument_parser.add_argument(
-        "--filename",
-        type=str,
-        help="Filename of the CSV file, e.g. `'run/log.csv'`.",
-        required=True,
-        default=",",
-    )
-    argument_parser.add_argument(
-        "--separator",
-        type=str,
-        help="String used to separate elements in the CSV file.",
-        required=True,
-        default=",",
-    )
-    argument_parser.add_argument(
-        "--append",
-        type=bool,
-        help="""Boolean. True: append if file exists (useful for continuing
-        training). False: overwrite existing file.""",
-        required=True,
-        default=False,
-    )
+```
+
+Arguments:
+    filename: Filename of the CSV file, e.g. `'run/log.csv'`.
+    separator: String used to separate elements in the CSV file.
+    append: Boolean. True: append if file exists (useful for continuing
+        training). False: overwrite existing file."""
+    argument_parser.add_argument("--filename", help=None, required=True, default=",")
+    argument_parser.add_argument("--separator", help=None, required=True, default=False)
+    argument_parser.add_argument("--append", help=None, required=True)
     return argument_parser
 
 
@@ -111,34 +97,7 @@ def CallbackListConfig(argument_parser):
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = "Container abstracting a list of callbacks."
-    argument_parser.add_argument(
-        "--callbacks", type=str, help="List of `Callback` instances."
-    )
-    argument_parser.add_argument(
-        "--add_history",
-        type=bool,
-        help="""Whether a `History` callback should be added, if one does not
-    already exist in the `callbacks` list.""",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--add_progbar",
-        type=bool,
-        help="""Whether a `ProgbarLogger` callback should be added, if one
-    does not already exist in the `callbacks` list.""",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--model", type=str, help="The `Model` these callbacks are used with."
-    )
-    argument_parser.add_argument(
-        "--params",
-        type=str,
-        help="""If provided, parameters will be passed to each `Callback` via
-    `Callback.set_params`.""",
-    )
+    argument_parser.add_argument("--params", type=loads, help="", required=True)
     return argument_parser
 
 
@@ -164,6 +123,29 @@ the loss is no longer decreasing, considering the `min_delta` and
 The quantity to be monitored needs to be available in `logs` dict.
 To make it so, pass the loss or metrics at `model.compile()`.
 
+Arguments:
+  monitor: Quantity to be monitored.
+  min_delta: Minimum change in the monitored quantity
+      to qualify as an improvement, i.e. an absolute
+      change of less than min_delta, will count as no
+      improvement.
+  patience: Number of epochs with no improvement
+      after which training will be stopped.
+  verbose: verbosity mode.
+  mode: One of `{"auto", "min", "max"}`. In `min` mode,
+      training will stop when the quantity
+      monitored has stopped decreasing; in `"max"`
+      mode it will stop when the quantity
+      monitored has stopped increasing; in `"auto"`
+      mode, the direction is automatically inferred
+      from the name of the monitored quantity.
+  baseline: Baseline value for the monitored quantity.
+      Training will stop if the model doesn't show improvement over the
+      baseline.
+  restore_best_weights: Whether to restore model weights from
+      the epoch with the best value of the monitored quantity.
+      If False, the model weights obtained at the last step of
+      training are used.
 
 Example:
 
@@ -178,62 +160,15 @@ Example:
 >>> len(history.history['loss'])  # Only 4 epochs are run.
 4"""
     argument_parser.add_argument(
-        "--monitor",
-        type=str,
-        help="Quantity to be monitored.",
-        required=True,
-        default="val_loss",
+        "--monitor", help=None, required=True, default="val_loss"
     )
+    argument_parser.add_argument("--min_delta", help=None, required=True, default=0)
+    argument_parser.add_argument("--patience", help=None, required=True, default=0)
+    argument_parser.add_argument("--verbose", help=None, required=True, default=0)
+    argument_parser.add_argument("--mode", help=None, required=True, default="auto")
+    argument_parser.add_argument("--baseline", help=None)
     argument_parser.add_argument(
-        "--min_delta",
-        type=int,
-        help="""Minimum change in the monitored quantity
-      to qualify as an improvement, i.e. an absolute
-      change of less than min_delta, will count as no
-      improvement.""",
-        required=True,
-        default=0,
-    )
-    argument_parser.add_argument(
-        "--patience",
-        type=int,
-        help="""Number of epochs with no improvement
-      after which training will be stopped.""",
-        required=True,
-        default=0,
-    )
-    argument_parser.add_argument(
-        "--verbose", type=int, help="verbosity mode.", required=True, default=0
-    )
-    argument_parser.add_argument(
-        "--mode",
-        type=str,
-        help="""One of `{"auto", "min", "max"}`. In `min` mode,
-      training will stop when the quantity
-      monitored has stopped decreasing; in `"max"`
-      mode it will stop when the quantity
-      monitored has stopped increasing; in `"auto"`
-      mode, the direction is automatically inferred
-      from the name of the monitored quantity.""",
-        required=True,
-        default="auto",
-    )
-    argument_parser.add_argument(
-        "--baseline",
-        type=str,
-        help="""Baseline value for the monitored quantity.
-      Training will stop if the model doesn't show improvement over the
-      baseline.""",
-    )
-    argument_parser.add_argument(
-        "--restore_best_weights",
-        type=bool,
-        help="""Whether to restore model weights from
-      the epoch with the best value of the monitored quantity.
-      If False, the model weights obtained at the last step of
-      training are used.""",
-        required=True,
-        default=False,
+        "--restore_best_weights", help=None, required=True, default=False
     )
     return argument_parser
 
@@ -279,6 +214,13 @@ arguments, as:
 - `on_train_begin` and `on_train_end` expect one positional argument:
   `logs`
 
+Arguments:
+    on_epoch_begin: called at the beginning of every epoch.
+    on_epoch_end: called at the end of every epoch.
+    on_batch_begin: called at the beginning of every batch.
+    on_batch_end: called at the end of every batch.
+    on_train_begin: called at the beginning of model training.
+    on_train_end: called at the end of model training.
 
 Example:
 
@@ -308,24 +250,12 @@ model.fit(...,
                      json_logging_callback,
                      cleanup_callback])
 ```"""
-    argument_parser.add_argument(
-        "--on_epoch_begin", type=str, help="called at the beginning of every epoch."
-    )
-    argument_parser.add_argument(
-        "--on_epoch_end", type=str, help="called at the end of every epoch."
-    )
-    argument_parser.add_argument(
-        "--on_batch_begin", type=str, help="called at the beginning of every batch."
-    )
-    argument_parser.add_argument(
-        "--on_batch_end", type=str, help="called at the end of every batch."
-    )
-    argument_parser.add_argument(
-        "--on_train_begin", type=str, help="called at the beginning of model training."
-    )
-    argument_parser.add_argument(
-        "--on_train_end", type=str, help="called at the end of model training."
-    )
+    argument_parser.add_argument("--on_epoch_begin", help=None)
+    argument_parser.add_argument("--on_epoch_end", help=None)
+    argument_parser.add_argument("--on_batch_begin", help=None)
+    argument_parser.add_argument("--on_batch_end", help=None)
+    argument_parser.add_argument("--on_train_begin", help=None)
+    argument_parser.add_argument("--on_train_end", help=None)
     argument_parser.add_argument("--kwargs", type=loads, help="")
     return argument_parser
 
@@ -347,6 +277,11 @@ value from `schedule` function provided at `__init__`, with the current epoch
 and current learning rate, and applies the updated learning rate
 on the optimizer.
 
+Arguments:
+  schedule: a function that takes an epoch index (integer, indexed from 0)
+      and current learning rate (float) as inputs and returns a new
+      learning rate as output (float).
+  verbose: int. 0: quiet, 1: update messages.
 
 Example:
 
@@ -368,22 +303,8 @@ Example:
 ...                     epochs=15, callbacks=[callback], verbose=0)
 >>> round(model.optimizer.lr.numpy(), 5)
 0.00607"""
-    argument_parser.add_argument(
-        "--schedule",
-        type=int,
-        help="""a function that takes an epoch index (integer, indexed from 0)
-      and current learning rate (float) as inputs and returns a new
-      learning rate as output (float).""",
-        required=True,
-        default=0,
-    )
-    argument_parser.add_argument(
-        "--verbose",
-        type=int,
-        help="int. 0: quiet, 1: update messages.",
-        required=True,
-        default=0,
-    )
+    argument_parser.add_argument("--schedule", help=None, required=True, default=0)
+    argument_parser.add_argument("--verbose", help=None, required=True)
     return argument_parser
 
 
@@ -415,15 +336,22 @@ A few options this callback provides include:
   the end of every epoch, or after a fixed number of training batches.
 - Whether only weights are saved, or the whole model is saved.
 
+Note: If you get `WARNING:tensorflow:Can save best model only with <name>
+available, skipping` see the description of the `monitor` argument for
+details on how to get this right.
+
 Example:
 
 ```python
+model.compile(loss=..., optimizer=...,
+              metrics=['accuracy'])
+
 EPOCHS = 10
 checkpoint_filepath = '/tmp/checkpoint'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=checkpoint_filepath,
     save_weights_only=True,
-    monitor='val_acc',
+    monitor='val_accuracy',
     mode='max',
     save_best_only=True)
 
@@ -433,88 +361,72 @@ model.fit(epochs=EPOCHS, callbacks=[model_checkpoint_callback])
 
 # The model weights (that are considered the best) are loaded into the model.
 model.load_weights(checkpoint_filepath)
-```"""
-    argument_parser.add_argument(
-        "--filepath",
-        type=str,
-        help="""string or `PathLike`, path to save the model file. `filepath`
+```
+
+Arguments:
+    filepath: string or `PathLike`, path to save the model file. `filepath`
       can contain named formatting options, which will be filled the value of
       `epoch` and keys in `logs` (passed in `on_epoch_end`). For example: if
       `filepath` is `weights.{epoch:02d}-{val_loss:.2f}.hdf5`, then the model
       checkpoints will be saved with the epoch number and the validation loss
-      in the filename.""",
-        required=True,
-        default="val_loss",
-    )
-    argument_parser.add_argument(
-        "--monitor",
-        type=str,
-        help="quantity to monitor.",
-        required=True,
-        default="val_loss",
-    )
-    argument_parser.add_argument(
-        "--verbose", type=int, help="verbosity mode, 0 or 1.", required=True, default=0
-    )
-    argument_parser.add_argument(
-        "--save_best_only",
-        type=bool,
-        help="""if `save_best_only=True`, the latest best model according
-      to the quantity monitored will not be overwritten.
-      If `filepath` doesn't contain formatting options like `{epoch}` then
-      `filepath` will be overwritten by each new better model.""",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--mode",
-        type=str,
-        help="""one of {auto, min, max}. If `save_best_only=True`, the decision to
-      overwrite the current save file is made based on either the maximization
-      or the minimization of the monitored quantity. For `val_acc`, this
-      should be `max`, for `val_loss` this should be `min`, etc. In `auto`
-      mode, the direction is automatically inferred from the name of the
-      monitored quantity.""",
-        required=True,
-        default="auto",
-    )
-    argument_parser.add_argument(
-        "--save_weights_only",
-        type=bool,
-        help="""if True, then only the model's weights will be saved
+      in the filename.
+    monitor: The metric name to monitor. Typically the metrics are set by the
+      `Model.compile` method. Note:
+
+      * Prefix the name with `"val_`" to monitor validation metrics.
+      * Use `"loss"` or "`val_loss`" to monitor the model's total loss.
+      * If you specify metrics as strings, like `"accuracy"`, pass the same
+        string (with or without the `"val_"` prefix).
+      * If you pass `metrics.Metric` objects, `monitor` should be set to
+        `metric.name`
+      * If you're not sure about the metric names you can check the contents
+        of the `history.history` dictionary returned by
+        `history = model.fit()`
+      * Multi-output models set additional prefixes on the metric names.
+
+    verbose: verbosity mode, 0 or 1.
+    save_best_only: if `save_best_only=True`, it only saves when the model
+      is considered the "best" and the latest best model according to the
+      quantity monitored will not be overwritten. If `filepath` doesn't
+      contain formatting options like `{epoch}` then `filepath` will be
+      overwritten by each new better model.
+    mode: one of {'auto', 'min', 'max'}. If `save_best_only=True`, the
+      decision to overwrite the current save file is made based on either
+      the maximization or the minimization of the monitored quantity.
+      For `val_acc`, this should be `max`, for `val_loss` this should be
+      `min`, etc. In `auto` mode, the direction is automatically inferred
+      from the name of the monitored quantity.
+    save_weights_only: if True, then only the model's weights will be saved
       (`model.save_weights(filepath)`), else the full model is saved
-      (`model.save(filepath)`).""",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--save_freq",
-        type=str,
-        help="""`'epoch'` or integer. When using `'epoch'`, the callback saves
+      (`model.save(filepath)`).
+    save_freq: `'epoch'` or integer. When using `'epoch'`, the callback saves
       the model after each epoch. When using integer, the callback saves the
       model at end of this many batches. If the `Model` is compiled with
-      `experimental_steps_per_execution=N`, then the saving criteria will be
+      `steps_per_execution=N`, then the saving criteria will be
       checked every Nth batch. Note that if the saving isn't aligned to
       epochs, the monitored metric may potentially be less reliable (it
       could reflect as little as 1 batch, since the metrics get reset every
-      epoch).""",
-        required=True,
-        default="epoch",
+      epoch). Defaults to `'epoch'`.
+    options: Optional `tf.train.CheckpointOptions` object if
+      `save_weights_only` is true or optional `tf.saved_model.SaveOptions`
+      object if `save_weights_only` is false.
+    **kwargs: Additional arguments for backwards compatibility. Possible key
+      is `period`."""
+    argument_parser.add_argument(
+        "--filepath", help=None, required=True, default="val_loss"
+    )
+    argument_parser.add_argument("--monitor", help=None, required=True, default=0)
+    argument_parser.add_argument("--verbose", help=None, required=True, default=False)
+    argument_parser.add_argument(
+        "--save_best_only", help=None, required=True, default=False
     )
     argument_parser.add_argument(
-        "--options",
-        type=str,
-        help="""Optional `tf.train.CheckpointOptions` object if
-      `save_weights_only` is true or optional `tf.saved_model.SavedOptions`
-      object if `save_weights_only` is false.""",
-        required=True,
+        "--save_weights_only", help=None, required=True, default="auto"
     )
-    argument_parser.add_argument(
-        "--kwargs",
-        type=loads,
-        help="""Additional arguments for backwards compatibility. Possible key
-      is `period`.""",
-    )
+    argument_parser.add_argument("--mode", help=None, required=True, default="epoch")
+    argument_parser.add_argument("--save_freq", help=None)
+    argument_parser.add_argument("--options", help=None, required=True)
+    argument_parser.add_argument("--kwargs", type=loads, help="")
     return argument_parser
 
 
@@ -530,29 +442,22 @@ def ProgbarLoggerConfig(argument_parser):
     """
     argument_parser.description = """Callback that prints metrics to stdout.
 
+Arguments:
+    count_mode: One of `"steps"` or `"samples"`.
+        Whether the progress bar should
+        count samples seen or steps (batches) seen.
+    stateful_metrics: Iterable of string names of metrics that
+        should *not* be averaged over an epoch.
+        Metrics in this list will be logged as-is.
+        All others will be averaged over time (e.g. loss, etc).
+        If not provided, defaults to the `Model`'s metrics.
 
 Raises:
     ValueError: In case of invalid `count_mode`."""
     argument_parser.add_argument(
-        "--count_mode",
-        type=str,
-        help="""One of `"steps"` or `"samples"`.
-        Whether the progress bar should
-        count samples seen or steps (batches) seen.""",
-        required=True,
-        default="samples",
+        "--count_mode", help=None, required=True, default="samples"
     )
-    argument_parser.add_argument(
-        "--stateful_metrics",
-        type=str,
-        help="""Iterable of string names of metrics that
-        should *not* be averaged over an epoch.
-        Metrics in this list will be logged as-is.
-        All others will be averaged over time (e.g. loss, etc).
-        If not provided,""",
-        required=True,
-        default="the `Model`'s metrics",
-    )
+    argument_parser.add_argument("--stateful_metrics", help=None)
     return argument_parser
 
 
@@ -579,72 +484,38 @@ Example:
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                               patience=5, min_lr=0.001)
 model.fit(X_train, Y_train, callbacks=[reduce_lr])
-```"""
-    argument_parser.add_argument(
-        "--monitor",
-        type=str,
-        help="quantity to be monitored.",
-        required=True,
-        default="val_loss",
-    )
-    argument_parser.add_argument(
-        "--factor",
-        type=float,
-        help="""factor by which the learning rate will be reduced.
-      `new_lr = lr * factor`.""",
-        required=True,
-        default=0.1,
-    )
-    argument_parser.add_argument(
-        "--patience",
-        type=int,
-        help="""number of epochs with no improvement after which learning rate
-      will be reduced.""",
-        required=True,
-        default=10,
-    )
-    argument_parser.add_argument(
-        "--verbose",
-        type=int,
-        help="int. 0: quiet, 1: update messages.",
-        required=True,
-        default=0,
-    )
-    argument_parser.add_argument(
-        "--mode",
-        type=str,
-        help="""one of `{'auto', 'min', 'max'}`. In `'min'` mode,
+```
+
+Arguments:
+    monitor: quantity to be monitored.
+    factor: factor by which the learning rate will be reduced.
+      `new_lr = lr * factor`.
+    patience: number of epochs with no improvement after which learning rate
+      will be reduced.
+    verbose: int. 0: quiet, 1: update messages.
+    mode: one of `{'auto', 'min', 'max'}`. In `'min'` mode,
       the learning rate will be reduced when the
       quantity monitored has stopped decreasing; in `'max'` mode it will be
       reduced when the quantity monitored has stopped increasing; in `'auto'`
       mode, the direction is automatically inferred from the name of the
-      monitored quantity.""",
-        required=True,
-        default="auto",
-    )
+      monitored quantity.
+    min_delta: threshold for measuring the new optimum, to only focus on
+      significant changes.
+    cooldown: number of epochs to wait before resuming normal operation after
+      lr has been reduced.
+    min_lr: lower bound on the learning rate."""
     argument_parser.add_argument(
-        "--min_delta",
-        type=float,
-        help="""threshold for measuring the new optimum, to only focus on
-      significant changes.""",
-        required=True,
-        default=0.0001,
+        "--monitor", help=None, required=True, default="val_loss"
     )
+    argument_parser.add_argument("--factor", help=None, required=True, default=0.1)
+    argument_parser.add_argument("--patience", help=None, required=True, default=10)
+    argument_parser.add_argument("--verbose", help=None, required=True, default=0)
+    argument_parser.add_argument("--mode", help=None, required=True, default="auto")
     argument_parser.add_argument(
-        "--cooldown",
-        type=int,
-        help="""number of epochs to wait before resuming normal operation after
-      lr has been reduced.""",
-        required=True,
-        default=0,
+        "--min_delta", help=None, required=True, default=0.0001
     )
-    argument_parser.add_argument(
-        "--min_lr",
-        type=int,
-        help="lower bound on the learning rate.",
-        required=True,
-        default=0,
-    )
+    argument_parser.add_argument("--cooldown", help=None, required=True, default=0)
+    argument_parser.add_argument("--min_lr", help=None, required=True, default=0)
     argument_parser.add_argument("--kwargs", type=loads, help="")
     return argument_parser
 
@@ -667,40 +538,27 @@ HTTP POST, with a `data` argument which is a
 JSON-encoded dictionary of event data.
 If `send_as_json=True`, the content type of the request will be
 `"application/json"`.
-Otherwise the serialized JSON will be sent within a form."""
-    argument_parser.add_argument(
-        "--root",
-        type=str,
-        help="String; root url of the target server.",
-        required=True,
-        default="http://localhost:9000",
-    )
-    argument_parser.add_argument(
-        "--path",
-        type=str,
-        help="String; path relative to `root` to which the events will be sent.",
-        required=True,
-        default="/publish/epoch/end/",
-    )
-    argument_parser.add_argument(
-        "--field",
-        type=str,
-        help="""String; JSON field under which the data will be stored.
+Otherwise the serialized JSON will be sent within a form.
+
+Arguments:
+  root: String; root url of the target server.
+  path: String; path relative to `root` to which the events will be sent.
+  field: String; JSON field under which the data will be stored.
       The field is used only if the payload is sent within a form
-      (i.e. send_as_json is set to False).""",
-        required=True,
-        default="data",
+      (i.e. send_as_json is set to False).
+  headers: Dictionary; optional custom HTTP headers.
+  send_as_json: Boolean; whether the request should be
+      sent as `"application/json"`."""
+    argument_parser.add_argument(
+        "--root", help=None, required=True, default="http://localhost:9000"
     )
     argument_parser.add_argument(
-        "--headers", type=str, help="Dictionary; optional custom HTTP headers."
+        "--path", help=None, required=True, default="/publish/epoch/end/"
     )
+    argument_parser.add_argument("--field", help=None, required=True, default="data")
+    argument_parser.add_argument("--headers", help=None)
     argument_parser.add_argument(
-        "--send_as_json",
-        type=bool,
-        help="""Boolean; whether the request should be
-      sent as `"application/json"`.""",
-        required=True,
-        default=False,
+        "--send_as_json", help=None, required=True, default=False
     )
     return argument_parser
 
@@ -736,108 +594,121 @@ tensorboard --logdir=path_to_your_logs
 You can find more information about TensorBoard
 [here](https://www.tensorflow.org/get_started/summaries_and_tensorboard).
 
-Example (Basic):
-
-```python
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs")
-model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
-# run the tensorboard command to view the visualizations.
-```
-
-Example (Profile):
-
-```python
-# profile a single batch, e.g. the 5th batch.
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir='./logs',
-                                                      profile_batch=5)
-model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
-# Now run the tensorboard command to view the visualizations (profile plugin).
-
-# profile a range of batches, e.g. from 10 to 20.
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir='./logs',
-                                                      profile_batch='10,20')
-model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
-# Now run the tensorboard command to view the visualizations (profile plugin).
-```
-
-
-Raises:
-    ValueError: If histogram_freq is set and no validation data is provided."""
-    argument_parser.add_argument(
-        "--log_dir",
-        type=str,
-        help="""the path of the directory where to save the log files to be
-      parsed by TensorBoard.""",
-        required=True,
-        default="logs",
-    )
-    argument_parser.add_argument(
-        "--histogram_freq",
-        type=int,
-        help="""frequency (in epochs) at which to compute activation and
+Arguments:
+    log_dir: the path of the directory where to save the log files to be
+      parsed by TensorBoard.
+    histogram_freq: frequency (in epochs) at which to compute activation and
       weight histograms for the layers of the model. If set to 0, histograms
       won't be computed. Validation data (or split) must be specified for
-      histogram visualizations.""",
-        required=True,
-        default=0,
-    )
-    argument_parser.add_argument(
-        "--write_graph",
-        type=bool,
-        help="""whether to visualize the graph in TensorBoard. The log file
-      can become quite large when write_graph is set to True.""",
-        required=True,
-        default=True,
-    )
-    argument_parser.add_argument(
-        "--write_images",
-        type=bool,
-        help="""whether to write model weights to visualize as image in
-      TensorBoard.""",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--update_freq",
-        type=str,
-        help="""`'batch'` or `'epoch'` or integer. When using `'batch'`,
+      histogram visualizations.
+    write_graph: whether to visualize the graph in TensorBoard. The log file
+      can become quite large when write_graph is set to True.
+    write_images: whether to write model weights to visualize as image in
+      TensorBoard.
+    update_freq: `'batch'` or `'epoch'` or integer. When using `'batch'`,
       writes the losses and metrics to TensorBoard after each batch. The same
       applies for `'epoch'`. If using an integer, let's say `1000`, the
       callback will write the metrics and losses to TensorBoard every 1000
       batches. Note that writing too frequently to TensorBoard can slow down
-      your training.""",
-        required=True,
-        default="epoch",
-    )
-    argument_parser.add_argument(
-        "--profile_batch",
-        type=int,
-        help="""Profile the batch(es) to sample compute characteristics.
+      your training.
+    profile_batch: Profile the batch(es) to sample compute characteristics.
       profile_batch must be a non-negative integer or a tuple of integers.
       A pair of positive integers signify a range of batches to profile.
       By default, it will profile the second batch. Set profile_batch=0
-      to disable profiling.""",
-        required=True,
-        default=2,
-    )
-    argument_parser.add_argument(
-        "--embeddings_freq",
-        type=int,
-        help="""frequency (in epochs) at which embedding layers will be
-      visualized. If set to 0, embeddings won't be visualized.""",
-        required=True,
-        default=0,
-    )
-    argument_parser.add_argument(
-        "--embeddings_metadata",
-        type=str,
-        help="""a dictionary which maps layer name to a file name in
+      to disable profiling.
+    embeddings_freq: frequency (in epochs) at which embedding layers will be
+      visualized. If set to 0, embeddings won't be visualized.
+    embeddings_metadata: a dictionary which maps layer name to a file name in
       which metadata for this embedding layer is saved. See the
       [details](
         https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
       about metadata files format. In case if the same metadata file is
-      used for all embedding layers, string can be passed.""",
+      used for all embedding layers, string can be passed.
+
+Examples:
+
+Basic usage:
+
+```python
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs")
+model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
+# Then run the tensorboard command to view the visualizations.
+```
+
+Custom batch-level summaries in a subclassed Model:
+
+```python
+class MyModel(tf.keras.Model):
+
+  def build(self, _):
+    self.dense = tf.keras.layers.Dense(10)
+
+  def call(self, x):
+    outputs = self.dense(x)
+    tf.summary.histogram('outputs', outputs)
+    return outputs
+
+model = MyModel()
+model.compile('sgd', 'mse')
+
+# Make sure to set `update_freq=N` to log a batch-level summary every N batches.
+# In addition to any `tf.summary` contained in `Model.call`, metrics added in
+# `Model.compile` will be logged every N batches.
+tb_callback = tf.keras.callbacks.TensorBoard('./logs', update_freq=1)
+model.fit(x_train, y_train, callbacks=[tb_callback])
+```
+
+Custom batch-level summaries in a Functional API Model:
+
+```python
+def my_summary(x):
+  tf.summary.histogram('x', x)
+  return x
+
+inputs = tf.keras.Input(10)
+x = tf.keras.layers.Dense(10)(inputs)
+outputs = tf.keras.layers.Lambda(my_summary)(x)
+model = tf.keras.Model(inputs, outputs)
+model.compile('sgd', 'mse')
+
+# Make sure to set `update_freq=N` to log a batch-level summary every N batches.
+# In addition to any `tf.summary` contained in `Model.call`, metrics added in
+# `Model.compile` will be logged every N batches.
+tb_callback = tf.keras.callbacks.TensorBoard('./logs', update_freq=1)
+model.fit(x_train, y_train, callbacks=[tb_callback])
+```
+
+Profiling:
+
+```python
+# Profile a single batch, e.g. the 5th batch.
+tensorboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir='./logs', profile_batch=5)
+model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
+
+# Profile a range of batches, e.g. from 10 to 20.
+tensorboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir='./logs', profile_batch=(10,20))
+model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
+```"""
+    argument_parser.add_argument("--log_dir", help=None, required=True, default="logs")
+    argument_parser.add_argument(
+        "--histogram_freq", help=None, required=True, default=0
     )
+    argument_parser.add_argument(
+        "--write_graph", help=None, required=True, default=True
+    )
+    argument_parser.add_argument(
+        "--write_images", help=None, required=True, default=False
+    )
+    argument_parser.add_argument(
+        "--update_freq", help=None, required=True, default="epoch"
+    )
+    argument_parser.add_argument("--profile_batch", help=None, required=True, default=2)
+    argument_parser.add_argument(
+        "--embeddings_freq", help=None, required=True, default=0
+    )
+    argument_parser.add_argument("--embeddings_metadata", help=None)
     argument_parser.add_argument("--kwargs", type=loads, help="")
     return argument_parser
 

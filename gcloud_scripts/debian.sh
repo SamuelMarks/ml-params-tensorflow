@@ -11,7 +11,9 @@ sudo apt-get install -y python3-venv
 python3 -m venv venv
 . ~/venv/bin/activate
 pip3 install -U pip setuptools wheel
-pip3 install tensorflow tensorflow-datasets jupyter
+# 2.3.1 because that's what the TPU is configured for
+pip3 install tensorflow==2.3.1
+pip3 install tensorflow-datasets jupyter
 pip install -r 'https://raw.githubusercontent.com/SamuelMarks/ml-params-tensorflow/master/requirements.txt'
 pip install 'https://api.github.com/repos/SamuelMarks/ml-params-tensorflow/zipball#egg=ml-params-tensorflow'
 
@@ -19,7 +21,7 @@ if [ -z "$TPU_ADDR" ]; then
     printf '$TPU_ADDR must be set\n' >&2
     exit 1
 else
-  printf 'Training on: %s\n' "$TPU_ADDR"
+    printf 'Training on: %s\n' "$TPU_ADDR"
 fi
 
 export ML_PARAMS_ENGINE='tensorflow'

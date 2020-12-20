@@ -1,6 +1,6 @@
 """
-Implementation of ml_params BaseTrainer API
-"""
+    Implementation of ml_params BaseTrainer API
+    """
 from functools import partial
 from itertools import filterfalse
 from operator import eq
@@ -113,6 +113,8 @@ class TensorFlowTrainer(BaseTrainer):
                 "InceptionV3",
                 "MobileNet",
                 "MobileNetV2",
+                "MobileNetV3Large",
+                "MobileNetV3Small",
                 "NASNetLarge",
                 "NASNetMobile",
                 "ResNet101",
@@ -155,7 +157,6 @@ class TensorFlowTrainer(BaseTrainer):
             :return: model, e.g., the result of applying `model_kwargs` on model
             :rtype: ```Any```
             """
-
             super(TensorFlowTrainer, self).load_model(
                 model=model, call=callable(model) or call, **model_kwargs
             )
@@ -174,7 +175,6 @@ class TensorFlowTrainer(BaseTrainer):
                         raise NotImplementedError(
                             "`tf.keras.Model` from {!r}".format(self.model)
                         )
-
                     extra_model_kwargs = (
                         next(
                             (
@@ -196,7 +196,6 @@ class TensorFlowTrainer(BaseTrainer):
                 assert isinstance(
                     self.model, tf.keras.Model
                 ), "Expected `tf.keras.Model` got {!r}".format(type(self.model))
-                # elif isinstance(self.model, tf.keras.Layer):
                 assert self.ds_info is not None
                 self.model = tf.keras.Sequential(
                     [
@@ -259,28 +258,49 @@ class TensorFlowTrainer(BaseTrainer):
         metrics: Optional[
             List[
                 Literal[
+                    "AUC",
                     "binary_accuracy",
                     "binary_crossentropy",
                     "categorical_accuracy",
                     "categorical_crossentropy",
+                    "CategoricalHinge",
+                    "CosineSimilarity",
+                    "FalseNegatives",
+                    "FalsePositives",
                     "hinge",
-                    "kl_divergence",
                     "kld",
+                    "kl_divergence",
                     "kullback_leibler_divergence",
+                    "logcosh",
+                    "LogCoshError",
                     "mae",
                     "mape",
+                    "Mean",
                     "mean_absolute_error",
                     "mean_absolute_percentage_error",
+                    "MeanIoU",
+                    "MeanRelativeError",
                     "mean_squared_error",
                     "mean_squared_logarithmic_error",
+                    "MeanTensor",
                     "mse",
                     "msle",
                     "poisson",
+                    "Precision",
+                    "PrecisionAtRecall",
+                    "Recall",
+                    "RecallAtPrecision",
+                    "RootMeanSquaredError",
+                    "SensitivityAtSpecificity",
                     "sparse_categorical_accuracy",
                     "sparse_categorical_crossentropy",
                     "sparse_top_k_categorical_accuracy",
+                    "SpecificityAtSensitivity",
                     "squared_hinge",
+                    "Sum",
                     "top_k_categorical_accuracy",
+                    "TrueNegatives",
+                    "TruePositives",
                 ]
             ]
         ] = None,
@@ -322,10 +342,8 @@ class TensorFlowTrainer(BaseTrainer):
         :rtype: ```Any```
         """
         super(TensorFlowTrainer, self).train(epochs=epochs)
-
         assert self.data is not None
         assert self.get_model is not None
-
         if tpu_address is None:
             strategy = tf.distribute.MirroredStrategy()
         else:
@@ -335,11 +353,8 @@ class TensorFlowTrainer(BaseTrainer):
             )
             tf.config.experimental_connect_to_cluster(resolver)
             tf.tpu.experimental.initialize_tpu_system(resolver)
-
             print("TPU devices:", tf.config.list_logical_devices("TPU"), ";")
-
             strategy = tf.distribute.TPUStrategy(resolver)
-
         with strategy.scope():
             model = self.get_model()
             model.compile(
@@ -347,23 +362,18 @@ class TensorFlowTrainer(BaseTrainer):
                 optimizer=set_from((optimizer,), tf.keras.optimizers)[0](),
                 metrics=set_from(metrics, tf.keras.metrics),
             )
-
         callbacks = set_from(callbacks, tf.keras.callbacks) if callbacks else None
         model.fit(
             self.data[0],
             validation_data=self.data[1],
             epochs=epochs,
-            # loss=loss,
-            # optimizer=optimizer,
             callbacks=callbacks,
-            # metrics=metrics,
             validation_split=validation_split
             if tf.is_tensor(self.data[1])
             or type(self.data[1]).__module__ == np.__name__
             else None,
             batch_size=batch_size,
         )
-
         return model
 
 
@@ -386,5 +396,4 @@ def set_from(iterable, o):
 
 
 del get_logger
-
 __all__ = ["TensorFlowTrainer"]

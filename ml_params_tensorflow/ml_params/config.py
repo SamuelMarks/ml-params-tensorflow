@@ -1,6 +1,6 @@
 """
-Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
-"""
+    Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
+    """
 from dataclasses import dataclass
 from json import loads
 from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
@@ -117,28 +117,49 @@ class TrainConfig(object):
     metrics: Optional[
         List[
             Literal[
+                "AUC",
                 "binary_accuracy",
                 "binary_crossentropy",
                 "categorical_accuracy",
                 "categorical_crossentropy",
+                "CategoricalHinge",
+                "CosineSimilarity",
+                "FalseNegatives",
+                "FalsePositives",
                 "hinge",
-                "kl_divergence",
                 "kld",
+                "kl_divergence",
                 "kullback_leibler_divergence",
+                "logcosh",
+                "LogCoshError",
                 "mae",
                 "mape",
+                "Mean",
                 "mean_absolute_error",
                 "mean_absolute_percentage_error",
+                "MeanIoU",
+                "MeanRelativeError",
                 "mean_squared_error",
                 "mean_squared_logarithmic_error",
+                "MeanTensor",
                 "mse",
                 "msle",
                 "poisson",
+                "Precision",
+                "PrecisionAtRecall",
+                "Recall",
+                "RecallAtPrecision",
+                "RootMeanSquaredError",
+                "SensitivityAtSpecificity",
                 "sparse_categorical_accuracy",
                 "sparse_categorical_crossentropy",
                 "sparse_top_k_categorical_accuracy",
+                "SpecificityAtSensitivity",
                 "squared_hinge",
+                "Sum",
                 "top_k_categorical_accuracy",
+                "TrueNegatives",
+                "TruePositives",
             ]
         ]
     ] = None
@@ -148,21 +169,20 @@ class TrainConfig(object):
     batch_size: int = 128
     tpu_address: Optional[str] = None
     kwargs: Optional[dict] = None
-    return_type: Any = "``````self.model``````"
+    return_type: Any = self.model
 
 
-@run_typed
 class LoadDataConfig(object):
     """
     Load the data for your ML pipeline. Will be fed into `train`.
 
     :cvar dataset_name: name of dataset
-    :cvar data_loader: function that returns the expected data type. Defaults to None
-    :cvar data_type: incoming data type. Defaults to infer
-    :cvar output_type: outgoing data_type. Defaults to None
-    :cvar K: backend engine, e.g., `np` or `tf`. Defaults to None
+    :cvar data_loader: function that returns the expected data type.
+    :cvar data_type: incoming data type
+    :cvar output_type: outgoing data_type,
+    :cvar K: backend engine, e.g., `np` or `tf`
     :cvar data_loader_kwargs: pass this as arguments to data_loader function
-    :cvar return_type: Dataset splits (by default, your train and test). Defaults to self.data"""
+    :cvar return_type: Dataset splits (by default, your train and test)"""
 
     dataset_name: Literal[
         "boston_housing",
@@ -189,19 +209,18 @@ class LoadDataConfig(object):
     data_loader_kwargs: Optional[dict] = None
     return_type: Union[
         Tuple[tf.data.Dataset, tf.data.Dataset], Tuple[np.ndarray, np.ndarray]
-    ] = self.data
+    ] = "``````self.data``````"
 
 
-@run_typed
 class LoadModelConfig(object):
     """
-        Load the model.
+    Load the model.
     Takes a model object, or a pipeline that downloads & configures before returning a model object.
 
-        :cvar model: model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance
-        :cvar call: whether to call `model()` even if `len(model_kwargs) == 0`. Defaults to False
-        :cvar model_kwargs: to be passed into the model. If empty, doesn't call, unless call=True.
-        :cvar return_type: self.model, e.g., the result of applying `model_kwargs` on model. Defaults to self.model"""
+    :cvar model: model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance
+    :cvar call: whether to call `model()` even if `len(model_kwargs) == 0`
+    :cvar model_kwargs: to be passed into the model. If empty, doesn't call, unless call=True.
+    :cvar return_type: self.model, e.g., the result of applying `model_kwargs` on model"""
 
     model: Union[
         Literal[
@@ -220,6 +239,8 @@ class LoadModelConfig(object):
             "InceptionV3",
             "MobileNet",
             "MobileNetV2",
+            "MobileNetV3Large",
+            "MobileNetV3Small",
             "NASNetLarge",
             "NASNetMobile",
             "ResNet101",
@@ -234,7 +255,7 @@ class LoadModelConfig(object):
     ] = None
     call: bool = False
     model_kwargs: Optional[dict] = None
-    return_type: tf.keras.Model = self.model
+    return_type: Callable[[], tf.keras.Model] = "``````self.get_model``````"
 
 
 __all__ = ["LoadDataConfig", "LoadModelConfig", "TrainConfig"]
