@@ -1,4 +1,4 @@
-""" Generated Callback config classes """
+""" Generated Metric CLI parsers """
 from __future__ import absolute_import, division, print_function
 
 NoneType = type(None)

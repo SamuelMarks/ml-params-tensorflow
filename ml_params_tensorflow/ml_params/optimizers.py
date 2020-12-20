@@ -1,4 +1,4 @@
-""" Generated Callback config classes """
+""" Generated Optimizer CLI parsers """
 from __future__ import absolute_import, division, print_function
 
 from yaml import safe_load as loads

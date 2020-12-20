@@ -24,6 +24,9 @@ class self(object):
     data: Any = None
 
 
+model = self.model
+
+
 def from_string(cls, s):
     """
     Generate a new object of the class using a loaded s
@@ -169,7 +172,7 @@ class TrainConfig(object):
     batch_size: int = 128
     tpu_address: Optional[str] = None
     kwargs: Optional[dict] = None
-    return_type: Any = self.model
+    return_type: Any = model
 
 
 class LoadDataConfig(object):

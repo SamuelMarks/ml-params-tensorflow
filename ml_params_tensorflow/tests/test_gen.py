@@ -34,26 +34,23 @@ class TestGen(TestCase):
         """
         return sorted(
             filterfalse(
-                partial(
-                    contains,
-                    frozenset(
-                        (
-                            "NoneType",
-                            "Optional",
-                            "absolute_import",
-                            "dataclass",
-                            "division",
-                            "print_function",
-                            "loads",
-                        )
-                    ),
-                ),
+                rpartial(str.startswith, "_"),
                 filterfalse(
-                    rpartial(str.startswith, "_"),
-                    map(
-                        itemgetter(0),
-                        getmembers(module),
+                    partial(
+                        contains,
+                        frozenset(
+                            (
+                                "NoneType",
+                                "Optional",
+                                "absolute_import",
+                                "dataclass",
+                                "division",
+                                "print_function",
+                                "loads",
+                            )
+                        ),
                     ),
+                    map(itemgetter(0), getmembers(module)),
                 ),
             )
         )
@@ -91,8 +88,13 @@ class TestGen(TestCase):
         Tests whether `losses` has correct `__all__`
         """
         self.assertListEqual(
-            ml_params_tensorflow.ml_params.losses.__all__,
-            self.gen_all(ml_params_tensorflow.ml_params.losses),
+            *map(
+                sorted,
+                (
+                    ml_params_tensorflow.ml_params.losses.__all__,
+                    self.gen_all(ml_params_tensorflow.ml_params.losses),
+                ),
+            )
         )
         self.assertTrue(self._call_all(ml_params_tensorflow.ml_params.losses))
 
@@ -101,8 +103,13 @@ class TestGen(TestCase):
         Tests whether `metrics` has correct `__all__`
         """
         self.assertListEqual(
-            ml_params_tensorflow.ml_params.metrics.__all__,
-            self.gen_all(ml_params_tensorflow.ml_params.metrics),
+            *map(
+                sorted,
+                (
+                    ml_params_tensorflow.ml_params.metrics.__all__,
+                    self.gen_all(ml_params_tensorflow.ml_params.metrics),
+                ),
+            )
         )
         self.assertTrue(self._call_all(ml_params_tensorflow.ml_params.metrics))
 

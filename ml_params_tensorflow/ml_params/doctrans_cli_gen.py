@@ -54,16 +54,17 @@ def main(argv=None):
                 input_mapping="ml_params_tensorflow.ml_params.type_generators.exposed_{mod_pl}".format(
                     mod_pl=mod_pl
                 ),
-                prepend='""" Generated Callback config classes """\\n'
+                prepend='""" Generated {mod_cap} CLI parsers """\\n'
                 "import tensorflow as tf\\n"
                 "from typing import Optional, Union\\n"
                 "from {typing} import Literal\\n\\n"
                 "from dataclasses import dataclass\\n\\n"
                 "from yaml import safe_load as loads\\n\\n"
                 "NoneType = type(None)\\n".format(
+                    mod_cap=mod_cap,
                     typing="typing"
                     if sys.version_info[:2] < (3, 8)
-                    else "typing_extensions"
+                    else "typing_extensions",
                 ),
                 imports_from_file="tf.keras.{mod_pl}.{mod_cap}".format(
                     mod_pl=mod_pl, mod_cap=mod_cap
