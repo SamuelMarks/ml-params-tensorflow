@@ -2,6 +2,7 @@
 CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 """
 
+from dataclasses import dataclass
 from itertools import chain
 from json import loads
 
@@ -11,7 +12,22 @@ except ImportError:
     datasets2classes = {}
 
 
-def set_cli_args(argument_parser):
+@dataclass
+class self(object):
+    """
+    Simple class to proxy object expected by code generated from `train` function
+    :cvar model: The model (probably a `tf.keras.models.Sequential`)
+    :cvar data: The data (probably a `tf.data.Dataset`)
+    """
+
+    model: object = None
+    data: object = None
+
+
+model = self.model
+
+
+def train_parser(argument_parser):
     """
     Set CLI arguments
 

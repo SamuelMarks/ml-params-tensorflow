@@ -364,12 +364,22 @@ class TensorFlowTrainer(BaseTrainer):
             strategy = tf.distribute.TPUStrategy(resolver)
         with strategy.scope():
             model = self.get_model()
+            optimizer = acquire_symbols_from((optimizer,), tf.keras.optimizers)
+            if not isinstance(optimizer, tf.keras.optimizers.Optimizer):
+                optimizer = acquire_symbols_from(
+                    optimizer, tf.keras.optimizers, never_str=False
+                )[0]
+            metrics = (
+                acquire_symbols_from(metrics, tf.keras.metrics) if metrics else None
+            )
             model.compile(
                 loss=loss,
-                optimizer=set_from((optimizer,), tf.keras.optimizers)[0](),
-                metrics=set_from(metrics, tf.keras.metrics),
+                optimizer=optimizer,
+                metrics=metrics,
             )
-        callbacks = set_from(callbacks, tf.keras.callbacks) if callbacks else None
+        callbacks = (
+            acquire_symbols_from(callbacks, tf.keras.callbacks) if callbacks else None
+        )
         model.fit(
             self.data[0],
             validation_data=self.data[1],
@@ -384,20 +394,40 @@ class TensorFlowTrainer(BaseTrainer):
         return model
 
 
-def set_from(iterable, o):
+def acquire_symbols_from(iterable, module, never_str=False):
     """
-    Helper function for generating
+    Acquire the symbol(s) from the iterable
+
+    :param iterable: Iterator of keys to lookup in module
+    :type iterable: ```Optional[Iterator[str]]```
+
+    :param module: The module to run `getattr` on
+    :type module: ```Union[ModuleType, Any]```
+
+    :param never_str: If True, ensure that `getattr` on the module is always called
+    :type never_str: ```bool```
+
+    :return: The list of symbols acquired from the module
+    :rtype: ```Optional[List[Union[Any, str]]]```
     """
     return (
         None
         if iterable is None
         else list(
-            getattr(o, obj.rpartition(".")[2])
-            if isinstance(obj, str)
-            else getattr(o, obj.__class__.__name__)(
-                **dict(filterfalse(partial(eq, ("kwargs", None)), vars(obj).items()))
+            (
+                getattr(
+                    module, name.rpartition(".")[2] if name.count(".") > 0 else name
+                )
+                if never_str is True
+                else name
             )
-            for obj in iterable
+            if isinstance(name, str)
+            else getattr(module, name[0].rpartition(".")[2])(
+                **dict(
+                    filterfalse(partial(eq, ("kwargs", None)), vars(name[1]).items())
+                )
+            )
+            for name in iterable
         )
     )
 
