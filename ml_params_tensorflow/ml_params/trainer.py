@@ -178,7 +178,7 @@ class TensorFlowTrainer(BaseTrainer):
         dataset_name: DatasetNameType,
         data_loader: Optional[
             Callable[
-                [AnyStr, AnyStr, Literal["np", "tf"], bool, Dict],
+                [AnyStr, Literal["np", "tf"], bool, Dict],
                 Union[
                     Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
                     Tuple[np.ndarray, np.ndarray, Any],
@@ -297,7 +297,9 @@ class TensorFlowTrainer(BaseTrainer):
                     [
                         self.model,
                         tf.keras.layers.Dense(
-                            self.ds_info.features["label"].num_classes
+                            *(1, "sigmoid")
+                            if self.ds_info.features["label"].num_classes == 2
+                            else (self.ds_info.features["label"].num_classes,)
                         ),
                     ]
                 )
@@ -375,6 +377,16 @@ class TensorFlowTrainer(BaseTrainer):
             metrics = (
                 acquire_symbols_from(metrics, tf.keras.metrics) if metrics else None
             )
+            if isinstance(loss, tuple):
+                loss_kwargs = {
+                    k: v
+                    for k, v in vars(loss[1]).items()
+                    if k not in frozenset(("y_pred", "y_true"))
+                }
+                loss = getattr(
+                    tf.keras.losses,
+                    "".join(map(str.title, loss[0].rpartition(".")[2].split("_"))),
+                )(**loss_kwargs)
             model.compile(
                 loss=loss,
                 optimizer=optimizer,
