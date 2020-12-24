@@ -1,8 +1,10 @@
 """
-    Implementation of datasets following vendor recommendations.
-    """
+Implementation of datasets following vendor recommendations.
+"""
 import os
 from functools import partial
+from importlib import import_module
+from pkgutil import find_loader
 from typing import (
     Any,
     AnyStr,
@@ -19,8 +21,13 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from ml_params.datasets import load_data_from_ml_prepare
-from ml_prepare.datasets import datasets2classes
 from typing_extensions import Literal
+
+datasets2classes = (
+    {}
+    if find_loader("ml_prepare") is None
+    else getattr(import_module("ml_prepare.datasets"), "datasets2classes")
+)
 
 NumpyValue = Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]
 NumpyElem = Union[NumpyValue, Iterable[NumpyValue]]
@@ -176,10 +183,7 @@ def load_data_from_tfds_or_ml_prepare(
         .prefetch(tf.data.experimental.AUTOTUNE)
     )
     splits = ds_train, ds_test
-    if as_numpy:
-        _ds_train, _ds_test = tuple(map(tfds.as_numpy, splits))
-    else:
-        _ds_train, _ds_test = splits
+    _ds_train, _ds_test = map(tfds.as_numpy, splits) if as_numpy else splits
     ds_train: Union[
         Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],

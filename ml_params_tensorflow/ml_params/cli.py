@@ -3,13 +3,16 @@ CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 """
 
 from dataclasses import dataclass
+from importlib import import_module
 from itertools import chain
 from json import loads
+from pkgutil import find_loader
 
-try:
-    from ml_prepare.datasets import datasets2classes
-except ImportError:
-    datasets2classes = {}
+datasets2classes = (
+    {}
+    if find_loader("ml_prepare") is None
+    else getattr(import_module("ml_prepare.datasets"), "datasets2classes")
+)
 
 
 @dataclass

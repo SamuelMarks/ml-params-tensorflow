@@ -1,6 +1,6 @@
 """
-    Implementation of ml_params BaseTrainer API
-    """
+Implementation of ml_params BaseTrainer API
+"""
 from functools import partial
 from itertools import filterfalse
 from operator import eq
@@ -26,6 +26,144 @@ logger = get_logger(
     )
 )
 
+DatasetNameType = Literal[
+    "boston_housing",
+    "cifar10",
+    "cifar100",
+    "fashion_mnist",
+    "imdb",
+    "mnist",
+    "reuters",
+]
+ModelType = Union[
+    Literal[
+        "DenseNet121",
+        "DenseNet169",
+        "DenseNet201",
+        "EfficientNetB0",
+        "EfficientNetB1",
+        "EfficientNetB2",
+        "EfficientNetB3",
+        "EfficientNetB4",
+        "EfficientNetB5",
+        "EfficientNetB6",
+        "EfficientNetB7",
+        "InceptionResNetV2",
+        "InceptionV3",
+        "MobileNet",
+        "MobileNetV2",
+        "MobileNetV3Large",
+        "MobileNetV3Small",
+        "NASNetLarge",
+        "NASNetMobile",
+        "ResNet101",
+        "ResNet101V2",
+        "ResNet152",
+        "ResNet152V2",
+        "ResNet50",
+        "ResNet50V2",
+        "Xception",
+    ],
+    AnyStr,
+]
+LossType = Literal[
+    "binary_crossentropy",
+    "categorical_crossentropy",
+    "categorical_hinge",
+    "cosine_similarity",
+    "hinge",
+    "huber",
+    "kld",
+    "kl_divergence",
+    "kullback_leibler_divergence",
+    "logcosh",
+    "Loss",
+    "mae",
+    "mape",
+    "mean_absolute_error",
+    "mean_absolute_percentage_error",
+    "mean_squared_error",
+    "mean_squared_logarithmic_error",
+    "mse",
+    "msle",
+    "poisson",
+    "Reduction",
+    "sparse_categorical_crossentropy",
+    "squared_hinge",
+]
+OptimizerType = Literal[
+    "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
+]
+CallbacksType = Optional[
+    List[
+        Literal[
+            "BaseLogger",
+            "CSVLogger",
+            "Callback",
+            "CallbackList",
+            "EarlyStopping",
+            "History",
+            "LambdaCallback",
+            "LearningRateScheduler",
+            "ModelCheckpoint",
+            "ProgbarLogger",
+            "ReduceLROnPlateau",
+            "RemoteMonitor",
+            "TensorBoard",
+            "TerminateOnNaN",
+        ]
+    ]
+]
+MetricsType = Optional[
+    List[
+        Literal[
+            "AUC",
+            "binary_accuracy",
+            "binary_crossentropy",
+            "categorical_accuracy",
+            "categorical_crossentropy",
+            "CategoricalHinge",
+            "CosineSimilarity",
+            "FalseNegatives",
+            "FalsePositives",
+            "hinge",
+            "kld",
+            "kl_divergence",
+            "kullback_leibler_divergence",
+            "logcosh",
+            "LogCoshError",
+            "mae",
+            "mape",
+            "Mean",
+            "mean_absolute_error",
+            "mean_absolute_percentage_error",
+            "MeanIoU",
+            "MeanRelativeError",
+            "mean_squared_error",
+            "mean_squared_logarithmic_error",
+            "MeanTensor",
+            "mse",
+            "msle",
+            "poisson",
+            "Precision",
+            "PrecisionAtRecall",
+            "Recall",
+            "RecallAtPrecision",
+            "RootMeanSquaredError",
+            "SensitivityAtSpecificity",
+            "sparse_categorical_accuracy",
+            "sparse_categorical_crossentropy",
+            "sparse_top_k_categorical_accuracy",
+            "SpecificityAtSensitivity",
+            "squared_hinge",
+            "Sum",
+            "top_k_categorical_accuracy",
+            "TrueNegatives",
+            "TruePositives",
+        ]
+    ]
+]
+
 
 class TensorFlowTrainer(BaseTrainer):
     """ Implementation of ml_params BaseTrainer for TensorFlow """
@@ -37,15 +175,7 @@ class TensorFlowTrainer(BaseTrainer):
     def load_data(
         self,
         *,
-        dataset_name: Literal[
-            "boston_housing",
-            "cifar10",
-            "cifar100",
-            "fashion_mnist",
-            "imdb",
-            "mnist",
-            "reuters",
-        ],
+        dataset_name: DatasetNameType,
         data_loader: Optional[
             Callable[
                 [AnyStr, AnyStr, Literal["np", "tf"], bool, Dict],
@@ -94,41 +224,7 @@ class TensorFlowTrainer(BaseTrainer):
         return self.data
 
     def load_model(
-        self,
-        *,
-        model: Union[
-            Literal[
-                "DenseNet121",
-                "DenseNet169",
-                "DenseNet201",
-                "EfficientNetB0",
-                "EfficientNetB1",
-                "EfficientNetB2",
-                "EfficientNetB3",
-                "EfficientNetB4",
-                "EfficientNetB5",
-                "EfficientNetB6",
-                "EfficientNetB7",
-                "InceptionResNetV2",
-                "InceptionV3",
-                "MobileNet",
-                "MobileNetV2",
-                "MobileNetV3Large",
-                "MobileNetV3Small",
-                "NASNetLarge",
-                "NASNetMobile",
-                "ResNet101",
-                "ResNet101V2",
-                "ResNet152",
-                "ResNet152V2",
-                "ResNet50",
-                "ResNet50V2",
-                "Xception",
-            ],
-            AnyStr,
-        ],
-        call: bool = False,
-        **model_kwargs
+        self, *, model: ModelType, call: bool = False, **model_kwargs
     ) -> Callable[[], tf.keras.Model]:
         """
         Load the model.
@@ -214,103 +310,10 @@ class TensorFlowTrainer(BaseTrainer):
         self,
         *,
         epochs: int,
-        loss: Literal[
-            "binary_crossentropy",
-            "categorical_crossentropy",
-            "categorical_hinge",
-            "cosine_similarity",
-            "hinge",
-            "huber",
-            "kld",
-            "kl_divergence",
-            "kullback_leibler_divergence",
-            "logcosh",
-            "Loss",
-            "mae",
-            "mape",
-            "mean_absolute_error",
-            "mean_absolute_percentage_error",
-            "mean_squared_error",
-            "mean_squared_logarithmic_error",
-            "mse",
-            "msle",
-            "poisson",
-            "Reduction",
-            "sparse_categorical_crossentropy",
-            "squared_hinge",
-        ],
-        optimizer: Literal[
-            "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
-        ],
-        callbacks: Optional[
-            List[
-                Literal[
-                    "BaseLogger",
-                    "CSVLogger",
-                    "Callback",
-                    "CallbackList",
-                    "EarlyStopping",
-                    "History",
-                    "LambdaCallback",
-                    "LearningRateScheduler",
-                    "ModelCheckpoint",
-                    "ProgbarLogger",
-                    "ReduceLROnPlateau",
-                    "RemoteMonitor",
-                    "TensorBoard",
-                    "TerminateOnNaN",
-                ]
-            ]
-        ] = None,
-        metrics: Optional[
-            List[
-                Literal[
-                    "AUC",
-                    "binary_accuracy",
-                    "binary_crossentropy",
-                    "categorical_accuracy",
-                    "categorical_crossentropy",
-                    "CategoricalHinge",
-                    "CosineSimilarity",
-                    "FalseNegatives",
-                    "FalsePositives",
-                    "hinge",
-                    "kld",
-                    "kl_divergence",
-                    "kullback_leibler_divergence",
-                    "logcosh",
-                    "LogCoshError",
-                    "mae",
-                    "mape",
-                    "Mean",
-                    "mean_absolute_error",
-                    "mean_absolute_percentage_error",
-                    "MeanIoU",
-                    "MeanRelativeError",
-                    "mean_squared_error",
-                    "mean_squared_logarithmic_error",
-                    "MeanTensor",
-                    "mse",
-                    "msle",
-                    "poisson",
-                    "Precision",
-                    "PrecisionAtRecall",
-                    "Recall",
-                    "RecallAtPrecision",
-                    "RootMeanSquaredError",
-                    "SensitivityAtSpecificity",
-                    "sparse_categorical_accuracy",
-                    "sparse_categorical_crossentropy",
-                    "sparse_top_k_categorical_accuracy",
-                    "SpecificityAtSensitivity",
-                    "squared_hinge",
-                    "Sum",
-                    "top_k_categorical_accuracy",
-                    "TrueNegatives",
-                    "TruePositives",
-                ]
-            ]
-        ] = None,
+        loss: LossType,
+        optimizer: OptimizerType,
+        callbacks: CallbacksType = None,
+        metrics: MetricsType = None,
         metric_emit_freq: Optional[Callable[[int], bool]] = None,
         output_type: str = "infer",
         validation_split: float = 0.1,

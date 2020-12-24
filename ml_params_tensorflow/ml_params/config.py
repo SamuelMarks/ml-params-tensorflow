@@ -1,14 +1,12 @@
 """
-    Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
-    """
-from dataclasses import dataclass
+Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
+"""
 from json import loads
 from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from enforce import runtime_validation
 from typing_extensions import Literal
 
 
@@ -43,19 +41,19 @@ def from_string(cls, s):
     return cls(**loads(s))
 
 
-def run_typed(f):
-    """
-    Decorate to validate the input class properties
-
-    :param f: Function or class
-    :type f: ```Any```
-
-    :return: Object that will now validate its input
-    :rtype: ```Any```
-    """
-    f.from_string = classmethod(from_string)
-    f.__argparse__ = dict(from_string=f.from_string)
-    return runtime_validation(dataclass(f))
+# def run_typed(f):
+#     """
+#     Decorate to validate the input class properties
+#
+#     :param f: Function or class
+#     :type f: ```Any```
+#
+#     :return: Object that will now validate its input
+#     :rtype: ```Any```
+#     """
+#     f.from_string = classmethod(from_string)
+#     f.__argparse__ = dict(from_string=f.from_string)
+#     return runtime_validation(dataclass(f))
 
 
 class TrainConfig(object):
