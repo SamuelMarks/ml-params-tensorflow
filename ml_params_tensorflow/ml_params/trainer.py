@@ -298,7 +298,8 @@ class TensorFlowTrainer(BaseTrainer):
                         self.model,
                         tf.keras.layers.Dense(
                             *(1, "sigmoid")
-                            if self.ds_info.features["label"].num_classes == 2
+                            if self.ds_info.features["label"].num_classes
+                            in frozenset((1, 2))
                             else (self.ds_info.features["label"].num_classes,)
                         ),
                     ]

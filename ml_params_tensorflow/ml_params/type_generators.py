@@ -156,7 +156,6 @@ exposed_activations: Dict[str, Any] = dict(
         exposed_activations_keys,
     )
 )
-exposed_activations_keys: Tuple[str, ...] = tuple(sorted(exposed_activations.keys()))
 
 exposed_applications: Dict[str, Any] = _expose_module(tf.keras.applications)
 exposed_applications_keys: Tuple[str, ...] = tuple(sorted(exposed_applications.keys()))
