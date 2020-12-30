@@ -221,6 +221,7 @@ class TensorFlowTrainer(BaseTrainer):
         )
         if len(self.data) > 2:
             self.ds_info: tfds.core.DatasetInfo = self.data[2]
+
         return self.data
 
     def load_model(
@@ -283,6 +284,19 @@ class TensorFlowTrainer(BaseTrainer):
                         if self.ds_info is not None and self.ds_info.features
                         else {}
                     )
+                    if (
+                        extra_model_kwargs.get("input_shape", (None,) * 3)[:-1]
+                        == (None,) * 2
+                    ):
+                        if self.ds_info.features["image"].shape[:-1] != (None,) * 2:
+                            extra_model_kwargs["input_shape"] = self.ds_info.features[
+                                "image"
+                            ].shape
+                        else:
+                            for image, label in self.data[0].take(1):
+                                extra_model_kwargs["input_shape"] = tuple(
+                                    tf.shape(image).numpy()[1:]
+                                )
                     self.model = self.model(
                         include_top=model_kwargs.get("include_top", False),
                         **extra_model_kwargs,
@@ -296,6 +310,7 @@ class TensorFlowTrainer(BaseTrainer):
                 self.model = tf.keras.Sequential(
                     [
                         self.model,
+                        tf.keras.layers.Flatten(),
                         tf.keras.layers.Dense(
                             *(1, "sigmoid")
                             if self.ds_info.features["label"].num_classes
@@ -370,6 +385,7 @@ class TensorFlowTrainer(BaseTrainer):
             strategy = tf.distribute.TPUStrategy(resolver)
         with strategy.scope():
             model = self.get_model()
+
             optimizer = acquire_symbols_from((optimizer,), tf.keras.optimizers)
             if not isinstance(optimizer, tf.keras.optimizers.Optimizer):
                 optimizer = acquire_symbols_from(
@@ -396,6 +412,7 @@ class TensorFlowTrainer(BaseTrainer):
         callbacks = (
             acquire_symbols_from(callbacks, tf.keras.callbacks) if callbacks else None
         )
+
         model.fit(
             self.data[0],
             validation_data=self.data[1],
