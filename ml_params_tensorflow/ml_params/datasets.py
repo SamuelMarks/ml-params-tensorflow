@@ -164,6 +164,21 @@ def load_data_from_tfds_or_ml_prepare(
     )
 
     ds_train: tf.data.Dataset = _ds_train
+    print("acquire_and_concat_validation_to_train:", acquire_and_concat_validation_to_train, ';')
+    if acquire_and_concat_validation_to_train:
+        ds_validation: tf.data.Dataset = tfds_load(
+            dataset_name,
+            split=[tfds.core.ReadInstruction("validation")],
+            data_dir=tfds_dir,
+            shuffle_files=True,
+            as_supervised=True,
+            with_info=True,
+            download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"],
+        )
+        print("train was", ds_train.cardinality())
+        print("validation is", ds_validation.cardinality())
+        ds_train = ds_train.concatenate(ds_validation)
+        print("train now", ds_train.cardinality())
     ds_test: tf.data.Dataset = _ds_test
     ds_info: tfds.core.DatasetInfo = _ds_info
     assert (
