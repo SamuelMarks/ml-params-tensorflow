@@ -70,6 +70,7 @@ def load_data_from_tfds_or_ml_prepare(
         "TFDS_DATA_DIR", os.path.join(os.path.expanduser("~"), "tensorflow_datasets")
     ),
     K: Literal["np", "tf"] = "tf",
+    acquire_and_concat_validation_to_train: bool = True,
     as_numpy: bool = True,
     **data_loader_kwargs
 ) -> Tuple[
@@ -98,6 +99,9 @@ def load_data_from_tfds_or_ml_prepare(
     :param as_numpy: Convert to numpy ndarrays. If `True`, then a structure
       matching `dataset` where `tf.data.Dataset`s are converted to generators
       of NumPy arrays and `tf.Tensor`s are converted to NumPy arrays.
+
+    :param acquire_and_concat_validation_to_train: Whether to acquire the validation split
+      and then concatenate it to train
 
     :param data_loader_kwargs: pass this as arguments to data_loader function
 
@@ -158,6 +162,7 @@ def load_data_from_tfds_or_ml_prepare(
         with_info=True,
         download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"],
     )
+
     ds_train: tf.data.Dataset = _ds_train
     ds_test: tf.data.Dataset = _ds_test
     ds_info: tfds.core.DatasetInfo = _ds_info
