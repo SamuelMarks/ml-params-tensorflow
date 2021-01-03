@@ -1,5 +1,4 @@
 """ Generated Metric CLI parsers """
-from __future__ import absolute_import, division, print_function
 
 
 def AUCConfig(argument_parser):

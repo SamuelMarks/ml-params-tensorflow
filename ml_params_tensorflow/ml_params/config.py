@@ -2,11 +2,12 @@
 Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
 """
 
-from typing import Any, AnyStr, Callable, Dict, List, Literal, Optional, Tuple, Union
+from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
+from typing_extensions import Literal
 
 
 class TrainConfig(object):

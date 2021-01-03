@@ -1,7 +1,5 @@
 """ Generated Callback CLI parsers """
 
-from __future__ import absolute_import, division, print_function
-
 
 def BaseLoggerConfig(argument_parser):
     """
