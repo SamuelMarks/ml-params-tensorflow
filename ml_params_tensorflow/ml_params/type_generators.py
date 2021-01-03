@@ -222,3 +222,28 @@ exposed_optimizer_keys: Tuple[str, ...] = tuple(sorted(exposed_optimizers.keys()
 
 exposed_regularizers: Dict[str, Any] = _expose_module(tf.keras.regularizers)
 exposed_regularizers_keys: Tuple[str, ...] = tuple(sorted(exposed_regularizers.keys()))
+
+__all__ = [
+    "exposed_activations",
+    "exposed_activations_keys",
+    "exposed_applications",
+    "exposed_applications_keys",
+    "exposed_callbacks",
+    "exposed_callbacks_keys",
+    "exposed_constraints",
+    "exposed_constraints_keys",
+    "exposed_datasets",
+    "exposed_datasets_keys",
+    "exposed_initializers",
+    "exposed_initializers_keys",
+    "exposed_layers",
+    "exposed_layers_keys",
+    "exposed_loss_keys",
+    "exposed_losses",
+    "exposed_metrics",
+    "exposed_metrics_keys",
+    "exposed_optimizer_keys",
+    "exposed_optimizers",
+    "exposed_regularizers",
+    "exposed_regularizers_keys",
+]

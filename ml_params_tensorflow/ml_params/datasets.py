@@ -222,3 +222,6 @@ def load_data_from_tfds_or_ml_prepare(
         Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
     ] = _ds_test
     return ds_train, ds_test, ds_info
+
+
+__all__ = ["load_data_from_tfds_or_ml_prepare"]

@@ -88,3 +88,5 @@ def run_main():
 
 
 run_main()
+
+__all__ = ["run_main"]
