@@ -5,7 +5,7 @@ import os
 from functools import partial
 from importlib import import_module
 from pkgutil import find_loader
-from typing import Any, AnyStr, Iterable, Iterator, Tuple, Union
+from typing import Any, AnyStr, Callable, Iterable, Iterator, Tuple, Union
 
 import numpy as np
 import tensorflow as tf
@@ -13,13 +13,43 @@ import tensorflow_datasets as tfds
 from ml_params.datasets import load_data_from_ml_prepare
 from typing_extensions import Literal
 
+from ml_params_tensorflow.utils import identity
+
 datasets2classes = (
     {}
     if find_loader("ml_prepare") is None
     else getattr(import_module("ml_prepare.datasets"), "datasets2classes")
 )
-NumpyValue = Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]
-NumpyElem = Union[NumpyValue, Iterable[NumpyValue]]
+
+DatasetTuple = Union[
+    Tuple[tf.data.Dataset, tf.data.Dataset],
+    Tuple[
+        Iterator[
+            Union[
+                tf.RaggedTensor,
+                np.ndarray,
+                np.generic,
+                bytes,
+                Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
+            ]
+        ],
+        Iterator[
+            Union[
+                tf.RaggedTensor,
+                np.ndarray,
+                np.generic,
+                bytes,
+                Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
+            ]
+        ],
+    ],
+]
+
+DatasetTupleInfo = Tuple[
+    DatasetTuple[0],
+    DatasetTuple[1],
+    tfds.core.DatasetInfo,
+]
 
 
 def normalize_img(image: Any, label: str, scale: Union[float, int]) -> Tuple[Any, str]:
@@ -62,55 +92,7 @@ def load_data_from_tfds_or_ml_prepare(
     acquire_and_concat_validation_to_train: bool = True,
     as_numpy: bool = True,
     **data_loader_kwargs
-) -> Tuple[
-    Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset],
-        Tuple[
-            Iterator[
-                Union[
-                    tf.RaggedTensor,
-                    np.ndarray,
-                    np.generic,
-                    bytes,
-                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
-                ]
-            ],
-            Iterator[
-                Union[
-                    tf.RaggedTensor,
-                    np.ndarray,
-                    np.generic,
-                    bytes,
-                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
-                ]
-            ],
-        ],
-    ],
-    Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset],
-        Tuple[
-            Iterator[
-                Union[
-                    tf.RaggedTensor,
-                    np.ndarray,
-                    np.generic,
-                    bytes,
-                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
-                ]
-            ],
-            Iterator[
-                Union[
-                    tf.RaggedTensor,
-                    np.ndarray,
-                    np.generic,
-                    bytes,
-                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
-                ]
-            ],
-        ],
-    ],
-    tfds.core.DatasetInfo,
-]:
+) -> DatasetTupleInfo:
     """
     Acquire from the official tfds model zoo, or the ophthalmology focussed ml-prepare library
 
@@ -167,12 +149,8 @@ def load_data_from_tfds_or_ml_prepare(
         download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"],
     )
     ds_info: tfds.core.DatasetInfo = _ds_info
+    ds_test: tf.data.Dataset = _ds_test
     ds_train: tf.data.Dataset = _ds_train
-    print(
-        "acquire_and_concat_validation_to_train:",
-        acquire_and_concat_validation_to_train,
-        ";",
-    )
     if acquire_and_concat_validation_to_train and "validation" in ds_info.splits:
         ds_validation: tf.data.Dataset = tfds.load(
             dataset_name,
@@ -189,7 +167,6 @@ def load_data_from_tfds_or_ml_prepare(
         print("validation is", ds_validation.cardinality())
         ds_train = ds_train.concatenate(ds_validation)
         print("train now", ds_train.cardinality())
-    ds_test: tf.data.Dataset = _ds_test
     assert (
         "num_classes" not in data_loader_kwargs
         or data_loader_kwargs["num_classes"] == ds_info.features["label"].num_classes
@@ -198,29 +175,22 @@ def load_data_from_tfds_or_ml_prepare(
     )
     num_parallel_calls = tf.data.experimental.AUTOTUNE if "tf" in globals() else 10
     normalize_img_at_scale = partial(normalize_img, scale=data_loader_kwargs["scale"])
-    ds_train = (
+    as_format: Callable[[DatasetTuple[0]], DatasetTuple[0]] = (
+        tfds.as_numpy if as_numpy else identity
+    )
+    ds_train = as_format(
         ds_train.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
         .cache()
         .shuffle(ds_info.splits["train"].num_examples)
         .batch(data_loader_kwargs["batch_size"])
         .prefetch(tf.data.experimental.AUTOTUNE)
     )
-    ds_test = (
+    ds_test = as_format(
         ds_test.map(normalize_img_at_scale, num_parallel_calls=num_parallel_calls)
         .batch(data_loader_kwargs["batch_size"])
         .cache()
         .prefetch(tf.data.experimental.AUTOTUNE)
     )
-    splits = ds_train, ds_test
-    _ds_train, _ds_test = map(tfds.as_numpy, splits) if as_numpy else splits
-    ds_train: Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset],
-        Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
-    ] = _ds_train
-    ds_test: Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset],
-        Tuple[Iterator[NumpyElem], Iterator[NumpyElem]],
-    ] = _ds_test
     return ds_train, ds_test, ds_info
 
 
