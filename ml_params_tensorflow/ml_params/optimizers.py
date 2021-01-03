@@ -3,8 +3,6 @@ from __future__ import absolute_import, division, print_function
 
 from yaml import safe_load as loads
 
-NoneType = type(None)
-
 
 def AdadeltaConfig(argument_parser):
     """
@@ -76,7 +74,6 @@ Reference:
         type=str,
         help="""Optional name prefix for the operations created when applying
     gradients. """,
-        required=True,
         default="Adadelta",
     )
     argument_parser.add_argument(
@@ -88,7 +85,7 @@ Reference:
     gradients by value.""",
     )
     argument_parser.add_argument(
-        "--_HAS_AGGREGATE_GRAD", type=bool, help="", required=True, default=True
+        "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
     )
     return argument_parser
 
@@ -142,7 +139,6 @@ Reference:
         type=str,
         help="""Optional name prefix for the operations created when applying
     gradients. """,
-        required=True,
         default="Adagrad",
     )
     argument_parser.add_argument(
@@ -154,7 +150,7 @@ Reference:
     gradients by value.""",
     )
     argument_parser.add_argument(
-        "--_HAS_AGGREGATE_GRAD", type=bool, help="", required=True, default=True
+        "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
     )
     return argument_parser
 
@@ -264,7 +260,6 @@ unless a variable slice was actually used)."""
         type=str,
         help="""Optional name for the operations created when applying gradients.
    """,
-        required=True,
         default="Adam",
     )
     argument_parser.add_argument(
@@ -276,7 +271,7 @@ unless a variable slice was actually used)."""
     gradients by value.""",
     )
     argument_parser.add_argument(
-        "--_HAS_AGGREGATE_GRAD", type=bool, help="", required=True, default=True
+        "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
     )
     return argument_parser
 
@@ -367,7 +362,6 @@ Reference:
         type=str,
         help="""Optional name for the operations created when applying gradients.
    """,
-        required=True,
         default="Adamax",
     )
     argument_parser.add_argument(
@@ -379,7 +373,7 @@ Reference:
     gradients by value.""",
     )
     argument_parser.add_argument(
-        "--_HAS_AGGREGATE_GRAD", type=bool, help="", required=True, default=True
+        "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
     )
     return argument_parser
 
@@ -471,7 +465,6 @@ Reference:
         type=str,
         help="""Optional name prefix for the operations created when applying
     gradients. """,
-        required=True,
         default="Ftrl",
     )
     argument_parser.add_argument(
@@ -555,7 +548,6 @@ Reference:
         type=str,
         help="""Optional name for the operations created when applying gradients.
    """,
-        required=True,
         default="Nadam",
     )
     argument_parser.add_argument(
@@ -567,7 +559,7 @@ Reference:
     gradients by value.""",
     )
     argument_parser.add_argument(
-        "--_HAS_AGGREGATE_GRAD", type=bool, help="", required=True, default=True
+        "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
     )
     return argument_parser
 
@@ -667,7 +659,6 @@ Reference:
         type=str,
         help="""Optional name prefix for the operations created when applying
     gradients.""",
-        required=True,
         default="RMSprop",
     )
     argument_parser.add_argument(
@@ -679,7 +670,7 @@ Reference:
     gradients by value.""",
     )
     argument_parser.add_argument(
-        "--_HAS_AGGREGATE_GRAD", type=bool, help="", required=True, default=True
+        "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
     )
     return argument_parser
 

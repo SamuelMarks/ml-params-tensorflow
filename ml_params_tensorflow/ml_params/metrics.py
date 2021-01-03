@@ -1,8 +1,6 @@
 """ Generated Metric CLI parsers """
 from __future__ import absolute_import, division, print_function
 
-NoneType = type(None)
-
 
 def AUCConfig(argument_parser):
     """
@@ -69,7 +67,6 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
         type=int,
         help="""(Optional)The number of thresholds to
     use when discretizing the roc curve. Values must be > 1.""",
-        required=True,
         default=200,
     )
     argument_parser.add_argument(
@@ -95,10 +92,16 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
         default="interpolation",
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     argument_parser.add_argument(
         "--thresholds",
@@ -109,6 +112,7 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     equal to {-epsilon, 1+epsilon} for a small positive epsilon value will
     be automatically included with these to correctly handle predictions
     equal to exactly 0 or 1.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--multi_label",
@@ -136,6 +140,7 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     label, whereas label_weights depends only on the index of that label
     before flattening; therefore `label_weights` should not be used for
     multi-class data.""",
+        required=True,
     )
     return argument_parser
 
@@ -370,7 +375,10 @@ model.compile(
         default="categorical_hinge",
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -429,14 +437,16 @@ model.compile(
         default="cosine_similarity",
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     argument_parser.add_argument(
         "--axis",
         type=float,
         help="""(Optional)The dimension along which the cosine
     similarity is computed.""",
-        required=True,
         default=-1.0,
     )
     return argument_parser
@@ -489,14 +499,19 @@ model.compile(optimizer='sgd',
     with prediction values to determine the truth value of predictions
     (i.e., above the threshold is `true`, below is `false`). One metric
     value is generated for each threshold value.""",
-        required=True,
         default=0.5,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -548,14 +563,19 @@ model.compile(optimizer='sgd',
     with prediction values to determine the truth value of predictions
     (i.e., above the threshold is `true`, below is `false`). One metric
     value is generated for each threshold value.""",
-        required=True,
         default=0.5,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -803,7 +823,10 @@ model.compile(optimizer='sgd',
         default="logcosh",
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -932,7 +955,10 @@ model.compile(optimizer='sgd', loss='mse')
         default="mean",
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -1068,9 +1094,13 @@ model.compile(
         help="""The possible number of labels the prediction task can have.
     This value must be provided, since a confusion matrix of dimension =
     [num_classes, num_classes] will be allocated.""",
+        required=True,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
         "--dtype",
@@ -1125,9 +1155,13 @@ model.compile(
         "--normalizer",
         type=str,
         help="The normalizer values with same shape as predictions.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
         "--dtype",
@@ -1262,7 +1296,10 @@ array([2.       , 3.6363635, 4.8      , 5.3333335], dtype=float32)"""
         default="mean_tensor",
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -1467,12 +1504,14 @@ model.compile(optimizer='sgd',
     threshold is `true`, below is `false`). One metric value is generated
     for each threshold value. If neither thresholds nor top_k are set, the
     default is to calculate precision with `thresholds=0.5`.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--top_k",
         type=str,
         help="""(Optional) Unset by default. An int value specifying the top-k
     predictions to consider when calculating precision.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--class_id",
@@ -1480,12 +1519,19 @@ model.compile(optimizer='sgd',
         help="""(Optional) Integer class ID for which we want binary metrics.
     This must be in the half-open interval `[0, num_classes)`, where
     `num_classes` is the last dimension of predictions.""",
+        required=True,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -1544,11 +1590,13 @@ model.compile(
         type=int,
         help="""(Optional)The number of thresholds to
     use for matching the given recall.""",
-        required=True,
         default=200,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
         "--dtype",
@@ -1616,12 +1664,14 @@ model.compile(optimizer='sgd',
     threshold is `true`, below is `false`). One metric value is generated
     for each threshold value. If neither thresholds nor top_k are set, the
     default is to calculate recall with `thresholds=0.5`.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--top_k",
         type=str,
         help="""(Optional) Unset by default. An int value specifying the top-k
     predictions to consider when calculating recall.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--class_id",
@@ -1629,12 +1679,19 @@ model.compile(optimizer='sgd',
         help="""(Optional) Integer class ID for which we want binary metrics.
     This must be in the half-open interval `[0, num_classes)`, where
     `num_classes` is the last dimension of predictions.""",
+        required=True,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -1696,11 +1753,13 @@ model.compile(
         type=int,
         help="""(Optional)The number of thresholds to
     use for matching the given precision.""",
-        required=True,
         default=200,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
         "--dtype",
@@ -1745,9 +1804,9 @@ model.compile(
     metrics=[tf.keras.metrics.RootMeanSquaredError()])
 ```"""
     argument_parser.add_argument(
-        "--name", help=None, required=True, default="root_mean_squared_error"
+        "--name", type=str, required=True, default="root_mean_squared_error"
     )
-    argument_parser.add_argument("--dtype", help=None)
+    argument_parser.add_argument("--dtype", required=True)
     return argument_parser
 
 
@@ -1815,11 +1874,13 @@ model.compile(
         type=int,
         help="""(Optional)The number of thresholds to
     use for matching the given specificity.""",
-        required=True,
         default=200,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
         "--dtype",
@@ -1888,11 +1949,7 @@ array([0.0513, 2.303], dtype=float32)"""
         "--y_true", type=bool, help="Ground truth values.", required=True, default=False
     )
     argument_parser.add_argument(
-        "--y_pred",
-        type=str,
-        help="The predicted values.",
-        required=True,
-        default="```(-1)```",
+        "--y_pred", help="The predicted values.", required=True, default="```(-1)```"
     )
     argument_parser.add_argument(
         "--from_logits",
@@ -1907,7 +1964,6 @@ array([0.0513, 2.303], dtype=float32)"""
         type=int,
         help="""(Optional)The dimension along which the entropy is
     computed.""",
-        required=True,
         default=-1,
     )
     return (
@@ -1948,7 +2004,6 @@ array([1., 1.], dtype=float32)"""
         type=int,
         help="""(Optional) Number of top elements to look at for computing accuracy.
    """,
-        required=True,
         default=5,
     )
     return (
@@ -2020,11 +2075,13 @@ model.compile(
         type=int,
         help="""(Optional)The number of thresholds to
     use for matching the given sensitivity.""",
-        required=True,
         default=200,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
         "--dtype",
@@ -2121,7 +2178,10 @@ model.compile(optimizer='sgd', loss='mse')
         default="sum",
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -2156,7 +2216,6 @@ array([1., 1.], dtype=float32)"""
         type=int,
         help="""(Optional) Number of top elements to look at for computing accuracy.
    """,
-        required=True,
         default=5,
     )
     return (
@@ -2213,14 +2272,19 @@ model.compile(optimizer='sgd',
     with prediction values to determine the truth value of predictions
     (i.e., above the threshold is `true`, below is `false`). One metric
     value is generated for each threshold value.""",
-        required=True,
         default=0.5,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 
@@ -2272,14 +2336,19 @@ model.compile(optimizer='sgd',
     with prediction values to determine the truth value of predictions
     (i.e., above the threshold is `true`, below is `false`). One metric
     value is generated for each threshold value.""",
-        required=True,
         default=0.5,
     )
     argument_parser.add_argument(
-        "--name", type=str, help="(Optional) string name of the metric instance."
+        "--name",
+        type=str,
+        help="(Optional) string name of the metric instance.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--dtype", type=str, help="(Optional) data type of the metric result."
+        "--dtype",
+        type=str,
+        help="(Optional) data type of the metric result.",
+        required=True,
     )
     return argument_parser
 

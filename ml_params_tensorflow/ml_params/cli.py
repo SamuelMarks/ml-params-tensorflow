@@ -4,7 +4,6 @@ CLI interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params.
 
 from dataclasses import dataclass
 from importlib import import_module
-from itertools import chain
 from json import loads
 from pkgutil import find_loader
 
@@ -38,7 +37,7 @@ def train_parser(argument_parser):
     :type argument_parser: ```ArgumentParser```
 
     :return: argument_parser, the model
-    :rtype: ```Tuple[ArgumentParser, Any]```
+    :rtype: ```Tuple[ArgumentParser, str]```
     """
     argument_parser.description = "Run the training loop for your ML pipeline."
     argument_parser.add_argument(
@@ -174,7 +173,6 @@ def train_parser(argument_parser):
         "--validation_split",
         type=float,
         help="Optional float between 0 and 1, fraction of data to reserve for validation.",
-        required=True,
         default=0.1,
     )
     argument_parser.add_argument(
@@ -211,23 +209,14 @@ def load_data_parser(argument_parser):
     argument_parser.add_argument(
         "--dataset_name",
         type=str,
-        choices=tuple(
-            sorted(
-                chain.from_iterable(
-                    (
-                        (
-                            "boston_housing",
-                            "cifar10",
-                            "cifar100",
-                            "fashion_mnist",
-                            "imdb",
-                            "mnist",
-                            "reuters",
-                        ),
-                        datasets2classes.keys(),
-                    )
-                )
-            )
+        choices=(
+            "boston_housing",
+            "cifar10",
+            "cifar100",
+            "fashion_mnist",
+            "imdb",
+            "mnist",
+            "reuters",
         ),
         help="name of dataset",
         required=True,
@@ -316,6 +305,3 @@ Takes a model object, or a pipeline that downloads & configures before returning
         help="to be passed into the model. If empty, doesn't call, unless call=True.",
     )
     return argument_parser, "```self.get_model```"
-
-
-__all__ = ["load_data_parser", "load_model_parser", "train_parser"]

@@ -17,7 +17,7 @@ class TestExtraSymbols(TestCase):
         Tests whether `extra_symbols` has the right keys
         """
         self.assertListEqual(
-            sorted(extra_symbols.keys()), ["callbacks", "metrics", "optimizers"]
+            sorted(extra_symbols.keys()), ["callbacks", "loss", "metrics", "optimizers"]
         )
 
 

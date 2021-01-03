@@ -1,8 +1,6 @@
 """ Generated Loss CLI parsers """
 from __future__ import absolute_import, division, print_function
 
-NoneType = type(None)
-
 
 def binary_crossentropyConfig(argument_parser):
     """
@@ -182,11 +180,7 @@ Standalone usage:
 >>> loss.numpy()
 array([-0., -0.999, 0.999], dtype=float32)"""
     argument_parser.add_argument(
-        "--y_true",
-        type=str,
-        help="Tensor of true targets.",
-        required=True,
-        default="```(-1)```",
+        "--y_true", help="Tensor of true targets.", required=True, default="```(-1)```"
     )
     argument_parser.add_argument(
         "--y_pred", type=str, help="Tensor of predicted targets.", required=True
@@ -491,7 +485,6 @@ with strategy.scope():
 ```"""
     argument_parser.add_argument(
         "--reduction",
-        type=str,
         help="""(Optional) Type of `tf.keras.losses.Reduction` to apply to
     loss. Default value is `AUTO`. `AUTO` indicates that the reduction
     option will be determined by the usage context. For almost all cases
@@ -501,10 +494,11 @@ with strategy.scope():
     will raise an error. Please see this custom training [tutorial](
       https://www.tensorflow.org/tutorials/distribute/custom_training)
     for more details.""",
-        required=True,
         default="```losses_utils.ReductionV2```",
     )
-    argument_parser.add_argument("--name", type=str, help="Optional name for the op.")
+    argument_parser.add_argument(
+        "--name", type=str, help="Optional name for the op.", required=True
+    )
     return argument_parser
 
 
@@ -919,21 +913,11 @@ Contains the following values:
 Please see the
 [custom training guide](https://www.tensorflow.org/tutorials/distribute/custom_training)  # pylint: disable=line-too-long
 for more details on this."""
+    argument_parser.add_argument("--AUTO", type=str, required=True, default="auto")
+    argument_parser.add_argument("--NONE", type=str, required=True, default="none")
+    argument_parser.add_argument("--SUM", type=str, required=True, default="sum")
     argument_parser.add_argument(
-        "--AUTO", type=str, help="", required=True, default="auto"
-    )
-    argument_parser.add_argument(
-        "--NONE", type=str, help="", required=True, default="none"
-    )
-    argument_parser.add_argument(
-        "--SUM", type=str, help="", required=True, default="sum"
-    )
-    argument_parser.add_argument(
-        "--SUM_OVER_BATCH_SIZE",
-        type=str,
-        help="",
-        required=True,
-        default="sum_over_batch_size",
+        "--SUM_OVER_BATCH_SIZE", type=str, required=True, default="sum_over_batch_size"
     )
     return argument_parser
 
@@ -962,11 +946,7 @@ array([0.0513, 2.303], dtype=float32)"""
         "--y_true", type=bool, help="Ground truth values.", required=True, default=False
     )
     argument_parser.add_argument(
-        "--y_pred",
-        type=str,
-        help="The predicted values.",
-        required=True,
-        default="```(-1)```",
+        "--y_pred", help="The predicted values.", required=True, default="```(-1)```"
     )
     argument_parser.add_argument(
         "--from_logits",
@@ -981,7 +961,6 @@ array([0.0513, 2.303], dtype=float32)"""
         type=int,
         help="""(Optional)The dimension along which the entropy is
     computed.""",
-        required=True,
         default=-1,
     )
     return (

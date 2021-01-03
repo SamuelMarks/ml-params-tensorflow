@@ -59,8 +59,8 @@ def main(argv=None):
                 "from typing import Optional, Union\\n"
                 "from {typing} import Literal\\n\\n"
                 "from dataclasses import dataclass\\n\\n"
-                "from yaml import safe_load as loads\\n\\n"
-                "NoneType = type(None)\\n".format(
+                "from yaml import safe_load as loads\\n"
+                "\\n".format(
                     mod_cap=mod_cap,
                     typing="typing"
                     if sys.version_info[:2] < (3, 8)

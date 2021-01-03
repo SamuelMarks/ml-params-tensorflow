@@ -2,11 +2,19 @@
 Implementation of ml_params BaseTrainer API
 """
 from functools import partial
-from itertools import filterfalse
-from operator import eq
 from os import path
 from types import FunctionType
-from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
+from typing import (
+    AnyStr,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    Union,
+)
 
 import numpy as np
 import tensorflow as tf
@@ -16,6 +24,7 @@ from typing_extensions import Literal
 
 from ml_params_tensorflow import get_logger
 from ml_params_tensorflow.ml_params.datasets import load_data_from_tfds_or_ml_prepare
+from ml_params_tensorflow.ml_params.type_generators import exposed_datasets
 
 logger = get_logger(
     ".".join(
@@ -25,144 +34,6 @@ logger = get_logger(
         )
     )
 )
-
-DatasetNameType = Literal[
-    "boston_housing",
-    "cifar10",
-    "cifar100",
-    "fashion_mnist",
-    "imdb",
-    "mnist",
-    "reuters",
-]
-ModelType = Union[
-    Literal[
-        "DenseNet121",
-        "DenseNet169",
-        "DenseNet201",
-        "EfficientNetB0",
-        "EfficientNetB1",
-        "EfficientNetB2",
-        "EfficientNetB3",
-        "EfficientNetB4",
-        "EfficientNetB5",
-        "EfficientNetB6",
-        "EfficientNetB7",
-        "InceptionResNetV2",
-        "InceptionV3",
-        "MobileNet",
-        "MobileNetV2",
-        "MobileNetV3Large",
-        "MobileNetV3Small",
-        "NASNetLarge",
-        "NASNetMobile",
-        "ResNet101",
-        "ResNet101V2",
-        "ResNet152",
-        "ResNet152V2",
-        "ResNet50",
-        "ResNet50V2",
-        "Xception",
-    ],
-    AnyStr,
-]
-LossType = Literal[
-    "binary_crossentropy",
-    "categorical_crossentropy",
-    "categorical_hinge",
-    "cosine_similarity",
-    "hinge",
-    "huber",
-    "kld",
-    "kl_divergence",
-    "kullback_leibler_divergence",
-    "logcosh",
-    "Loss",
-    "mae",
-    "mape",
-    "mean_absolute_error",
-    "mean_absolute_percentage_error",
-    "mean_squared_error",
-    "mean_squared_logarithmic_error",
-    "mse",
-    "msle",
-    "poisson",
-    "Reduction",
-    "sparse_categorical_crossentropy",
-    "squared_hinge",
-]
-OptimizerType = Literal[
-    "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
-]
-CallbacksType = Optional[
-    List[
-        Literal[
-            "BaseLogger",
-            "CSVLogger",
-            "Callback",
-            "CallbackList",
-            "EarlyStopping",
-            "History",
-            "LambdaCallback",
-            "LearningRateScheduler",
-            "ModelCheckpoint",
-            "ProgbarLogger",
-            "ReduceLROnPlateau",
-            "RemoteMonitor",
-            "TensorBoard",
-            "TerminateOnNaN",
-        ]
-    ]
-]
-MetricsType = Optional[
-    List[
-        Literal[
-            "AUC",
-            "binary_accuracy",
-            "binary_crossentropy",
-            "categorical_accuracy",
-            "categorical_crossentropy",
-            "CategoricalHinge",
-            "CosineSimilarity",
-            "FalseNegatives",
-            "FalsePositives",
-            "hinge",
-            "kld",
-            "kl_divergence",
-            "kullback_leibler_divergence",
-            "logcosh",
-            "LogCoshError",
-            "mae",
-            "mape",
-            "Mean",
-            "mean_absolute_error",
-            "mean_absolute_percentage_error",
-            "MeanIoU",
-            "MeanRelativeError",
-            "mean_squared_error",
-            "mean_squared_logarithmic_error",
-            "MeanTensor",
-            "mse",
-            "msle",
-            "poisson",
-            "Precision",
-            "PrecisionAtRecall",
-            "Recall",
-            "RecallAtPrecision",
-            "RootMeanSquaredError",
-            "SensitivityAtSpecificity",
-            "sparse_categorical_accuracy",
-            "sparse_categorical_crossentropy",
-            "sparse_top_k_categorical_accuracy",
-            "SpecificityAtSensitivity",
-            "squared_hinge",
-            "Sum",
-            "top_k_categorical_accuracy",
-            "TrueNegatives",
-            "TruePositives",
-        ]
-    ]
-]
 
 
 class TensorFlowTrainer(BaseTrainer):
@@ -175,14 +46,94 @@ class TensorFlowTrainer(BaseTrainer):
     def load_data(
         self,
         *,
-        dataset_name: DatasetNameType,
+        dataset_name: Literal[
+            "boston_housing",
+            "cifar10",
+            "cifar100",
+            "fashion_mnist",
+            "imdb",
+            "mnist",
+            "reuters",
+        ],
         data_loader: Optional[
             Callable[
                 [AnyStr, Literal["np", "tf"], bool, Dict],
-                Union[
-                    Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
-                    Tuple[np.ndarray, np.ndarray, Any],
-                    Tuple[Any, Any, Any],
+                Tuple[
+                    Union[
+                        Tuple[tf.data.Dataset, tf.data.Dataset],
+                        Tuple[
+                            Iterator[
+                                Union[
+                                    tf.RaggedTensor,
+                                    np.ndarray,
+                                    np.generic,
+                                    bytes,
+                                    Iterable[
+                                        Union[
+                                            tf.RaggedTensor,
+                                            np.ndarray,
+                                            np.generic,
+                                            bytes,
+                                        ]
+                                    ],
+                                ]
+                            ],
+                            Iterator[
+                                Union[
+                                    tf.RaggedTensor,
+                                    np.ndarray,
+                                    np.generic,
+                                    bytes,
+                                    Iterable[
+                                        Union[
+                                            tf.RaggedTensor,
+                                            np.ndarray,
+                                            np.generic,
+                                            bytes,
+                                        ]
+                                    ],
+                                ]
+                            ],
+                        ],
+                    ],
+                    Union[
+                        Tuple[tf.data.Dataset, tf.data.Dataset],
+                        Tuple[
+                            Iterator[
+                                Union[
+                                    tf.RaggedTensor,
+                                    np.ndarray,
+                                    np.generic,
+                                    bytes,
+                                    Iterable[
+                                        Union[
+                                            tf.RaggedTensor,
+                                            np.ndarray,
+                                            np.generic,
+                                            bytes,
+                                        ]
+                                    ],
+                                ]
+                            ],
+                            Iterator[
+                                Union[
+                                    tf.RaggedTensor,
+                                    np.ndarray,
+                                    np.generic,
+                                    bytes,
+                                    Iterable[
+                                        Union[
+                                            tf.RaggedTensor,
+                                            np.ndarray,
+                                            np.generic,
+                                            bytes,
+                                        ]
+                                    ],
+                                ]
+                            ],
+                        ],
+                    ],
+                    tfds.core.DatasetInfo,
                 ],
             ]
         ] = None,
@@ -221,11 +172,44 @@ class TensorFlowTrainer(BaseTrainer):
         )
         if len(self.data) > 2:
             self.ds_info: tfds.core.DatasetInfo = self.data[2]
-
         return self.data
 
     def load_model(
-        self, *, model: ModelType, call: bool = False, **model_kwargs
+        self,
+        *,
+        model: Union[
+            Literal[
+                "DenseNet121",
+                "DenseNet169",
+                "DenseNet201",
+                "EfficientNetB0",
+                "EfficientNetB1",
+                "EfficientNetB2",
+                "EfficientNetB3",
+                "EfficientNetB4",
+                "EfficientNetB5",
+                "EfficientNetB6",
+                "EfficientNetB7",
+                "InceptionResNetV2",
+                "InceptionV3",
+                "MobileNet",
+                "MobileNetV2",
+                "MobileNetV3Large",
+                "MobileNetV3Small",
+                "NASNetLarge",
+                "NASNetMobile",
+                "ResNet101",
+                "ResNet101V2",
+                "ResNet152",
+                "ResNet152V2",
+                "ResNet50",
+                "ResNet50V2",
+                "Xception",
+            ],
+            AnyStr,
+        ],
+        call: bool = False,
+        **model_kwargs
     ) -> Callable[[], tf.keras.Model]:
         """
         Load the model.
@@ -268,6 +252,8 @@ class TensorFlowTrainer(BaseTrainer):
                         self.model = getattr(
                             tf.keras.applications, self.model.rpartition(".")[2]
                         )
+                    elif self.model in exposed_datasets:
+                        self.model = exposed_datasets[self.model]
                     else:
                         raise NotImplementedError(
                             "`tf.keras.Model` from {!r}".format(self.model)
@@ -312,10 +298,12 @@ class TensorFlowTrainer(BaseTrainer):
                         self.model,
                         tf.keras.layers.Flatten(),
                         tf.keras.layers.Dense(
-                            *(1, "sigmoid")
-                            if self.ds_info.features["label"].num_classes
-                            in frozenset((1, 2))
-                            else (self.ds_info.features["label"].num_classes,)
+                            *(
+                                (1, "sigmoid")
+                                if self.ds_info.features["label"].num_classes
+                                in frozenset((1, 2))
+                                else (self.ds_info.features["label"].num_classes,)
+                            )
                         ),
                     ]
                 )
@@ -328,10 +316,103 @@ class TensorFlowTrainer(BaseTrainer):
         self,
         *,
         epochs: int,
-        loss: LossType,
-        optimizer: OptimizerType,
-        callbacks: CallbacksType = None,
-        metrics: MetricsType = None,
+        loss: Literal[
+            "binary_crossentropy",
+            "categorical_crossentropy",
+            "categorical_hinge",
+            "cosine_similarity",
+            "hinge",
+            "huber",
+            "kld",
+            "kl_divergence",
+            "kullback_leibler_divergence",
+            "logcosh",
+            "Loss",
+            "mae",
+            "mape",
+            "mean_absolute_error",
+            "mean_absolute_percentage_error",
+            "mean_squared_error",
+            "mean_squared_logarithmic_error",
+            "mse",
+            "msle",
+            "poisson",
+            "Reduction",
+            "sparse_categorical_crossentropy",
+            "squared_hinge",
+        ],
+        optimizer: Literal[
+            "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
+        ],
+        callbacks: Optional[
+            List[
+                Literal[
+                    "BaseLogger",
+                    "CSVLogger",
+                    "Callback",
+                    "CallbackList",
+                    "EarlyStopping",
+                    "History",
+                    "LambdaCallback",
+                    "LearningRateScheduler",
+                    "ModelCheckpoint",
+                    "ProgbarLogger",
+                    "ReduceLROnPlateau",
+                    "RemoteMonitor",
+                    "TensorBoard",
+                    "TerminateOnNaN",
+                ]
+            ]
+        ] = None,
+        metrics: Optional[
+            List[
+                Literal[
+                    "AUC",
+                    "binary_accuracy",
+                    "binary_crossentropy",
+                    "categorical_accuracy",
+                    "categorical_crossentropy",
+                    "CategoricalHinge",
+                    "CosineSimilarity",
+                    "FalseNegatives",
+                    "FalsePositives",
+                    "hinge",
+                    "kld",
+                    "kl_divergence",
+                    "kullback_leibler_divergence",
+                    "logcosh",
+                    "LogCoshError",
+                    "mae",
+                    "mape",
+                    "Mean",
+                    "mean_absolute_error",
+                    "mean_absolute_percentage_error",
+                    "MeanIoU",
+                    "MeanRelativeError",
+                    "mean_squared_error",
+                    "mean_squared_logarithmic_error",
+                    "MeanTensor",
+                    "mse",
+                    "msle",
+                    "poisson",
+                    "Precision",
+                    "PrecisionAtRecall",
+                    "Recall",
+                    "RecallAtPrecision",
+                    "RootMeanSquaredError",
+                    "SensitivityAtSpecificity",
+                    "sparse_categorical_accuracy",
+                    "sparse_categorical_crossentropy",
+                    "sparse_top_k_categorical_accuracy",
+                    "SpecificityAtSensitivity",
+                    "squared_hinge",
+                    "Sum",
+                    "top_k_categorical_accuracy",
+                    "TrueNegatives",
+                    "TruePositives",
+                ]
+            ]
+        ] = None,
         metric_emit_freq: Optional[Callable[[int], bool]] = None,
         output_type: str = "infer",
         validation_split: float = 0.1,
@@ -369,6 +450,13 @@ class TensorFlowTrainer(BaseTrainer):
         :return: the model
         :rtype: ```Any```
         """
+        from ml_params_tensorflow.ml_params.type_generators import (
+            exposed_callbacks,
+            exposed_losses,
+            exposed_metrics,
+            exposed_optimizers,
+        )
+
         super(TensorFlowTrainer, self).train(epochs=epochs)
         assert self.data is not None
         assert self.get_model is not None
@@ -385,14 +473,17 @@ class TensorFlowTrainer(BaseTrainer):
             strategy = tf.distribute.TPUStrategy(resolver)
         with strategy.scope():
             model = self.get_model()
-
-            optimizer = acquire_symbols_from((optimizer,), tf.keras.optimizers)
-            if not isinstance(optimizer, tf.keras.optimizers.Optimizer):
-                optimizer = acquire_symbols_from(
-                    optimizer, tf.keras.optimizers, never_str=False
-                )[0]
+            optimizer = acquire_symbols_from(
+                name=optimizer, name2sym=exposed_optimizers, never_str=False
+            )
             metrics = (
-                acquire_symbols_from(metrics, tf.keras.metrics) if metrics else None
+                list(
+                    map(
+                        partial(acquire_symbols_from, name2sym=exposed_metrics), metrics
+                    )
+                )
+                if metrics
+                else None
             )
             if isinstance(loss, tuple):
                 loss_kwargs = {
@@ -400,19 +491,24 @@ class TensorFlowTrainer(BaseTrainer):
                     for k, v in vars(loss[1]).items()
                     if k not in frozenset(("y_pred", "y_true"))
                 }
-                loss = getattr(
-                    tf.keras.losses,
-                    "".join(map(str.title, loss[0].rpartition(".")[2].split("_"))),
+                loss = acquire_symbols_from(
+                    name2sym=exposed_losses,
+                    name="".join(map(str.title, loss[0].rpartition(".")[2].split("_"))),
+                    never_str=True,
                 )(**loss_kwargs)
-            model.compile(
-                loss=loss,
-                optimizer=optimizer,
-                metrics=metrics,
-            )
-        callbacks = (
-            acquire_symbols_from(callbacks, tf.keras.callbacks) if callbacks else None
-        )
+            print("optimizer:", optimizer, ";")
+            model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
 
+        print("callbacks:", callbacks, ";")
+        callbacks = (
+            list(
+                map(
+                    partial(acquire_symbols_from, name2sym=exposed_callbacks), callbacks
+                )
+            )
+            if callbacks
+            else None
+        )
         model.fit(
             self.data[0],
             validation_data=self.data[1],
@@ -427,42 +523,29 @@ class TensorFlowTrainer(BaseTrainer):
         return model
 
 
-def acquire_symbols_from(iterable, module, never_str=False):
+def acquire_symbols_from(name, name2sym, never_str=False):
     """
     Acquire the symbol(s) from the iterable
 
-    :param iterable: Iterator of keys to lookup in module
-    :type iterable: ```Optional[Iterator[str]]```
+    :param name: Name of symbol. All namespace is removed.
+    :type name: ```Union[Any, str]```
 
-    :param module: The module to run `getattr` on
-    :type module: ```Union[ModuleType, Any]```
+    :param name2sym: Dict from symbol name to symbol
+    :type name2sym: ```Dict[Str, Any]```
 
     :param never_str: If True, ensure that `getattr` on the module is always called
     :type never_str: ```bool```
 
     :return: The list of symbols acquired from the module
-    :rtype: ```Optional[List[Union[Any, str]]]```
+    :rtype: ```Callable[[...], Any]```
     """
-    return (
-        None
-        if iterable is None
-        else list(
-            (
-                getattr(
-                    module, name.rpartition(".")[2] if name.count(".") > 0 else name
-                )
-                if never_str is True
-                else name
-            )
-            if isinstance(name, str)
-            else getattr(module, name[0].rpartition(".")[2])(
-                **dict(
-                    filterfalse(partial(eq, ("kwargs", None)), vars(name[1]).items())
-                )
-            )
-            for name in iterable
-        )
-    )
+    if isinstance(name, str):
+        name = name.rpartition(".")[2] if name.count(".") > 0 else name
+        if name in name2sym and never_str:
+            return name2sym[name]
+    if never_str and isinstance(name, str):
+        raise KeyError("{!r} not found in {!r}".format(name, ""))
+    return name
 
 
 del get_logger

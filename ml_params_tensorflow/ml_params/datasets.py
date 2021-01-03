@@ -5,17 +5,7 @@ import os
 from functools import partial
 from importlib import import_module
 from pkgutil import find_loader
-from typing import (
-    Any,
-    AnyStr,
-    Callable,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
-    Union,
-)
+from typing import Any, AnyStr, Iterable, Iterator, Tuple, Union
 
 import numpy as np
 import tensorflow as tf
@@ -28,7 +18,6 @@ datasets2classes = (
     if find_loader("ml_prepare") is None
     else getattr(import_module("ml_prepare.datasets"), "datasets2classes")
 )
-
 NumpyValue = Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]
 NumpyElem = Union[NumpyValue, Iterable[NumpyValue]]
 
@@ -75,17 +64,52 @@ def load_data_from_tfds_or_ml_prepare(
     **data_loader_kwargs
 ) -> Tuple[
     Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
+        Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[
-            Iterator[NumpyElem], Iterator[NumpyElem], Union[tfds.core.DatasetInfo, Any]
+            Iterator[
+                Union[
+                    tf.RaggedTensor,
+                    np.ndarray,
+                    np.generic,
+                    bytes,
+                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
+                ]
+            ],
+            Iterator[
+                Union[
+                    tf.RaggedTensor,
+                    np.ndarray,
+                    np.generic,
+                    bytes,
+                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
+                ]
+            ],
         ],
     ],
     Union[
-        Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
+        Tuple[tf.data.Dataset, tf.data.Dataset],
         Tuple[
-            Iterator[NumpyElem], Iterator[NumpyElem], Union[tfds.core.DatasetInfo, Any]
+            Iterator[
+                Union[
+                    tf.RaggedTensor,
+                    np.ndarray,
+                    np.generic,
+                    bytes,
+                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
+                ]
+            ],
+            Iterator[
+                Union[
+                    tf.RaggedTensor,
+                    np.ndarray,
+                    np.generic,
+                    bytes,
+                    Iterable[Union[tf.RaggedTensor, np.ndarray, np.generic, bytes]],
+                ]
+            ],
         ],
     ],
+    tfds.core.DatasetInfo,
 ]:
     """
     Acquire from the official tfds model zoo, or the ophthalmology focussed ml-prepare library
@@ -133,27 +157,7 @@ def load_data_from_tfds_or_ml_prepare(
             ),
         },
     )
-    tfds_load: Callable[
-        [
-            Tuple[
-                str,
-                Optional[List[str]],
-                Optional[str],
-                Optional[int],
-                Optional[bool],
-                Optional[bool],
-                Optional[bool],
-                Optional[dict],
-                Optional[tfds.ReadConfig],
-                Optional[bool],
-                Optional[dict],
-                Optional[dict],
-                Optional[bool],
-            ]
-        ],
-        Tuple[Tuple[tf.data.Dataset, tf.data.Dataset], tfds.core.DatasetInfo],
-    ] = tfds.load
-    (_ds_train, _ds_test), _ds_info = tfds_load(
+    (_ds_train, _ds_test), _ds_info = tfds.load(
         dataset_name,
         split=[tfds.core.ReadInstruction("train"), tfds.core.ReadInstruction("test")],
         data_dir=tfds_dir,
@@ -162,25 +166,30 @@ def load_data_from_tfds_or_ml_prepare(
         with_info=True,
         download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"],
     )
-
+    ds_info: tfds.core.DatasetInfo = _ds_info
     ds_train: tf.data.Dataset = _ds_train
-    print("acquire_and_concat_validation_to_train:", acquire_and_concat_validation_to_train, ';')
-    if acquire_and_concat_validation_to_train:
-        ds_validation: tf.data.Dataset = tfds_load(
+    print(
+        "acquire_and_concat_validation_to_train:",
+        acquire_and_concat_validation_to_train,
+        ";",
+    )
+    if acquire_and_concat_validation_to_train and "validation" in ds_info.splits:
+        ds_validation: tf.data.Dataset = tfds.load(
             dataset_name,
             split=[tfds.core.ReadInstruction("validation")],
             data_dir=tfds_dir,
             shuffle_files=True,
             as_supervised=True,
             with_info=True,
-            download_and_prepare_kwargs=data_loader_kwargs["download_and_prepare_kwargs"],
+            download_and_prepare_kwargs=data_loader_kwargs[
+                "download_and_prepare_kwargs"
+            ],
         )
         print("train was", ds_train.cardinality())
         print("validation is", ds_validation.cardinality())
         ds_train = ds_train.concatenate(ds_validation)
         print("train now", ds_train.cardinality())
     ds_test: tf.data.Dataset = _ds_test
-    ds_info: tfds.core.DatasetInfo = _ds_info
     assert (
         "num_classes" not in data_loader_kwargs
         or data_loader_kwargs["num_classes"] == ds_info.features["label"].num_classes

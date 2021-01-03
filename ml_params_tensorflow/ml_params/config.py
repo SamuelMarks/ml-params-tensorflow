@@ -1,59 +1,12 @@
 """
 Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
 """
-from json import loads
-from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
+
+from typing import Any, AnyStr, Callable, Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from typing_extensions import Literal
-
-
-class self(object):
-    """
-    Simple class to proxy object expected by code generated from `train` function
-
-    :cvar model: The model (probably a `tf.keras.models.Sequential`)
-    :cvar data: The data (probably a `tf.data.Dataset`)
-    """
-
-    model: Any = None
-    data: Any = None
-
-
-model = self.model
-
-
-def from_string(cls, s):
-    """
-    Generate a new object of the class using a loaded s
-
-    :param cls: The class to create
-    :type cls: ```Callable[[Any, ...], Any]```
-
-    :param s: The arguments string to be parsed
-    :type s: ```str```
-
-    :return: Constructed class
-    :rtype: ```Any```
-    """
-    return cls(**loads(s))
-
-
-# def run_typed(f):
-#     """
-#     Decorate to validate the input class properties
-#
-#     :param f: Function or class
-#     :type f: ```Any```
-#
-#     :return: Object that will now validate its input
-#     :rtype: ```Any```
-#     """
-#     f.from_string = classmethod(from_string)
-#     f.__argparse__ = dict(from_string=f.from_string)
-#     return runtime_validation(dataclass(f))
 
 
 class TrainConfig(object):
@@ -171,13 +124,13 @@ class TrainConfig(object):
             ]
         ]
     ] = None
-    metric_emit_freq: Optional[Callable[[int], bool]] = "``````None``````"
+    metric_emit_freq: Optional[Callable[[int], bool]] = None
     output_type: str = "infer"
-    validation_split: float = 0.1
+    validation_split: Optional[float] = 0.1
     batch_size: int = 128
     tpu_address: Optional[str] = None
     kwargs: Optional[dict] = None
-    return_type: Any = model
+    return_type: str = "model"
 
 
 class LoadDataConfig(object):
@@ -203,7 +156,7 @@ class LoadDataConfig(object):
     ] = None
     data_loader: Optional[
         Callable[
-            [AnyStr, AnyStr, Literal["np", "tf"], bool, Dict],
+            [AnyStr, Literal["np", "tf"], bool, Dict],
             Union[
                 Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
                 Tuple[np.ndarray, np.ndarray, Any],
