@@ -46,8 +46,7 @@ DatasetTuple = Union[
 ]
 
 DatasetTupleInfo = Tuple[
-    DatasetTuple[0],
-    DatasetTuple[1],
+    DatasetTuple,
     tfds.core.DatasetInfo,
 ]
 
