@@ -138,12 +138,11 @@ Standalone usage:
 >>> assert np.array_equal(loss.numpy(), np.maximum(0., neg - pos + 1.))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="The ground truth values. `y_true` values are expected to be 0 or 1.",
         required=True,
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="The predicted values.", required=True
+        "--y_pred", help="The predicted values.", required=True
     )
     return argument_parser, "```math_ops.maximum(neg - pos + 1.0, zero)```"
 
@@ -182,7 +181,7 @@ array([-0., -0.999, 0.999], dtype=float32)"""
         "--y_true", help="Tensor of true targets.", required=True, default="```(-1)```"
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     argument_parser.add_argument(
         "--axis",
@@ -219,7 +218,6 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="""The ground truth values. `y_true` values are expected to be -1 or 1.
     If binary (0 or 1) labels are provided they will be converted to -1 or 1.
     shape = `[batch_size, d0, .. dN]`.""",
@@ -227,7 +225,6 @@ Standalone usage:
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -264,7 +261,7 @@ where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss"""
         default=1.0,
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="tensor of predicted targets.", required=True
+        "--y_pred", help="tensor of predicted targets.", required=True
     )
     argument_parser.add_argument(
         "--delta",
@@ -308,10 +305,10 @@ Standalone usage:
 >>> assert np.array_equal(
 ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Tensor of true targets.", required=True
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     return (
         argument_parser,
@@ -346,10 +343,10 @@ Standalone usage:
 >>> assert np.array_equal(
 ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Tensor of true targets.", required=True
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     return (
         argument_parser,
@@ -384,10 +381,10 @@ Standalone usage:
 >>> assert np.array_equal(
 ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Tensor of true targets.", required=True
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     return (
         argument_parser,
@@ -425,13 +422,11 @@ Standalone usage:
 ...     atol=1e-5)"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -487,7 +482,7 @@ with strategy.scope():
         help="""(Optional) Type of `tf.keras.losses.Reduction` to apply to
     loss. Default value is `AUTO`. `AUTO` indicates that the reduction
     option will be determined by the usage context. For almost all cases
-    thisWhen used with
+    this defaults to `SUM_OVER_BATCH_SIZE`. When used with
     `tf.distribute.Strategy`, outside of built-in training loops such as
     `tf.keras` `compile` and `fit`, using `AUTO` or `SUM_OVER_BATCH_SIZE`
     will raise an error. Please see this custom training [tutorial](
@@ -496,7 +491,7 @@ with strategy.scope():
         default="```losses_utils.ReductionV2```",
     )
     argument_parser.add_argument(
-        "--name", type=str, help="Optional name for the op.", required=True
+        "--name", type=str, help="Optional name for the op.", default=None
     )
     return argument_parser
 
@@ -525,13 +520,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -564,13 +557,11 @@ Standalone usage:
 ...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -601,13 +592,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -640,13 +629,11 @@ Standalone usage:
 ...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -680,13 +667,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -724,13 +709,11 @@ Standalone usage:
 ...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -767,13 +750,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -811,13 +792,11 @@ Standalone usage:
 ...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -854,13 +833,11 @@ Standalone usage:
 ...     atol=1e-5)"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -958,15 +935,11 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="""(Optional)The dimension along which the entropy is
+        help="""(Optional) Defaults to -1. The dimension along which the entropy is
     computed.""",
         default=-1,
     )
-    return (
-        argument_parser,
-        """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
-    axis=axis)```""",
-    )
+    return argument_parser, None
 
 
 def squared_hingeConfig(argument_parser):
@@ -994,7 +967,6 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="""The ground truth values. `y_true` values are expected to be -1 or 1.
     If binary (0 or 1) labels are provided we will convert them to -1 or 1.
     shape = `[batch_size, d0, .. dN]`.""",
@@ -1002,7 +974,6 @@ Standalone usage:
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )

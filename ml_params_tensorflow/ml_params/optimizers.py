@@ -1,5 +1,6 @@
 """ Generated Optimizer CLI parsers """
 
+
 from yaml import safe_load as loads
 
 
@@ -82,6 +83,7 @@ Reference:
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -147,6 +149,7 @@ Reference:
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -268,6 +271,7 @@ unless a variable slice was actually used)."""
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -370,6 +374,7 @@ Reference:
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -490,6 +495,7 @@ Reference:
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     return argument_parser
 
@@ -556,6 +562,7 @@ Reference:
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -667,6 +674,7 @@ Reference:
     `"clipnorm"` or `"clipvalue"`.
     `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips
     gradients by value.""",
+        default=None,
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True

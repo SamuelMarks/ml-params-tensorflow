@@ -2,7 +2,7 @@
 Config interface to ml-params-tensorflow. Expected to be bootstrapped by ml-params, as well as internally.
 """
 
-from typing import Any, AnyStr, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, AnyStr, Callable, Dict, Optional, Tuple, Union, Iterator, List
 
 import numpy as np
 import tensorflow as tf
@@ -10,7 +10,7 @@ import tensorflow_datasets as tfds
 from typing_extensions import Literal
 
 
-class TrainConfig(object):
+class ConfigClass(object):
     """
     Run the training loop for your ML pipeline.
 
@@ -28,103 +28,10 @@ class TrainConfig(object):
     :cvar return_type: the model"""
 
     epochs: int = 0
-    loss: Literal[
-        "binary_crossentropy",
-        "categorical_crossentropy",
-        "categorical_hinge",
-        "cosine_similarity",
-        "hinge",
-        "huber",
-        "kld",
-        "kl_divergence",
-        "kullback_leibler_divergence",
-        "logcosh",
-        "Loss",
-        "mae",
-        "mape",
-        "mean_absolute_error",
-        "mean_absolute_percentage_error",
-        "mean_squared_error",
-        "mean_squared_logarithmic_error",
-        "mse",
-        "msle",
-        "poisson",
-        "Reduction",
-        "sparse_categorical_crossentropy",
-        "squared_hinge",
-    ] = None
-    optimizer: Literal[
-        "Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"
-    ] = None
-    callbacks: Optional[
-        List[
-            Literal[
-                "BaseLogger",
-                "CSVLogger",
-                "Callback",
-                "CallbackList",
-                "EarlyStopping",
-                "History",
-                "LambdaCallback",
-                "LearningRateScheduler",
-                "ModelCheckpoint",
-                "ProgbarLogger",
-                "ReduceLROnPlateau",
-                "RemoteMonitor",
-                "TensorBoard",
-                "TerminateOnNaN",
-            ]
-        ]
-    ] = None
-    metrics: Optional[
-        List[
-            Literal[
-                "AUC",
-                "binary_accuracy",
-                "binary_crossentropy",
-                "categorical_accuracy",
-                "categorical_crossentropy",
-                "CategoricalHinge",
-                "CosineSimilarity",
-                "FalseNegatives",
-                "FalsePositives",
-                "hinge",
-                "kld",
-                "kl_divergence",
-                "kullback_leibler_divergence",
-                "logcosh",
-                "LogCoshError",
-                "mae",
-                "mape",
-                "Mean",
-                "mean_absolute_error",
-                "mean_absolute_percentage_error",
-                "MeanIoU",
-                "MeanRelativeError",
-                "mean_squared_error",
-                "mean_squared_logarithmic_error",
-                "MeanTensor",
-                "mse",
-                "msle",
-                "poisson",
-                "Precision",
-                "PrecisionAtRecall",
-                "Recall",
-                "RecallAtPrecision",
-                "RootMeanSquaredError",
-                "SensitivityAtSpecificity",
-                "sparse_categorical_accuracy",
-                "sparse_categorical_crossentropy",
-                "sparse_top_k_categorical_accuracy",
-                "SpecificityAtSensitivity",
-                "squared_hinge",
-                "Sum",
-                "top_k_categorical_accuracy",
-                "TrueNegatives",
-                "TruePositives",
-            ]
-        ]
-    ] = None
+    loss: Any = None
+    optimizer: Any = None
+    callbacks: Any = None
+    metrics: Any = None
     metric_emit_freq: Optional[Callable[[int], bool]] = None
     output_type: str = "infer"
     validation_split: Optional[float] = 0.1
@@ -158,15 +65,75 @@ class LoadDataConfig(object):
     data_loader: Optional[
         Callable[
             [AnyStr, Literal["np", "tf"], bool, Dict],
-            Union[
-                Tuple[tf.data.Dataset, tf.data.Dataset, tfds.core.DatasetInfo],
-                Tuple[np.ndarray, np.ndarray, Any],
-                Tuple[Any, Any, Any],
+            Tuple[
+                Union[
+                    Tuple[tf.data.Dataset, tf.data.Dataset],
+                    Tuple[
+                        Iterator[
+                            Union[
+                                tf.RaggedTensor,
+                                np.ndarray,
+                                np.generic,
+                                bytes,
+                                Iterable[
+                                    Union[
+                                        tf.RaggedTensor, np.ndarray, np.generic, bytes
+                                    ]
+                                ],
+                            ]
+                        ],
+                        Iterator[
+                            Union[
+                                tf.RaggedTensor,
+                                np.ndarray,
+                                np.generic,
+                                bytes,
+                                Iterable[
+                                    Union[
+                                        tf.RaggedTensor, np.ndarray, np.generic, bytes
+                                    ]
+                                ],
+                            ]
+                        ],
+                    ],
+                ],
+                Union[
+                    Tuple[tf.data.Dataset, tf.data.Dataset],
+                    Tuple[
+                        Iterator[
+                            Union[
+                                tf.RaggedTensor,
+                                np.ndarray,
+                                np.generic,
+                                bytes,
+                                Iterable[
+                                    Union[
+                                        tf.RaggedTensor, np.ndarray, np.generic, bytes
+                                    ]
+                                ],
+                            ]
+                        ],
+                        Iterator[
+                            Union[
+                                tf.RaggedTensor,
+                                np.ndarray,
+                                np.generic,
+                                bytes,
+                                Iterable[
+                                    Union[
+                                        tf.RaggedTensor, np.ndarray, np.generic, bytes
+                                    ]
+                                ],
+                            ]
+                        ],
+                    ],
+                ],
+                tfds.core.DatasetInfo,
             ],
         ]
     ] = None
     data_type: str = "infer"
-    output_type: Optional[Literal["np"]] = None
+    output_type: Optional[Literal["np"]] = "no conversion"
     K: Optional[Literal["np", "tf"]] = None
     data_loader_kwargs: Optional[dict] = None
     return_type: Union[
@@ -218,6 +185,3 @@ class LoadModelConfig(object):
     call: bool = False
     model_kwargs: Optional[dict] = None
     return_type: Callable[[], tf.keras.Model] = "``````self.get_model``````"
-
-
-__all__ = ["LoadDataConfig", "LoadModelConfig", "TrainConfig"]

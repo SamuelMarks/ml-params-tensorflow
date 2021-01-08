@@ -41,126 +41,35 @@ def train_parser(argument_parser):
     """
     argument_parser.description = "Run the training loop for your ML pipeline."
     argument_parser.add_argument(
-        "--epochs",
-        type=int,
-        help="number of epochs (must be greater than 0)",
-        required=True,
+        "--epochs", help="number of epochs (must be greater than 0)", required=True
     )
     argument_parser.add_argument(
         "--loss",
-        type=str,
-        choices=(
-            "binary_crossentropy",
-            "categorical_crossentropy",
-            "categorical_hinge",
-            "cosine_similarity",
-            "hinge",
-            "huber",
-            "kld",
-            "kl_divergence",
-            "kullback_leibler_divergence",
-            "logcosh",
-            "Loss",
-            "mae",
-            "mape",
-            "mean_absolute_error",
-            "mean_absolute_percentage_error",
-            "mean_squared_error",
-            "mean_squared_logarithmic_error",
-            "mse",
-            "msle",
-            "poisson",
-            "Reduction",
-            "sparse_categorical_crossentropy",
-            "squared_hinge",
-        ),
         help="Loss function, can be a string (depending on the framework) or an instance of a class",
         required=True,
     )
     argument_parser.add_argument(
         "--optimizer",
-        type=str,
-        choices=("Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"),
         help="Optimizer, can be a string (depending on the framework) or an instance of a class",
         required=True,
     )
     argument_parser.add_argument(
         "--callbacks",
         type=str,
-        choices=(
-            "BaseLogger",
-            "CSVLogger",
-            "Callback",
-            "CallbackList",
-            "EarlyStopping",
-            "History",
-            "LambdaCallback",
-            "LearningRateScheduler",
-            "ModelCheckpoint",
-            "ProgbarLogger",
-            "ReduceLROnPlateau",
-            "RemoteMonitor",
-            "TensorBoard",
-            "TerminateOnNaN",
-        ),
-        action="append",
         help="Collection of callables that are run inside the training loop",
+        default=None,
     )
     argument_parser.add_argument(
         "--metrics",
         type=str,
-        choices=(
-            "AUC",
-            "binary_accuracy",
-            "binary_crossentropy",
-            "categorical_accuracy",
-            "categorical_crossentropy",
-            "CategoricalHinge",
-            "CosineSimilarity",
-            "FalseNegatives",
-            "FalsePositives",
-            "hinge",
-            "kld",
-            "kl_divergence",
-            "kullback_leibler_divergence",
-            "logcosh",
-            "LogCoshError",
-            "mae",
-            "mape",
-            "Mean",
-            "mean_absolute_error",
-            "mean_absolute_percentage_error",
-            "MeanIoU",
-            "MeanRelativeError",
-            "mean_squared_error",
-            "mean_squared_logarithmic_error",
-            "MeanTensor",
-            "mse",
-            "msle",
-            "poisson",
-            "Precision",
-            "PrecisionAtRecall",
-            "Recall",
-            "RecallAtPrecision",
-            "RootMeanSquaredError",
-            "SensitivityAtSpecificity",
-            "sparse_categorical_accuracy",
-            "sparse_categorical_crossentropy",
-            "sparse_top_k_categorical_accuracy",
-            "SpecificityAtSensitivity",
-            "squared_hinge",
-            "Sum",
-            "top_k_categorical_accuracy",
-            "TrueNegatives",
-            "TruePositives",
-        ),
-        action="append",
         help="Collection of metrics to monitor, e.g., accuracy, f1",
+        default=None,
     )
     argument_parser.add_argument(
         "--metric_emit_freq",
         type=int,
         help="`None` for every epoch. E.g., `eq(mod(epochs, 10), 0)` for every 10.",
+        default=None,
     )
     argument_parser.add_argument(
         "--output_type",
@@ -186,9 +95,10 @@ def train_parser(argument_parser):
         "--tpu_address",
         type=str,
         help="Address of TPU cluster. If None, don't connect & run within TPU context.",
+        default=None,
     )
     argument_parser.add_argument(
-        "--kwargs", type=loads, help="additional keyword arguments"
+        "--kwargs", type=loads, help="additional keyword arguments", default=None
     )
     return argument_parser, model
 
@@ -208,7 +118,6 @@ def load_data_parser(argument_parser):
     )
     argument_parser.add_argument(
         "--dataset_name",
-        type=str,
         choices=(
             "boston_housing",
             "cifar10",
@@ -226,6 +135,7 @@ def load_data_parser(argument_parser):
         type=str,
         choices=("np", "tf"),
         help="function that returns the expected data type.",
+        default=None,
     )
     argument_parser.add_argument(
         "--data_type",
@@ -234,14 +144,21 @@ def load_data_parser(argument_parser):
         required=True,
         default="infer",
     )
-    argument_parser.add_argument("--output_type", type=str, help="outgoing data_type,")
     argument_parser.add_argument(
-        "--K", type=str, choices=("np", "tf"), help="backend engine, e.g., `np` or `tf`"
+        "--output_type", type=str, help="outgoing data_type,", default=None
+    )
+    argument_parser.add_argument(
+        "--K",
+        type=str,
+        choices=("np", "tf"),
+        help="backend engine, e.g., `np` or `tf`",
+        default=None,
     )
     argument_parser.add_argument(
         "--data_loader_kwargs",
         type=loads,
         help="pass this as arguments to data_loader function",
+        default=None,
     )
     return argument_parser, "```self.data```"
 
@@ -260,7 +177,6 @@ def load_model_parser(argument_parser):
 Takes a model object, or a pipeline that downloads & configures before returning a model object."""
     argument_parser.add_argument(
         "--model",
-        type=str,
         choices=(
             "DenseNet121",
             "DenseNet169",
@@ -303,6 +219,7 @@ Takes a model object, or a pipeline that downloads & configures before returning
         "--model_kwargs",
         type=loads,
         help="to be passed into the model. If empty, doesn't call, unless call=True.",
+        default=None,
     )
     return argument_parser, "```self.get_model```"
 

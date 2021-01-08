@@ -94,13 +94,13 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--thresholds",
@@ -111,7 +111,7 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     equal to {-epsilon, 1+epsilon} for a small positive epsilon value will
     be automatically included with these to correctly handle predictions
     equal to exactly 0 or 1.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--multi_label",
@@ -139,7 +139,7 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     label, whereas label_weights depends only on the index of that label
     before flattening; therefore `label_weights` should not be used for
     multi-class data.""",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -172,7 +172,6 @@ array([1., 1., 1., 1.], dtype=float32)"""
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -265,10 +264,10 @@ array([0., 1.], dtype=float32)
 You can provide logits of classes as `y_pred`, since argmax of
 logits and probabilities are same."""
     argument_parser.add_argument(
-        "--y_true", type=str, help="One-hot ground truth values.", required=True
+        "--y_true", help="One-hot ground truth values.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="The prediction values.", required=True
+        "--y_pred", help="The prediction values.", required=True
     )
     return (
         argument_parser,
@@ -377,7 +376,7 @@ model.compile(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -439,7 +438,7 @@ model.compile(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--axis",
@@ -504,13 +503,13 @@ model.compile(optimizer='sgd',
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -568,13 +567,13 @@ model.compile(optimizer='sgd',
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -604,7 +603,6 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="""The ground truth values. `y_true` values are expected to be -1 or 1.
     If binary (0 or 1) labels are provided they will be converted to -1 or 1.
     shape = `[batch_size, d0, .. dN]`.""",
@@ -612,7 +610,6 @@ Standalone usage:
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -649,10 +646,10 @@ Standalone usage:
 >>> assert np.array_equal(
 ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Tensor of true targets.", required=True
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     return (
         argument_parser,
@@ -687,10 +684,10 @@ Standalone usage:
 >>> assert np.array_equal(
 ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Tensor of true targets.", required=True
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     return (
         argument_parser,
@@ -725,10 +722,10 @@ Standalone usage:
 >>> assert np.array_equal(
 ...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Tensor of true targets.", required=True
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="Tensor of predicted targets.", required=True
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     return (
         argument_parser,
@@ -766,13 +763,11 @@ Standalone usage:
 ...     atol=1e-5)"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -825,7 +820,7 @@ model.compile(optimizer='sgd',
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -854,13 +849,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -893,13 +886,11 @@ Standalone usage:
 ...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -957,7 +948,7 @@ model.compile(optimizer='sgd', loss='mse')
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -986,13 +977,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1025,13 +1014,11 @@ Standalone usage:
 ...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1093,19 +1080,16 @@ model.compile(
         help="""The possible number of labels the prediction task can have.
     This value must be provided, since a confusion matrix of dimension =
     [num_classes, num_classes] will be allocated.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
-        "--dtype",
-        type=str,
-        help="(Optional) data type of the metric result.",
-        required=True,
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -1154,19 +1138,16 @@ model.compile(
         "--normalizer",
         type=str,
         help="The normalizer values with same shape as predictions.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
-        "--dtype",
-        type=str,
-        help="(Optional) data type of the metric result.",
-        required=True,
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -1198,13 +1179,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1242,13 +1221,11 @@ Standalone usage:
 ...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1298,7 +1275,7 @@ array([2.       , 3.6363635, 4.8      , 5.3333335], dtype=float32)"""
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -1330,13 +1307,11 @@ Standalone usage:
 ...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1374,13 +1349,11 @@ Standalone usage:
 ...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1417,13 +1390,11 @@ Standalone usage:
 ...     atol=1e-5)"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -1503,14 +1474,14 @@ model.compile(optimizer='sgd',
     threshold is `true`, below is `false`). One metric value is generated
     for each threshold value. If neither thresholds nor top_k are set, the
     default is to calculate precision with `thresholds=0.5`.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--top_k",
         type=str,
         help="""(Optional) Unset by default. An int value specifying the top-k
     predictions to consider when calculating precision.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--class_id",
@@ -1518,19 +1489,19 @@ model.compile(optimizer='sgd',
         help="""(Optional) Integer class ID for which we want binary metrics.
     This must be in the half-open interval `[0, num_classes)`, where
     `num_classes` is the last dimension of predictions.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -1595,13 +1566,13 @@ model.compile(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -1663,14 +1634,14 @@ model.compile(optimizer='sgd',
     threshold is `true`, below is `false`). One metric value is generated
     for each threshold value. If neither thresholds nor top_k are set, the
     default is to calculate recall with `thresholds=0.5`.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--top_k",
         type=str,
         help="""(Optional) Unset by default. An int value specifying the top-k
     predictions to consider when calculating recall.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--class_id",
@@ -1678,19 +1649,19 @@ model.compile(optimizer='sgd',
         help="""(Optional) Integer class ID for which we want binary metrics.
     This must be in the half-open interval `[0, num_classes)`, where
     `num_classes` is the last dimension of predictions.""",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -1758,13 +1729,13 @@ model.compile(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -1805,7 +1776,7 @@ model.compile(
     argument_parser.add_argument(
         "--name", type=str, required=True, default="root_mean_squared_error"
     )
-    argument_parser.add_argument("--dtype", required=True)
+    argument_parser.add_argument("--dtype", type=str, default=None)
     return argument_parser
 
 
@@ -1879,13 +1850,13 @@ model.compile(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -1913,10 +1884,10 @@ array([0., 1.], dtype=float32)
 You can provide logits of classes as `y_pred`, since argmax of
 logits and probabilities are same."""
     argument_parser.add_argument(
-        "--y_true", type=str, help="Integer ground truth values.", required=True
+        "--y_true", help="Integer ground truth values.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="The prediction values.", required=True
+        "--y_pred", help="The prediction values.", required=True
     )
     return (
         argument_parser,
@@ -1961,15 +1932,11 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="""(Optional)The dimension along which the entropy is
+        help="""(Optional) Defaults to -1. The dimension along which the entropy is
     computed.""",
         default=-1,
     )
-    return (
-        argument_parser,
-        """```K.sparse_categorical_crossentropy(y_true, y_pred, from_logits=from_logits,
-    axis=axis)```""",
-    )
+    return argument_parser, None
 
 
 def sparse_top_k_categorical_accuracyConfig(argument_parser):
@@ -1996,20 +1963,16 @@ array([1., 1.], dtype=float32)"""
         "--y_true", type=int, help="tensor of true targets.", required=True, default=5
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="tensor of predicted targets.", required=True
+        "--y_pred", help="tensor of predicted targets.", required=True
     )
     argument_parser.add_argument(
         "--k",
         type=int,
         help="""(Optional) Number of top elements to look at for computing accuracy.
-   """,
+    Defaults to 5.""",
         default=5,
     )
-    return (
-        argument_parser,
-        """```math_ops.cast(nn.in_top_k(y_pred, math_ops.cast(y_true, 'int32'), k), K.
-    floatx())```""",
-    )
+    return argument_parser, None
 
 
 def SpecificityAtSensitivityConfig(argument_parser):
@@ -2080,13 +2043,13 @@ model.compile(
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -2116,7 +2079,6 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        type=str,
         help="""The ground truth values. `y_true` values are expected to be -1 or 1.
     If binary (0 or 1) labels are provided we will convert them to -1 or 1.
     shape = `[batch_size, d0, .. dN]`.""",
@@ -2124,7 +2086,6 @@ Standalone usage:
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=str,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
@@ -2180,7 +2141,7 @@ model.compile(optimizer='sgd', loss='mse')
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -2208,20 +2169,16 @@ array([1., 1.], dtype=float32)"""
         "--y_true", type=int, help="The ground truth values.", required=True, default=5
     )
     argument_parser.add_argument(
-        "--y_pred", type=str, help="The prediction values.", required=True
+        "--y_pred", help="The prediction values.", required=True
     )
     argument_parser.add_argument(
         "--k",
         type=int,
         help="""(Optional) Number of top elements to look at for computing accuracy.
-   """,
+    Defaults to 5.""",
         default=5,
     )
-    return (
-        argument_parser,
-        """```math_ops.cast(nn.in_top_k(y_pred, math_ops.argmax(y_true, axis=-1), k), K.
-    floatx())```""",
-    )
+    return argument_parser, None
 
 
 def TrueNegativesConfig(argument_parser):
@@ -2277,13 +2234,13 @@ model.compile(optimizer='sgd',
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
@@ -2341,13 +2298,13 @@ model.compile(optimizer='sgd',
         "--name",
         type=str,
         help="(Optional) string name of the metric instance.",
-        required=True,
+        default=None,
     )
     argument_parser.add_argument(
         "--dtype",
         type=str,
         help="(Optional) data type of the metric result.",
-        required=True,
+        default=None,
     )
     return argument_parser
 
