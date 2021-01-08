@@ -498,7 +498,6 @@ class TensorFlowTrainer(BaseTrainer):
                 )(**loss_kwargs)
             print("optimizer:", optimizer, ";")
             model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-
         print("callbacks:", callbacks, ";")
         callbacks = (
             list(

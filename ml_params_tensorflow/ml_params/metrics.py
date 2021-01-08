@@ -1936,7 +1936,7 @@ array([0.0513, 2.303], dtype=float32)"""
     computed.""",
         default=-1,
     )
-    return argument_parser, None
+    return argument_parser, "```None```"
 
 
 def sparse_top_k_categorical_accuracyConfig(argument_parser):
@@ -1972,7 +1972,7 @@ array([1., 1.], dtype=float32)"""
     Defaults to 5.""",
         default=5,
     )
-    return argument_parser, None
+    return argument_parser, "```None```"
 
 
 def SpecificityAtSensitivityConfig(argument_parser):
@@ -2178,7 +2178,7 @@ array([1., 1.], dtype=float32)"""
     Defaults to 5.""",
         default=5,
     )
-    return argument_parser, None
+    return argument_parser, "```None```"
 
 
 def TrueNegativesConfig(argument_parser):

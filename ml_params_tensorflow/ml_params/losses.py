@@ -939,7 +939,7 @@ array([0.0513, 2.303], dtype=float32)"""
     computed.""",
         default=-1,
     )
-    return argument_parser, None
+    return argument_parser, "```None```"
 
 
 def squared_hingeConfig(argument_parser):

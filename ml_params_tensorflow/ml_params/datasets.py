@@ -20,7 +20,6 @@ datasets2classes = (
     if find_loader("ml_prepare") is None
     else getattr(import_module("ml_prepare.datasets"), "datasets2classes")
 )
-
 DatasetTuple = Union[
     Tuple[tf.data.Dataset, tf.data.Dataset],
     Tuple[
@@ -44,11 +43,7 @@ DatasetTuple = Union[
         ],
     ],
 ]
-
-DatasetTupleInfo = Tuple[
-    DatasetTuple,
-    tfds.core.DatasetInfo,
-]
+DatasetTupleInfo = Tuple[DatasetTuple, tfds.core.DatasetInfo]
 
 
 def normalize_img(image: Any, label: str, scale: Union[float, int]) -> Tuple[Any, str]:
