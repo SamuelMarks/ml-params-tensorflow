@@ -41,7 +41,10 @@ def train_parser(argument_parser):
     """
     argument_parser.description = "Run the training loop for your ML pipeline."
     argument_parser.add_argument(
-        "--epochs", help="number of epochs (must be greater than 0)", required=True
+        "--epochs",
+        type=int,
+        help="number of epochs (must be greater than 0)",
+        required=True,
     )
     argument_parser.add_argument(
         "--loss",

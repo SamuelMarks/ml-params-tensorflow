@@ -21,7 +21,6 @@ This callback is automatically applied to every Keras model."""
         should *not* be averaged over an epoch.
         Metrics in this list will be logged as-is in `on_epoch_end`.
         All others will be averaged in `on_epoch_end`.""",
-        default=None,
     )
     return argument_parser
 
@@ -108,7 +107,7 @@ def CallbackListConfig(argument_parser):
     """
     argument_parser.description = "Container abstracting a list of callbacks."
     argument_parser.add_argument(
-        "--callbacks", type=str, help="List of `Callback` instances.", default=None
+        "--callbacks", type=str, help="List of `Callback` instances."
     )
     argument_parser.add_argument(
         "--add_history",
@@ -127,17 +126,13 @@ def CallbackListConfig(argument_parser):
         default=False,
     )
     argument_parser.add_argument(
-        "--model",
-        type=str,
-        help="The `Model` these callbacks are used with.",
-        default=None,
+        "--model", type=str, help="The `Model` these callbacks are used with."
     )
     argument_parser.add_argument(
         "--params",
         type=str,
         help="""If provided, parameters will be passed to each `Callback` via
     `Callback.set_params`.""",
-        default=None,
     )
     return argument_parser
 
@@ -224,7 +219,6 @@ Example:
         help="""Baseline value for the monitored quantity.
       Training will stop if the model doesn't show improvement over the
       baseline.""",
-        default=None,
     )
     argument_parser.add_argument(
         "--restore_best_weights",
@@ -310,40 +304,22 @@ model.fit(...,
                      cleanup_callback])
 ```"""
     argument_parser.add_argument(
-        "--on_epoch_begin",
-        type=str,
-        help="called at the beginning of every epoch.",
-        default=None,
+        "--on_epoch_begin", type=str, help="called at the beginning of every epoch."
     )
     argument_parser.add_argument(
-        "--on_epoch_end",
-        type=str,
-        help="called at the end of every epoch.",
-        default=None,
+        "--on_epoch_end", type=str, help="called at the end of every epoch."
     )
     argument_parser.add_argument(
-        "--on_batch_begin",
-        type=str,
-        help="called at the beginning of every batch.",
-        default=None,
+        "--on_batch_begin", type=str, help="called at the beginning of every batch."
     )
     argument_parser.add_argument(
-        "--on_batch_end",
-        type=str,
-        help="called at the end of every batch.",
-        default=None,
+        "--on_batch_end", type=str, help="called at the end of every batch."
     )
     argument_parser.add_argument(
-        "--on_train_begin",
-        type=str,
-        help="called at the beginning of model training.",
-        default=None,
+        "--on_train_begin", type=str, help="called at the beginning of model training."
     )
     argument_parser.add_argument(
-        "--on_train_end",
-        type=str,
-        help="called at the end of model training.",
-        default=None,
+        "--on_train_end", type=str, help="called at the end of model training."
     )
     return argument_parser
 
@@ -521,15 +497,15 @@ model.load_weights(checkpoint_filepath)
         default="val_loss",
     )
     argument_parser.add_argument(
-        "--save_weights_only", type=str, required=True, default="auto"
-    )
-    argument_parser.add_argument(
         "--save_best_only", type=bool, required=True, default=False
     )
-    argument_parser.add_argument("--mode", type=str, required=True, default="epoch")
+    argument_parser.add_argument(
+        "--save_weights_only", type=str, required=True, default="auto"
+    )
+    argument_parser.add_argument("--save_freq", type=str)
     argument_parser.add_argument("--options")
     argument_parser.add_argument("--verbose", type=bool, required=True, default=False)
-    argument_parser.add_argument("--save_freq", type=str, default=None)
+    argument_parser.add_argument("--mode", type=str, required=True, default="epoch")
     return argument_parser
 
 
@@ -706,10 +682,7 @@ Otherwise the serialized JSON will be sent within a form."""
         default="data",
     )
     argument_parser.add_argument(
-        "--headers",
-        type=str,
-        help="Dictionary; optional custom HTTP headers.",
-        default=None,
+        "--headers", type=str, help="Dictionary; optional custom HTTP headers."
     )
     argument_parser.add_argument(
         "--send_as_json",
@@ -894,7 +867,6 @@ model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
         https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
       about metadata files format. In case if the same metadata file is
       used for all embedding layers, string can be passed.""",
-        default=None,
     )
     return argument_parser
 

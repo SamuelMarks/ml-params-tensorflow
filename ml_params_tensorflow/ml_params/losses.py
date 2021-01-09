@@ -490,9 +490,7 @@ with strategy.scope():
     for more details.""",
         default="```losses_utils.ReductionV2```",
     )
-    argument_parser.add_argument(
-        "--name", type=str, help="Optional name for the op.", default=None
-    )
+    argument_parser.add_argument("--name", type=str, help="Optional name for the op.")
     return argument_parser
 
 

@@ -48,6 +48,8 @@ When TensorFlow itself changes—i.e., a new major version of TensorFlow is rele
 
 To synchronise all the various other APIs, edit one and it'll translate to the others, but make sure you select which one is the gold-standard.
 
+NOTE: The below steps are available in a script within [sync_scripts](sync_scripts).
+
 As an example, using the `class TensorFlowTrainer` methods as truth, this will update the CLI parsers and config classes:
 
     python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
