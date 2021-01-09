@@ -56,7 +56,7 @@ def main(argv=None):
                 ),
                 prepend='""" Generated {mod_cap} CLI parsers """\\n'
                 "import tensorflow as tf\\n"
-                "from typing import Optional, Union\\n"
+                "from typing import Any, Optional, Union, List, Iterator, Iterable, Generator\\n"
                 "from {typing} import Literal\\n\\n"
                 "from dataclasses import dataclass\\n\\n"
                 "from yaml import safe_load as loads\\n"

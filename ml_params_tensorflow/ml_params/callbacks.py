@@ -496,16 +496,16 @@ model.load_weights(checkpoint_filepath)
         required=True,
         default="val_loss",
     )
-    argument_parser.add_argument(
-        "--save_best_only", type=bool, required=True, default=False
-    )
+    argument_parser.add_argument("--save_freq", type=str)
+    argument_parser.add_argument("--verbose", type=bool, required=True, default=False)
     argument_parser.add_argument(
         "--save_weights_only", type=str, required=True, default="auto"
     )
-    argument_parser.add_argument("--save_freq", type=str)
-    argument_parser.add_argument("--options")
-    argument_parser.add_argument("--verbose", type=bool, required=True, default=False)
+    argument_parser.add_argument(
+        "--save_best_only", type=bool, required=True, default=False
+    )
     argument_parser.add_argument("--mode", type=str, required=True, default="epoch")
+    argument_parser.add_argument("--options")
     return argument_parser
 
 
