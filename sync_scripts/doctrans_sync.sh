@@ -60,7 +60,7 @@ python -m doctrans sync_properties \
                    --output-param 'load_data_from_tfds_or_ml_prepare.dataset_name'
 
 declare -ra generate=('callbacks' 'losses' 'metrics' 'optimizers')
-local IFS=', '
+IFS=','
 printf 'Using "%s" as truth to generate CLIs for %s\n' "$input_file" "${generate[*]}"
 
 for name in ${generate[*]}; do
