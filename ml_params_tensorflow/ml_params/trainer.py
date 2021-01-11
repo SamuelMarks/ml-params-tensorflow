@@ -238,6 +238,10 @@ class TensorFlowTrainer(BaseTrainer):
             :return: model, e.g., the result of applying `model_kwargs` on model
             :rtype: ```Any```
             """
+            if get_model.run_before is True:
+                return
+            else:
+                get_model.run_before = True
             super(TensorFlowTrainer, self).load_model(
                 model=model, call=callable(model) or call, **model_kwargs
             )
@@ -309,6 +313,7 @@ class TensorFlowTrainer(BaseTrainer):
                 )
             return self.model
 
+        get_model.run_before = False
         self.get_model = get_model
         return self.get_model
 
