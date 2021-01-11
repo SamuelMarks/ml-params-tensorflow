@@ -503,7 +503,6 @@ class TensorFlowTrainer(BaseTrainer):
                 )(**loss_kwargs)
             print("optimizer:", optimizer, ";")
             model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-        print("callbacks:", callbacks, ";")
         callbacks = (
             list(
                 map(
@@ -513,6 +512,7 @@ class TensorFlowTrainer(BaseTrainer):
             if callbacks
             else None
         )
+        print("callbacks:", callbacks, ";")
         model.fit(
             self.data[0],
             validation_data=self.data[1],
@@ -547,6 +547,10 @@ def acquire_symbols_from(name, name2sym, never_str=False):
         name = name.rpartition(".")[2] if name.count(".") > 0 else name
         if name in name2sym and never_str:
             return name2sym[name]
+    elif isinstance(name, tuple) and len(name) == 2:
+        name, namespace = name
+        name = name.rpartition(".")[2] if name.count(".") > 0 else name
+        return name2sym[name](**vars(namespace))
     if never_str and isinstance(name, str):
         raise KeyError("{!r} not found in {!r}".format(name, ""))
     return name
