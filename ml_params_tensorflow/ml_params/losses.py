@@ -23,23 +23,18 @@ Standalone usage:
 array([0.916 , 0.714], dtype=float32)"""
     argument_parser.add_argument(
         "--y_true",
-        type=bool,
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
-        default=False,
     )
     argument_parser.add_argument(
         "--y_pred",
-        type=int,
         help="The predicted values. shape = `[batch_size, d0, .. dN]`.",
         required=True,
-        default=0,
     )
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default,
-    we assume that `y_pred` encodes a probability distribution.""",
+        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
         required=True,
         default=False,
     )
@@ -77,24 +72,15 @@ Standalone usage:
 >>> loss.numpy()
 array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
-        "--y_true",
-        type=bool,
-        help="Tensor of one-hot true targets.",
-        required=True,
-        default=False,
+        "--y_true", help="Tensor of one-hot true targets.", required=True
     )
     argument_parser.add_argument(
-        "--y_pred",
-        type=int,
-        help="Tensor of predicted targets.",
-        required=True,
-        default=0,
+        "--y_pred", help="Tensor of predicted targets.", required=True
     )
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default,
-    we assume that `y_pred` encodes a probability distribution.""",
+        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
         required=True,
         default=False,
     )
@@ -178,7 +164,7 @@ Standalone usage:
 >>> loss.numpy()
 array([-0., -0.999, 0.999], dtype=float32)"""
     argument_parser.add_argument(
-        "--y_true", help="Tensor of true targets.", required=True, default="```(-1)```"
+        "--y_true", help="Tensor of true targets.", required=True
     )
     argument_parser.add_argument(
         "--y_pred", help="Tensor of predicted targets.", required=True
@@ -218,9 +204,7 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
-    If binary (0 or 1) labels are provided they will be converted to -1 or 1.
-    shape = `[batch_size, d0, .. dN]`.""",
+        help="The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are provided they will be converted to -1 or 1. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
@@ -254,11 +238,7 @@ loss = 0.5 * d^2 + d * (|x| - d)  if |x| > d
 ```
 where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss"""
     argument_parser.add_argument(
-        "--y_true",
-        type=float,
-        help="tensor of true targets.",
-        required=True,
-        default=1.0,
+        "--y_true", help="tensor of true targets.", required=True
     )
     argument_parser.add_argument(
         "--y_pred", help="tensor of predicted targets.", required=True
@@ -266,8 +246,7 @@ where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss"""
     argument_parser.add_argument(
         "--delta",
         type=float,
-        help="""A float, the point where the Huber loss function changes from a
-    quadratic to linear.""",
+        help="A float, the point where the Huber loss function changes from a quadratic to linear.",
         required=True,
         default=1.0,
     )
@@ -479,18 +458,10 @@ with strategy.scope():
 ```"""
     argument_parser.add_argument(
         "--reduction",
-        help="""(Optional) Type of `tf.keras.losses.Reduction` to apply to
-    loss. Default value is `AUTO`. `AUTO` indicates that the reduction
-    option will be determined by the usage context. For almost all cases
-    this defaults to `SUM_OVER_BATCH_SIZE`. When used with
-    `tf.distribute.Strategy`, outside of built-in training loops such as
-    `tf.keras` `compile` and `fit`, using `AUTO` or `SUM_OVER_BATCH_SIZE`
-    will raise an error. Please see this custom training [tutorial](
-      https://www.tensorflow.org/tutorials/distribute/custom_training)
-    for more details.""",
-        default="```losses_utils.ReductionV2```",
+        help="(Optional) Type of `tf.keras.losses.Reduction` to apply to loss. Default value is `AUTO`. `AUTO` indicates that the reduction option will be determined by the usage context. For almost all cases this defaults to `SUM_OVER_BATCH_SIZE`. When used with `tf.distribute.Strategy`, outside of built-in training loops such as `tf.keras` `compile` and `fit`, using `AUTO` or `SUM_OVER_BATCH_SIZE` will raise an error. Please see this custom training [tutorial]( https://www.tensorflow.org/tutorials/distribute/custom_training) for more details.",
+        default="SUM_OVER_BATCH_SIZE",
     )
-    argument_parser.add_argument("--name", type=str, help="Optional name for the op.")
+    argument_parser.add_argument("--name", help="Optional name for the op.")
     return argument_parser
 
 
@@ -887,11 +858,11 @@ Contains the following values:
 Please see the
 [custom training guide](https://www.tensorflow.org/tutorials/distribute/custom_training)  # pylint: disable=line-too-long
 for more details on this."""
-    argument_parser.add_argument("--AUTO", type=str, required=True, default="auto")
-    argument_parser.add_argument("--NONE", type=str, required=True, default="none")
-    argument_parser.add_argument("--SUM", type=str, required=True, default="sum")
+    argument_parser.add_argument("--AUTO", required=True, default="auto")
+    argument_parser.add_argument("--NONE", required=True, default="none")
+    argument_parser.add_argument("--SUM", required=True, default="sum")
     argument_parser.add_argument(
-        "--SUM_OVER_BATCH_SIZE", type=str, required=True, default="sum_over_batch_size"
+        "--SUM_OVER_BATCH_SIZE", required=True, default="sum_over_batch_size"
     )
     return argument_parser
 
@@ -916,25 +887,21 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
 array([0.0513, 2.303], dtype=float32)"""
+    argument_parser.add_argument("--y_true", help="Ground truth values.", required=True)
     argument_parser.add_argument(
-        "--y_true", type=bool, help="Ground truth values.", required=True, default=False
-    )
-    argument_parser.add_argument(
-        "--y_pred", help="The predicted values.", required=True, default="```(-1)```"
+        "--y_pred", help="The predicted values.", required=True
     )
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default,
-    we assume that `y_pred` encodes a probability distribution.""",
+        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="""(Optional) Defaults to -1. The dimension along which the entropy is
-    computed.""",
+        help="(Optional) Defaults to -1. The dimension along which the entropy is computed.",
         default=-1,
     )
     return argument_parser, "```None```"
@@ -965,9 +932,7 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
-    If binary (0 or 1) labels are provided we will convert them to -1 or 1.
-    shape = `[batch_size, d0, .. dN]`.""",
+        help="The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are provided we will convert them to -1 or 1. shape = `[batch_size, d0, .. dN]`.",
         required=True,
     )
     argument_parser.add_argument(
