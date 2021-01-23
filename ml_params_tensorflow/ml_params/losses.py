@@ -34,7 +34,8 @@ array([0.916 , 0.714], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
+assume that `y_pred` encodes a probability distribution.""",
         required=True,
         default=False,
     )
@@ -80,7 +81,8 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
+assume that `y_pred` encodes a probability distribution.""",
         required=True,
         default=False,
     )
@@ -204,7 +206,9 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are provided they will be converted to -1 or 1. shape = `[batch_size, d0, .. dN]`.",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
+If binary (0 or 1) labels are provided they will be converted to -1 or
+1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -246,7 +250,8 @@ where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss"""
     argument_parser.add_argument(
         "--delta",
         type=float,
-        help="A float, the point where the Huber loss function changes from a quadratic to linear.",
+        help="""A float, the point where the Huber loss function changes from a
+quadratic to linear.""",
         required=True,
         default=1.0,
     )
@@ -458,7 +463,15 @@ with strategy.scope():
 ```"""
     argument_parser.add_argument(
         "--reduction",
-        help="(Optional) Type of `tf.keras.losses.Reduction` to apply to loss. Default value is `AUTO`. `AUTO` indicates that the reduction option will be determined by the usage context. For almost all cases this defaults to `SUM_OVER_BATCH_SIZE`. When used with `tf.distribute.Strategy`, outside of built-in training loops such as `tf.keras` `compile` and `fit`, using `AUTO` or `SUM_OVER_BATCH_SIZE` will raise an error. Please see this custom training [tutorial]( https://www.tensorflow.org/tutorials/distribute/custom_training) for more details.",
+        help="""(Optional) Type of `tf.keras.losses.Reduction` to apply to loss.
+Default value is `AUTO`. `AUTO` indicates that the reduction option
+will be determined by the usage context. For almost all cases this
+defaults to `SUM_OVER_BATCH_SIZE`. When used with
+`tf.distribute.Strategy`, outside of built-in training loops such as
+`tf.keras` `compile` and `fit`, using `AUTO` or `SUM_OVER_BATCH_SIZE`
+will raise an error. Please see this custom training [tutorial](
+https://www.tensorflow.org/tutorials/distribute/custom_training) for
+more details.""",
         default="SUM_OVER_BATCH_SIZE",
     )
     argument_parser.add_argument("--name", help="Optional name for the op.")
@@ -894,14 +907,16 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
+assume that `y_pred` encodes a probability distribution.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="(Optional) Defaults to -1. The dimension along which the entropy is computed.",
+        help="""(Optional) Defaults to -1. The dimension along which the entropy is
+computed.""",
         default=-1,
     )
     return argument_parser, "```None```"
@@ -932,7 +947,9 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are provided we will convert them to -1 or 1. shape = `[batch_size, d0, .. dN]`.",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
+If binary (0 or 1) labels are provided we will convert them to -1 or
+1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(

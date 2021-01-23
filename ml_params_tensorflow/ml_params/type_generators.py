@@ -191,7 +191,7 @@ exposed_layers: Dict[str, Any] = dict(
 
 exposed_loss_keys: Tuple[str, ...] = tuple(
     filterfalse(
-        partial(contains, frozenset(("Loss")) | _global_exclude),
+        partial(contains, frozenset(("Loss",)) | _global_exclude),
         _unique_members(tf.keras.losses),
     )
 )

@@ -1,5 +1,6 @@
 """ Generated Optimizer CLI parsers """
 
+
 from yaml import safe_load as loads
 
 
@@ -47,7 +48,9 @@ Reference:
     argument_parser.add_argument(
         "--learning_rate",
         type=float,
-        help="A `Tensor`, floating point value, or a schedule that is a `tf.keras.optimizers.schedules.LearningRateSchedule`. The learning rate. To match the exact form in the original paper use 1.0.",
+        help="""A `Tensor`, floating point value, or a schedule that is a
+`tf.keras.optimizers.schedules.LearningRateSchedule`. The learning
+rate. To match the exact form in the original paper use 1.0.""",
         required=True,
         default=0.001,
     )
@@ -61,19 +64,23 @@ Reference:
     argument_parser.add_argument(
         "--epsilon",
         type=float,
-        help="A `Tensor` or a floating point value.  A constant epsilon used to better conditioning the grad update.",
+        help="""A `Tensor` or a floating point value.  A constant epsilon used to
+better conditioning the grad update.""",
         required=True,
         default=1e-07,
     )
     argument_parser.add_argument(
         "--name",
-        help="Optional name prefix for the operations created when applying gradients.",
+        help="""Optional name prefix for the operations created when applying
+gradients.""",
         default="Adadelta",
     )
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -105,14 +112,17 @@ Reference:
     argument_parser.add_argument(
         "--learning_rate",
         type=float,
-        help="A `Tensor`, floating point value, or a schedule that is a `tf.keras.optimizers.schedules.LearningRateSchedule`. The learning rate.",
+        help="""A `Tensor`, floating point value, or a schedule that is a
+`tf.keras.optimizers.schedules.LearningRateSchedule`. The learning
+rate.""",
         required=True,
         default=0.001,
     )
     argument_parser.add_argument(
         "--initial_accumulator_value",
         type=float,
-        help="A floating point value. Starting value for the accumulators, must be non-negative.",
+        help="""A floating point value. Starting value for the accumulators, must be
+non-negative.""",
         required=True,
         default=0.1,
     )
@@ -125,13 +135,16 @@ Reference:
     )
     argument_parser.add_argument(
         "--name",
-        help="Optional name prefix for the operations created when applying gradients.",
+        help="""Optional name prefix for the operations created when applying
+gradients.""",
         default="Adagrad",
     )
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -197,35 +210,45 @@ unless a variable slice was actually used)."""
     argument_parser.add_argument(
         "--learning_rate",
         type=float,
-        help="A `Tensor`, floating point value, or a schedule that is a `tf.keras.optimizers.schedules.LearningRateSchedule`, or a callable that takes no arguments and returns the actual value to use, The learning rate.",
+        help="""A `Tensor`, floating point value, or a schedule that is a
+`tf.keras.optimizers.schedules.LearningRateSchedule`, or a callable
+that takes no arguments and returns the actual value to use, The
+learning rate.""",
         required=True,
         default=0.001,
     )
     argument_parser.add_argument(
         "--beta_1",
         type=float,
-        help="A float value or a constant float tensor, or a callable that takes no arguments and returns the actual value to use. The exponential decay rate for the 1st moment estimates.",
+        help="""A float value or a constant float tensor, or a callable that takes no
+arguments and returns the actual value to use. The exponential decay
+rate for the 1st moment estimates.""",
         required=True,
         default=0.9,
     )
     argument_parser.add_argument(
         "--beta_2",
         type=float,
-        help="A float value or a constant float tensor, or a callable that takes no arguments and returns the actual value to use, The exponential decay rate for the 2nd moment estimates.",
+        help="""A float value or a constant float tensor, or a callable that takes no
+arguments and returns the actual value to use, The exponential decay
+rate for the 2nd moment estimates.""",
         required=True,
         default=0.999,
     )
     argument_parser.add_argument(
         "--epsilon",
         type=float,
-        help='A small constant for numerical stability. This epsilon is "epsilon hat" in the Kingma and Ba paper (in the formula just before Section 2.1), not the epsilon in Algorithm 1 of the paper.',
+        help="""A small constant for numerical stability. This epsilon is "epsilon
+hat" in the Kingma and Ba paper (in the formula just before Section
+2.1), not the epsilon in Algorithm 1 of the paper.""",
         required=True,
         default=1e-07,
     )
     argument_parser.add_argument(
         "--amsgrad",
         type=bool,
-        help='Boolean. Whether to apply AMSGrad variant of this algorithm from the paper "On the Convergence of Adam and beyond".',
+        help="""Boolean. Whether to apply AMSGrad variant of this algorithm from the
+paper "On the Convergence of Adam and beyond".""",
         required=True,
         default=False,
     )
@@ -237,7 +260,9 @@ unless a variable slice was actually used)."""
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -298,21 +323,25 @@ Reference:
     argument_parser.add_argument(
         "--learning_rate",
         type=float,
-        help="A `Tensor`, floating point value, or a schedule that is a `tf.keras.optimizers.schedules.LearningRateSchedule`. The learning rate.",
+        help="""A `Tensor`, floating point value, or a schedule that is a
+`tf.keras.optimizers.schedules.LearningRateSchedule`. The learning
+rate.""",
         required=True,
         default=0.001,
     )
     argument_parser.add_argument(
         "--beta_1",
         type=float,
-        help="A float value or a constant float tensor. The exponential decay rate for the 1st moment estimates.",
+        help="""A float value or a constant float tensor. The exponential decay rate
+for the 1st moment estimates.""",
         required=True,
         default=0.9,
     )
     argument_parser.add_argument(
         "--beta_2",
         type=float,
-        help="A float value or a constant float tensor. The exponential decay rate for the exponentially weighted infinity norm.",
+        help="""A float value or a constant float tensor. The exponential decay rate
+for the exponentially weighted infinity norm.""",
         required=True,
         default=0.999,
     )
@@ -331,7 +360,9 @@ Reference:
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -383,21 +414,26 @@ Reference:
     argument_parser.add_argument(
         "--learning_rate",
         type=float,
-        help="A `Tensor`, floating point value, or a schedule that is a `tf.keras.optimizers.schedules.LearningRateSchedule`. The learning rate.",
+        help="""A `Tensor`, floating point value, or a schedule that is a
+`tf.keras.optimizers.schedules.LearningRateSchedule`. The learning
+rate.""",
         required=True,
         default=0.001,
     )
     argument_parser.add_argument(
         "--learning_rate_power",
         type=float,
-        help="A float value, must be less or equal to zero. Controls how the learning rate decreases during training. Use zero for a fixed learning rate.",
+        help="""A float value, must be less or equal to zero. Controls how the
+learning rate decreases during training. Use zero for a fixed learning
+rate.""",
         required=True,
         default=-0.5,
     )
     argument_parser.add_argument(
         "--initial_accumulator_value",
         type=float,
-        help="The starting value for accumulators. Only zero or positive values are allowed.",
+        help="""The starting value for accumulators. Only zero or positive values are
+allowed.""",
         required=True,
         default=0.1,
     )
@@ -417,13 +453,17 @@ Reference:
     )
     argument_parser.add_argument(
         "--name",
-        help="Optional name prefix for the operations created when applying gradients.",
+        help="""Optional name prefix for the operations created when applying
+gradients.""",
         default="Ftrl",
     )
     argument_parser.add_argument(
         "--l2_shrinkage_regularization_strength",
         type=float,
-        help="A float value, must be greater than or equal to zero. This differs from L2 above in that the L2 above is a stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. When input is sparse shrinkage will only happen on the active weights.",
+        help="""A float value, must be greater than or equal to zero. This differs
+from L2 above in that the L2 above is a stabilization penalty, whereas
+this L2 shrinkage is a magnitude penalty. When input is sparse
+shrinkage will only happen on the active weights.""",
         required=True,
         default=0.0,
     )
@@ -437,7 +477,9 @@ Reference:
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     return argument_parser
 
@@ -470,14 +512,16 @@ Reference:
     argument_parser.add_argument(
         "--beta_1",
         type=float,
-        help="A float value or a constant float tensor. The exponential decay rate for the 1st moment estimates.",
+        help="""A float value or a constant float tensor. The exponential decay rate
+for the 1st moment estimates.""",
         required=True,
         default=0.9,
     )
     argument_parser.add_argument(
         "--beta_2",
         type=float,
-        help="A float value or a constant float tensor. The exponential decay rate for the exponentially weighted infinity norm.",
+        help="""A float value or a constant float tensor. The exponential decay rate
+for the exponentially weighted infinity norm.""",
         required=True,
         default=0.999,
     )
@@ -496,7 +540,9 @@ Reference:
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True
@@ -554,7 +600,10 @@ Reference:
     argument_parser.add_argument(
         "--learning_rate",
         type=float,
-        help="A `Tensor`, floating point value, or a schedule that is a `tf.keras.optimizers.schedules.LearningRateSchedule`, or a callable that takes no arguments and returns the actual value to use. The learning rate.",
+        help="""A `Tensor`, floating point value, or a schedule that is a
+`tf.keras.optimizers.schedules.LearningRateSchedule`, or a callable
+that takes no arguments and returns the actual value to use. The
+learning rate.""",
         required=True,
         default=0.001,
     )
@@ -575,26 +624,34 @@ Reference:
     argument_parser.add_argument(
         "--epsilon",
         type=float,
-        help='A small constant for numerical stability. This epsilon is "epsilon hat" in the Kingma and Ba paper (in the formula just before Section 2.1), not the epsilon in Algorithm 1 of the paper.',
+        help="""A small constant for numerical stability. This epsilon is "epsilon
+hat" in the Kingma and Ba paper (in the formula just before Section
+2.1), not the epsilon in Algorithm 1 of the paper.""",
         required=True,
         default=1e-07,
     )
     argument_parser.add_argument(
         "--centered",
         type=bool,
-        help="Boolean. If `True`, gradients are normalized by the estimated variance of the gradient; if False, by the uncentered second moment. Setting this to `True` may help with training, but is slightly more expensive in terms of computation and memory.",
+        help="""Boolean. If `True`, gradients are normalized by the estimated variance
+of the gradient; if False, by the uncentered second moment. Setting
+this to `True` may help with training, but is slightly more expensive
+in terms of computation and memory.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--name",
-        help="Optional name prefix for the operations created when applying gradients.",
+        help="""Optional name prefix for the operations created when applying
+gradients.""",
         default="RMSprop",
     )
     argument_parser.add_argument(
         "--kwargs",
         type=loads,
-        help='Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`. `"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float) clips gradients by value.',
+        help="""Keyword arguments. Allowed to be one of `"clipnorm"` or `"clipvalue"`.
+`"clipnorm"` (float) clips gradients by norm; `"clipvalue"` (float)
+clips gradients by value.""",
     )
     argument_parser.add_argument(
         "--_HAS_AGGREGATE_GRAD", type=bool, required=True, default=True

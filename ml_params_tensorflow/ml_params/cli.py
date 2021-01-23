@@ -73,13 +73,19 @@ def train_parser(argument_parser):
             "sparse_categorical_crossentropy",
             "squared_hinge",
         ),
-        help="Loss function, can be a string (depending on the framework) or an instance of a class",
+        help=(
+            "Loss function, can be a string (depending on the framework) or an instance"
+            " of a class"
+        ),
         required=True,
     )
     argument_parser.add_argument(
         "--optimizer",
         choices=("Adadelta", "Adagrad", "Adam", "Adamax", "Ftrl", "Nadam", "RMSprop"),
-        help="Optimizer, can be a string (depending on the framework) or an instance of a class",
+        help=(
+            "Optimizer, can be a string (depending on the framework) or an instance of"
+            " a class"
+        ),
         required=True,
     )
     argument_parser.add_argument(
@@ -173,7 +179,10 @@ def train_parser(argument_parser):
     argument_parser.add_argument(
         "--validation_split",
         type=float,
-        help="Optional float between 0 and 1, fraction of data to reserve for validation.",
+        help=(
+            "Optional float between 0 and 1, fraction of data to reserve for"
+            " validation."
+        ),
         default=0.1,
     )
     argument_parser.add_argument(
@@ -297,7 +306,9 @@ Takes a model object, or a pipeline that downloads & configures before returning
             "ResNet50V2",
             "Xception",
         ),
-        help="model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance",
+        help=(
+            "model object, e.g., a tf.keras.Sequential, tl.Serial,  nn.Module instance"
+        ),
         required=True,
     )
     argument_parser.add_argument(

@@ -64,18 +64,26 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="(Optional)The number of thresholds to use when discretizing the roc curve. Values must be > 1.",
+        help="""(Optional)The number of thresholds to use when discretizing the roc
+curve. Values must be > 1.""",
         default=200,
     )
     argument_parser.add_argument(
         "--curve",
-        help="(Optional) Specifies the name of the curve to be computed, 'ROC' [default] or 'PR' for the Precision-Recall-curve.",
+        help="""(Optional) Specifies the name of the curve to be computed, 'ROC'
+[default] or 'PR' for the Precision-Recall-curve.""",
         required=True,
         default="ROC",
     )
     argument_parser.add_argument(
         "--summation_method",
-        help="(Optional) Specifies the [Riemann summation method]( https://en.wikipedia.org/wiki/Riemann_sum) used. 'interpolation' (default) applies mid-point summation scheme for `ROC`. For PR-AUC, interpolates (true/false) positives but not the ratio that is precision (see Davis & Goadrich 2006 for details); 'minoring' applies left summation for increasing intervals and right summation for decreasing intervals; 'majoring' does the opposite.",
+        help="""(Optional) Specifies the [Riemann summation method](
+https://en.wikipedia.org/wiki/Riemann_sum) used. 'interpolation'
+(default) applies mid-point summation scheme for `ROC`. For PR-AUC,
+interpolates (true/false) positives but not the ratio that is
+precision (see Davis & Goadrich 2006 for details); 'minoring' applies
+left summation for increasing intervals and right summation for
+decreasing intervals; 'majoring' does the opposite.""",
         required=True,
         default="interpolation",
     )
@@ -87,18 +95,38 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     )
     argument_parser.add_argument(
         "--thresholds",
-        help="(Optional) A list of floating point values to use as the thresholds for discretizing the curve. If set, the `num_thresholds` parameter is ignored. Values should be in [0, 1]. Endpoint thresholds equal to {-epsilon, 1+epsilon} for a small positive epsilon value will be automatically included with these to correctly handle predictions equal to exactly 0 or 1.",
+        help="""(Optional) A list of floating point values to use as the thresholds
+for discretizing the curve. If set, the `num_thresholds` parameter is
+ignored. Values should be in [0, 1]. Endpoint thresholds equal to
+{-epsilon, 1+epsilon} for a small positive epsilon value will be
+automatically included with these to correctly handle predictions
+equal to exactly 0 or 1.""",
     )
     argument_parser.add_argument(
         "--multi_label",
         type=bool,
-        help="boolean indicating whether multilabel data should be treated as such, wherein AUC is computed separately for each label and then averaged across labels, or (when False) if the data should be flattened into a single label before AUC computation. In the latter case, when multilabel data is passed to AUC, each label-prediction pair is treated as an individual data point. Should be set to False for multi-class data.",
+        help="""boolean indicating whether multilabel data should be treated as such,
+wherein AUC is computed separately for each label and then averaged
+across labels, or (when False) if the data should be flattened into a
+single label before AUC computation. In the latter case, when
+multilabel data is passed to AUC, each label-prediction pair is
+treated as an individual data point. Should be set to False for multi-
+class data.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--label_weights",
-        help="(optional) list, array, or tensor of non-negative weights used to compute AUCs for multilabel data. When `multi_label` is True, the weights are applied to the individual label AUCs when they are averaged to produce the multi-label AUC. When it's False, they are used to weight the individual label predictions in computing the confusion matrix on the flattened data. Note that this is unlike class_weights in that class_weights weights the example depending on the value of its label, whereas label_weights depends only on the index of that label before flattening; therefore `label_weights` should not be used for multi-class data.",
+        help="""(optional) list, array, or tensor of non-negative weights used to
+compute AUCs for multilabel data. When `multi_label` is True, the
+weights are applied to the individual label AUCs when they are
+averaged to produce the multi-label AUC. When it's False, they are
+used to weight the individual label predictions in computing the
+confusion matrix on the flattened data. Note that this is unlike
+class_weights in that class_weights weights the example depending on
+the value of its label, whereas label_weights depends only on the
+index of that label before flattening; therefore `label_weights`
+should not be used for multi-class data.""",
     )
     return argument_parser
 
@@ -135,7 +163,8 @@ array([1., 1., 1., 1.], dtype=float32)"""
     argument_parser.add_argument(
         "--threshold",
         type=float,
-        help="(Optional) Float representing the threshold for deciding whether prediction values are 1 or 0.",
+        help="""(Optional) Float representing the threshold for deciding whether
+prediction values are 1 or 0.""",
         required=True,
         default=0.5,
     )
@@ -175,7 +204,8 @@ array([0.916 , 0.714], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
+assume that `y_pred` encodes a probability distribution.""",
         required=True,
         default=False,
     )
@@ -256,7 +286,8 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
+assume that `y_pred` encodes a probability distribution.""",
         required=True,
         default=False,
     )
@@ -425,7 +456,11 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is compared with prediction values to determine the truth value of predictions (i.e., above the threshold is `true`, below is `false`). One metric value is generated for each threshold value.",
+        help="""(Optional)A float value or a python list/tuple of float threshold
+values in [0, 1]. A threshold is compared with prediction values to
+determine the truth value of predictions (i.e., above the threshold is
+`true`, below is `false`). One metric value is generated for each
+threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
@@ -479,7 +514,11 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is compared with prediction values to determine the truth value of predictions (i.e., above the threshold is `true`, below is `false`). One metric value is generated for each threshold value.",
+        help="""(Optional)A float value or a python list/tuple of float threshold
+values in [0, 1]. A threshold is compared with prediction values to
+determine the truth value of predictions (i.e., above the threshold is
+`true`, below is `false`). One metric value is generated for each
+threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
@@ -516,7 +555,9 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are provided they will be converted to -1 or 1. shape = `[batch_size, d0, .. dN]`.",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
+If binary (0 or 1) labels are provided they will be converted to -1 or
+1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -979,7 +1020,9 @@ model.compile(
 ```"""
     argument_parser.add_argument(
         "--num_classes",
-        help="The possible number of labels the prediction task can have. This value must be provided, since a confusion matrix of dimension = [num_classes, num_classes] will be allocated.",
+        help="""The possible number of labels the prediction task can have. This value
+must be provided, since a confusion matrix of dimension =
+[num_classes, num_classes] will be allocated.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -1356,15 +1399,23 @@ model.compile(optimizer='sgd',
 ```"""
     argument_parser.add_argument(
         "--thresholds",
-        help="(Optional) A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is compared with prediction values to determine the truth value of predictions (i.e., above the threshold is `true`, below is `false`). One metric value is generated for each threshold value. If neither thresholds nor top_k are set, the default is to calculate precision with `thresholds=0.5`.",
+        help="""(Optional) A float value or a python list/tuple of float threshold
+values in [0, 1]. A threshold is compared with prediction values to
+determine the truth value of predictions (i.e., above the threshold is
+`true`, below is `false`). One metric value is generated for each
+threshold value. If neither thresholds nor top_k are set, the default
+is to calculate precision with `thresholds=0.5`.""",
     )
     argument_parser.add_argument(
         "--top_k",
-        help="(Optional) Unset by default. An int value specifying the top-k predictions to consider when calculating precision.",
+        help="""(Optional) Unset by default. An int value specifying the top-k
+predictions to consider when calculating precision.""",
     )
     argument_parser.add_argument(
         "--class_id",
-        help="(Optional) Integer class ID for which we want binary metrics. This must be in the half-open interval `[0, num_classes)`, where `num_classes` is the last dimension of predictions.",
+        help="""(Optional) Integer class ID for which we want binary metrics. This
+must be in the half-open interval `[0, num_classes)`, where
+`num_classes` is the last dimension of predictions.""",
     )
     argument_parser.add_argument(
         "--name", help="(Optional) string name of the metric instance."
@@ -1423,7 +1474,8 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="(Optional)The number of thresholds to use for matching the given recall.",
+        help="""(Optional)The number of thresholds to use for matching the given
+recall.""",
         default=200,
     )
     argument_parser.add_argument(
@@ -1485,15 +1537,23 @@ model.compile(optimizer='sgd',
 ```"""
     argument_parser.add_argument(
         "--thresholds",
-        help="(Optional) A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is compared with prediction values to determine the truth value of predictions (i.e., above the threshold is `true`, below is `false`). One metric value is generated for each threshold value. If neither thresholds nor top_k are set, the default is to calculate recall with `thresholds=0.5`.",
+        help="""(Optional) A float value or a python list/tuple of float threshold
+values in [0, 1]. A threshold is compared with prediction values to
+determine the truth value of predictions (i.e., above the threshold is
+`true`, below is `false`). One metric value is generated for each
+threshold value. If neither thresholds nor top_k are set, the default
+is to calculate recall with `thresholds=0.5`.""",
     )
     argument_parser.add_argument(
         "--top_k",
-        help="(Optional) Unset by default. An int value specifying the top-k predictions to consider when calculating recall.",
+        help="""(Optional) Unset by default. An int value specifying the top-k
+predictions to consider when calculating recall.""",
     )
     argument_parser.add_argument(
         "--class_id",
-        help="(Optional) Integer class ID for which we want binary metrics. This must be in the half-open interval `[0, num_classes)`, where `num_classes` is the last dimension of predictions.",
+        help="""(Optional) Integer class ID for which we want binary metrics. This
+must be in the half-open interval `[0, num_classes)`, where
+`num_classes` is the last dimension of predictions.""",
     )
     argument_parser.add_argument(
         "--name", help="(Optional) string name of the metric instance."
@@ -1555,7 +1615,8 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="(Optional)The number of thresholds to use for matching the given precision.",
+        help="""(Optional)The number of thresholds to use for matching the given
+precision.""",
         default=200,
     )
     argument_parser.add_argument(
@@ -1665,7 +1726,8 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="(Optional)The number of thresholds to use for matching the given specificity.",
+        help="""(Optional)The number of thresholds to use for matching the given
+specificity.""",
         default=200,
     )
     argument_parser.add_argument(
@@ -1738,14 +1800,16 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a probability distribution.",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
+assume that `y_pred` encodes a probability distribution.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="(Optional) Defaults to -1. The dimension along which the entropy is computed.",
+        help="""(Optional) Defaults to -1. The dimension along which the entropy is
+computed.""",
         default=-1,
     )
     return argument_parser, "```None```"
@@ -1780,7 +1844,8 @@ array([1., 1.], dtype=float32)"""
     argument_parser.add_argument(
         "--k",
         type=int,
-        help="(Optional) Number of top elements to look at for computing accuracy. Defaults to 5.",
+        help="""(Optional) Number of top elements to look at for computing accuracy.
+Defaults to 5.""",
         default=5,
     )
     return argument_parser, "```None```"
@@ -1842,7 +1907,8 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="(Optional)The number of thresholds to use for matching the given sensitivity.",
+        help="""(Optional)The number of thresholds to use for matching the given
+sensitivity.""",
         default=200,
     )
     argument_parser.add_argument(
@@ -1879,7 +1945,9 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are provided we will convert them to -1 or 1. shape = `[batch_size, d0, .. dN]`.",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
+If binary (0 or 1) labels are provided we will convert them to -1 or
+1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -1968,7 +2036,8 @@ array([1., 1.], dtype=float32)"""
     argument_parser.add_argument(
         "--k",
         type=int,
-        help="(Optional) Number of top elements to look at for computing accuracy. Defaults to 5.",
+        help="""(Optional) Number of top elements to look at for computing accuracy.
+Defaults to 5.""",
         default=5,
     )
     return argument_parser, "```None```"
@@ -2016,7 +2085,11 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is compared with prediction values to determine the truth value of predictions (i.e., above the threshold is `true`, below is `false`). One metric value is generated for each threshold value.",
+        help="""(Optional)A float value or a python list/tuple of float threshold
+values in [0, 1]. A threshold is compared with prediction values to
+determine the truth value of predictions (i.e., above the threshold is
+`true`, below is `false`). One metric value is generated for each
+threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
@@ -2070,7 +2143,11 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is compared with prediction values to determine the truth value of predictions (i.e., above the threshold is `true`, below is `false`). One metric value is generated for each threshold value.",
+        help="""(Optional)A float value or a python list/tuple of float threshold
+values in [0, 1]. A threshold is compared with prediction values to
+determine the truth value of predictions (i.e., above the threshold is
+`true`, below is `false`). One metric value is generated for each
+threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
