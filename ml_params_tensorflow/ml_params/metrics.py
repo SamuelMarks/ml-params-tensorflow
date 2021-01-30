@@ -8,7 +8,7 @@ def AUCConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the approximate AUC (Area under the curve) via a Riemann sum.
@@ -64,25 +64,22 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="""(Optional)The number of thresholds to use when discretizing the roc
-curve. Values must be > 1.""",
+        help="(Optional)The number of thresholds to use when discretizing the roc curve. Values must be > 1.",
         default=200,
     )
     argument_parser.add_argument(
         "--curve",
-        help="""(Optional) Specifies the name of the curve to be computed, 'ROC'
-[default] or 'PR' for the Precision-Recall-curve.""",
+        help="""(Optional) Specifies the name of the curve to be computed, 'ROC' [default] or 'PR' for the
+Precision-Recall-curve.""",
         required=True,
         default="ROC",
     )
     argument_parser.add_argument(
         "--summation_method",
-        help="""(Optional) Specifies the [Riemann summation method](
-https://en.wikipedia.org/wiki/Riemann_sum) used. 'interpolation'
-(default) applies mid-point summation scheme for `ROC`. For PR-AUC,
-interpolates (true/false) positives but not the ratio that is
-precision (see Davis & Goadrich 2006 for details); 'minoring' applies
-left summation for increasing intervals and right summation for
+        help="""(Optional) Specifies the [Riemann summation method]( https://en.wikipedia.org/wiki/Riemann_sum)
+used. 'interpolation' (default) applies mid-point summation scheme for `ROC`. For PR-AUC,
+interpolates (true/false) positives but not the ratio that is precision (see Davis & Goadrich 2006
+for details); 'minoring' applies left summation for increasing intervals and right summation for
 decreasing intervals; 'majoring' does the opposite.""",
         required=True,
         default="interpolation",
@@ -95,37 +92,30 @@ decreasing intervals; 'majoring' does the opposite.""",
     )
     argument_parser.add_argument(
         "--thresholds",
-        help="""(Optional) A list of floating point values to use as the thresholds
-for discretizing the curve. If set, the `num_thresholds` parameter is
-ignored. Values should be in [0, 1]. Endpoint thresholds equal to
-{-epsilon, 1+epsilon} for a small positive epsilon value will be
-automatically included with these to correctly handle predictions
-equal to exactly 0 or 1.""",
+        help="""(Optional) A list of floating point values to use as the thresholds for discretizing the curve. If
+set, the `num_thresholds` parameter is ignored. Values should be in [0, 1]. Endpoint thresholds
+equal to {-epsilon, 1+epsilon} for a small positive epsilon value will be automatically included
+with these to correctly handle predictions equal to exactly 0 or 1.""",
     )
     argument_parser.add_argument(
         "--multi_label",
         type=bool,
-        help="""boolean indicating whether multilabel data should be treated as such,
-wherein AUC is computed separately for each label and then averaged
-across labels, or (when False) if the data should be flattened into a
-single label before AUC computation. In the latter case, when
-multilabel data is passed to AUC, each label-prediction pair is
-treated as an individual data point. Should be set to False for multi-
-class data.""",
+        help="""boolean indicating whether multilabel data should be treated as such, wherein AUC is computed
+separately for each label and then averaged across labels, or (when False) if the data should be
+flattened into a single label before AUC computation. In the latter case, when multilabel data is
+passed to AUC, each label-prediction pair is treated as an individual data point. Should be set to
+False for multi-class data.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--label_weights",
-        help="""(optional) list, array, or tensor of non-negative weights used to
-compute AUCs for multilabel data. When `multi_label` is True, the
-weights are applied to the individual label AUCs when they are
-averaged to produce the multi-label AUC. When it's False, they are
-used to weight the individual label predictions in computing the
-confusion matrix on the flattened data. Note that this is unlike
-class_weights in that class_weights weights the example depending on
-the value of its label, whereas label_weights depends only on the
-index of that label before flattening; therefore `label_weights`
+        help="""(optional) list, array, or tensor of non-negative weights used to compute AUCs for multilabel data.
+When `multi_label` is True, the weights are applied to the individual label AUCs when they are
+averaged to produce the multi-label AUC. When it's False, they are used to weight the individual
+label predictions in computing the confusion matrix on the flattened data. Note that this is unlike
+class_weights in that class_weights weights the example depending on the value of its label, whereas
+label_weights depends only on the index of that label before flattening; therefore `label_weights`
 should not be used for multi-class data.""",
     )
     return argument_parser
@@ -138,7 +128,7 @@ def binary_accuracyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Binary accuracy values. shape = `[batch_size, d0, .. dN-1]`
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates how often predictions matches binary labels.
@@ -163,8 +153,7 @@ array([1., 1., 1., 1.], dtype=float32)"""
     argument_parser.add_argument(
         "--threshold",
         type=float,
-        help="""(Optional) Float representing the threshold for deciding whether
-prediction values are 1 or 0.""",
+        help="(Optional) Float representing the threshold for deciding whether prediction values are 1 or 0.",
         required=True,
         default=0.5,
     )
@@ -178,7 +167,7 @@ def binary_crossentropyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the binary crossentropy loss.
@@ -204,8 +193,8 @@ array([0.916 , 0.714], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
-assume that `y_pred` encodes a probability distribution.""",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a
+probability distribution.""",
         required=True,
         default=False,
     )
@@ -229,7 +218,7 @@ def categorical_accuracyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Categorical accuracy values.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates how often predictions matches one-hot labels.
@@ -264,7 +253,7 @@ def categorical_crossentropyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Categorical crossentropy loss value.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the categorical crossentropy loss.
@@ -286,8 +275,8 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
-assume that `y_pred` encodes a probability distribution.""",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a
+probability distribution.""",
         required=True,
         default=False,
     )
@@ -311,7 +300,7 @@ def CategoricalHingeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the categorical hinge metric between `y_true` and `y_pred`.
@@ -357,7 +346,7 @@ def CosineSimilarityConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the cosine similarity between the labels and predictions.
@@ -421,7 +410,7 @@ def FalseNegativesConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates the number of false negatives.
@@ -456,11 +445,9 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="""(Optional)A float value or a python list/tuple of float threshold
-values in [0, 1]. A threshold is compared with prediction values to
-determine the truth value of predictions (i.e., above the threshold is
-`true`, below is `false`). One metric value is generated for each
-threshold value.""",
+        help="""(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is
+compared with prediction values to determine the truth value of predictions (i.e., above the
+threshold is `true`, below is `false`). One metric value is generated for each threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
@@ -479,7 +466,7 @@ def FalsePositivesConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates the number of false positives.
@@ -514,11 +501,9 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="""(Optional)A float value or a python list/tuple of float threshold
-values in [0, 1]. A threshold is compared with prediction values to
-determine the truth value of predictions (i.e., above the threshold is
-`true`, below is `false`). One metric value is generated for each
-threshold value.""",
+        help="""(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is
+compared with prediction values to determine the truth value of predictions (i.e., above the
+threshold is `true`, below is `false`). One metric value is generated for each threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
@@ -537,7 +522,7 @@ def hingeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Hinge loss values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the hinge loss between `y_true` and `y_pred`.
@@ -555,9 +540,8 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
-If binary (0 or 1) labels are provided they will be converted to -1 or
-1. shape = `[batch_size, d0, .. dN]`.""",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
+provided they will be converted to -1 or 1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -578,7 +562,7 @@ def kldConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, A `Tensor` with loss.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -616,7 +600,7 @@ def kl_divergenceConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, A `Tensor` with loss.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -654,7 +638,7 @@ def kullback_leibler_divergenceConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, A `Tensor` with loss.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -692,7 +676,7 @@ def logcoshConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Logcosh error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Logarithm of the hyperbolic cosine of the prediction error.
@@ -733,7 +717,7 @@ def LogCoshErrorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the logarithm of the hyperbolic cosine of the prediction error.
@@ -780,7 +764,7 @@ def maeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute error between labels and predictions.
@@ -815,7 +799,7 @@ def mapeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute percentage error between `y_true` and `y_pred`.
@@ -852,7 +836,7 @@ def MeanConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the (weighted) mean of the given values.
@@ -904,7 +888,7 @@ def mean_absolute_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute error between labels and predictions.
@@ -939,7 +923,7 @@ def mean_absolute_percentage_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute percentage error between `y_true` and `y_pred`.
@@ -976,7 +960,7 @@ def MeanIoUConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean Intersection-Over-Union metric.
@@ -1020,9 +1004,8 @@ model.compile(
 ```"""
     argument_parser.add_argument(
         "--num_classes",
-        help="""The possible number of labels the prediction task can have. This value
-must be provided, since a confusion matrix of dimension =
-[num_classes, num_classes] will be allocated.""",
+        help="""The possible number of labels the prediction task can have. This value must be provided, since a
+confusion matrix of dimension = [num_classes, num_classes] will be allocated.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -1041,7 +1024,7 @@ def MeanRelativeErrorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean relative error by normalizing with the given values.
@@ -1095,7 +1078,7 @@ def mean_squared_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared error between labels and predictions.
@@ -1136,7 +1119,7 @@ def mean_squared_logarithmic_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared logarithmic error between `y_true` and `y_pred`.
@@ -1178,7 +1161,7 @@ def MeanTensorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the element-wise (weighted) mean of the given tensors.
@@ -1219,7 +1202,7 @@ def mseConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared error between labels and predictions.
@@ -1260,7 +1243,7 @@ def msleConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared logarithmic error between `y_true` and `y_pred`.
@@ -1302,7 +1285,7 @@ def poissonConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Poisson loss value. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the Poisson loss between y_true and y_pred.
@@ -1343,7 +1326,7 @@ def PrecisionConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the precision of the predictions with respect to the labels.
@@ -1399,23 +1382,20 @@ model.compile(optimizer='sgd',
 ```"""
     argument_parser.add_argument(
         "--thresholds",
-        help="""(Optional) A float value or a python list/tuple of float threshold
-values in [0, 1]. A threshold is compared with prediction values to
-determine the truth value of predictions (i.e., above the threshold is
-`true`, below is `false`). One metric value is generated for each
-threshold value. If neither thresholds nor top_k are set, the default
-is to calculate precision with `thresholds=0.5`.""",
+        help="""(Optional) A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is
+compared with prediction values to determine the truth value of predictions (i.e., above the
+threshold is `true`, below is `false`). One metric value is generated for each threshold value. If
+neither thresholds nor top_k are set, the default is to calculate precision with `thresholds=0.5`.""",
     )
     argument_parser.add_argument(
         "--top_k",
-        help="""(Optional) Unset by default. An int value specifying the top-k
-predictions to consider when calculating precision.""",
+        help="""(Optional) Unset by default. An int value specifying the top-k predictions to consider when
+calculating precision.""",
     )
     argument_parser.add_argument(
         "--class_id",
-        help="""(Optional) Integer class ID for which we want binary metrics. This
-must be in the half-open interval `[0, num_classes)`, where
-`num_classes` is the last dimension of predictions.""",
+        help="""(Optional) Integer class ID for which we want binary metrics. This must be in the half-open interval
+`[0, num_classes)`, where `num_classes` is the last dimension of predictions.""",
     )
     argument_parser.add_argument(
         "--name", help="(Optional) string name of the metric instance."
@@ -1433,7 +1413,7 @@ def PrecisionAtRecallConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes best precision where recall is >= specified value.
@@ -1474,8 +1454,7 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="""(Optional)The number of thresholds to use for matching the given
-recall.""",
+        help="(Optional)The number of thresholds to use for matching the given recall.",
         default=200,
     )
     argument_parser.add_argument(
@@ -1494,7 +1473,7 @@ def RecallConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the recall of the predictions with respect to the labels.
@@ -1537,23 +1516,20 @@ model.compile(optimizer='sgd',
 ```"""
     argument_parser.add_argument(
         "--thresholds",
-        help="""(Optional) A float value or a python list/tuple of float threshold
-values in [0, 1]. A threshold is compared with prediction values to
-determine the truth value of predictions (i.e., above the threshold is
-`true`, below is `false`). One metric value is generated for each
-threshold value. If neither thresholds nor top_k are set, the default
-is to calculate recall with `thresholds=0.5`.""",
+        help="""(Optional) A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is
+compared with prediction values to determine the truth value of predictions (i.e., above the
+threshold is `true`, below is `false`). One metric value is generated for each threshold value. If
+neither thresholds nor top_k are set, the default is to calculate recall with `thresholds=0.5`.""",
     )
     argument_parser.add_argument(
         "--top_k",
-        help="""(Optional) Unset by default. An int value specifying the top-k
-predictions to consider when calculating recall.""",
+        help="""(Optional) Unset by default. An int value specifying the top-k predictions to consider when
+calculating recall.""",
     )
     argument_parser.add_argument(
         "--class_id",
-        help="""(Optional) Integer class ID for which we want binary metrics. This
-must be in the half-open interval `[0, num_classes)`, where
-`num_classes` is the last dimension of predictions.""",
+        help="""(Optional) Integer class ID for which we want binary metrics. This must be in the half-open interval
+`[0, num_classes)`, where `num_classes` is the last dimension of predictions.""",
     )
     argument_parser.add_argument(
         "--name", help="(Optional) string name of the metric instance."
@@ -1571,7 +1547,7 @@ def RecallAtPrecisionConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes best recall where precision is >= specified value.
@@ -1615,8 +1591,7 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="""(Optional)The number of thresholds to use for matching the given
-precision.""",
+        help="(Optional)The number of thresholds to use for matching the given precision.",
         default=200,
     )
     argument_parser.add_argument(
@@ -1635,7 +1610,7 @@ def RootMeanSquaredErrorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes root mean squared error metric between `y_true` and `y_pred`.
@@ -1675,7 +1650,7 @@ def SensitivityAtSpecificityConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes best sensitivity where specificity is >= specified value.
@@ -1726,8 +1701,7 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="""(Optional)The number of thresholds to use for matching the given
-specificity.""",
+        help="(Optional)The number of thresholds to use for matching the given specificity.",
         default=200,
     )
     argument_parser.add_argument(
@@ -1746,7 +1720,7 @@ def sparse_categorical_accuracyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Sparse categorical accuracy values.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates how often predictions matches integer labels.
@@ -1780,7 +1754,7 @@ def sparse_categorical_crossentropyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Sparse categorical crossentropy loss value.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the sparse categorical crossentropy loss.
@@ -1800,16 +1774,15 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
-assume that `y_pred` encodes a probability distribution.""",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a
+probability distribution.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="""(Optional) Defaults to -1. The dimension along which the entropy is
-computed.""",
+        help="(Optional) Defaults to -1. The dimension along which the entropy is computed.",
         default=-1,
     )
     return argument_parser, "```None```"
@@ -1822,7 +1795,7 @@ def sparse_top_k_categorical_accuracyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Sparse top K categorical accuracy value.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes how often integer targets are in the top `K` predictions.
@@ -1844,8 +1817,7 @@ array([1., 1.], dtype=float32)"""
     argument_parser.add_argument(
         "--k",
         type=int,
-        help="""(Optional) Number of top elements to look at for computing accuracy.
-Defaults to 5.""",
+        help="(Optional) Number of top elements to look at for computing accuracy. Defaults to 5.",
         default=5,
     )
     return argument_parser, "```None```"
@@ -1858,7 +1830,7 @@ def SpecificityAtSensitivityConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes best specificity where sensitivity is >= specified value.
@@ -1907,8 +1879,7 @@ model.compile(
     argument_parser.add_argument(
         "--num_thresholds",
         type=int,
-        help="""(Optional)The number of thresholds to use for matching the given
-sensitivity.""",
+        help="(Optional)The number of thresholds to use for matching the given sensitivity.",
         default=200,
     )
     argument_parser.add_argument(
@@ -1927,7 +1898,7 @@ def squared_hingeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Squared hinge loss values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the squared hinge loss between `y_true` and `y_pred`.
@@ -1945,9 +1916,8 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
-If binary (0 or 1) labels are provided we will convert them to -1 or
-1. shape = `[batch_size, d0, .. dN]`.""",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
+provided we will convert them to -1 or 1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -1968,7 +1938,7 @@ def SumConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the (weighted) sum of the given values.
@@ -2015,7 +1985,7 @@ def top_k_categorical_accuracyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Top K categorical accuracy value.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes how often targets are in the top `K` predictions.
@@ -2036,8 +2006,7 @@ array([1., 1.], dtype=float32)"""
     argument_parser.add_argument(
         "--k",
         type=int,
-        help="""(Optional) Number of top elements to look at for computing accuracy.
-Defaults to 5.""",
+        help="(Optional) Number of top elements to look at for computing accuracy. Defaults to 5.",
         default=5,
     )
     return argument_parser, "```None```"
@@ -2050,7 +2019,7 @@ def TrueNegativesConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates the number of true negatives.
@@ -2085,11 +2054,9 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="""(Optional)A float value or a python list/tuple of float threshold
-values in [0, 1]. A threshold is compared with prediction values to
-determine the truth value of predictions (i.e., above the threshold is
-`true`, below is `false`). One metric value is generated for each
-threshold value.""",
+        help="""(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is
+compared with prediction values to determine the truth value of predictions (i.e., above the
+threshold is `true`, below is `false`). One metric value is generated for each threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(
@@ -2108,7 +2075,7 @@ def TruePositivesConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Calculates the number of true positives.
@@ -2143,11 +2110,9 @@ model.compile(optimizer='sgd',
     argument_parser.add_argument(
         "--thresholds",
         type=float,
-        help="""(Optional)A float value or a python list/tuple of float threshold
-values in [0, 1]. A threshold is compared with prediction values to
-determine the truth value of predictions (i.e., above the threshold is
-`true`, below is `false`). One metric value is generated for each
-threshold value.""",
+        help="""(Optional)A float value or a python list/tuple of float threshold values in [0, 1]. A threshold is
+compared with prediction values to determine the truth value of predictions (i.e., above the
+threshold is `true`, below is `false`). One metric value is generated for each threshold value.""",
         default=0.5,
     )
     argument_parser.add_argument(

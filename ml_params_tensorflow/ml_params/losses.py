@@ -8,7 +8,7 @@ def binary_crossentropyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Binary crossentropy loss value. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the binary crossentropy loss.
@@ -34,8 +34,8 @@ array([0.916 , 0.714], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
-assume that `y_pred` encodes a probability distribution.""",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a
+probability distribution.""",
         required=True,
         default=False,
     )
@@ -59,7 +59,7 @@ def categorical_crossentropyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Categorical crossentropy loss value.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the categorical crossentropy loss.
@@ -81,8 +81,8 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
-assume that `y_pred` encodes a probability distribution.""",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a
+probability distribution.""",
         required=True,
         default=False,
     )
@@ -106,7 +106,7 @@ def categorical_hingeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Categorical hinge loss values.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the categorical hinge loss between `y_true` and `y_pred`.
@@ -142,7 +142,7 @@ def cosine_similarityConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Cosine similarity tensor.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the cosine similarity between labels and predictions.
@@ -188,7 +188,7 @@ def hingeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Hinge loss values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the hinge loss between `y_true` and `y_pred`.
@@ -206,9 +206,8 @@ Standalone usage:
 ...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
-If binary (0 or 1) labels are provided they will be converted to -1 or
-1. shape = `[batch_size, d0, .. dN]`.""",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
+provided they will be converted to -1 or 1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -229,7 +228,7 @@ def huberConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Tensor with one scalar loss entry per sample.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Huber loss value.
@@ -250,8 +249,7 @@ where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss"""
     argument_parser.add_argument(
         "--delta",
         type=float,
-        help="""A float, the point where the Huber loss function changes from a
-quadratic to linear.""",
+        help="A float, the point where the Huber loss function changes from a quadratic to linear.",
         required=True,
         default=1.0,
     )
@@ -269,7 +267,7 @@ def kldConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, A `Tensor` with loss.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -307,7 +305,7 @@ def kl_divergenceConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, A `Tensor` with loss.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -345,7 +343,7 @@ def kullback_leibler_divergenceConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, A `Tensor` with loss.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes Kullback-Leibler divergence loss between `y_true` and `y_pred`.
@@ -383,7 +381,7 @@ def logcoshConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Logcosh error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Logarithm of the hyperbolic cosine of the prediction error.
@@ -417,67 +415,6 @@ Standalone usage:
     return argument_parser, "```K.mean(_logcosh(y_pred - y_true), axis=-1)```"
 
 
-def LossConfig(argument_parser):
-    """
-    Set CLI arguments
-
-    :param argument_parser: argument parser
-    :type argument_parser: ```ArgumentParser```
-
-    :return: argument_parser
-    :rtype: ```ArgumentParser```
-    """
-    argument_parser.description = """Loss base class.
-
-To be implemented by subclasses:
-* `call()`: Contains the logic for loss calculation using `y_true`, `y_pred`.
-
-Example subclass implementation:
-
-```python
-class MeanSquaredError(Loss):
-
-  def call(self, y_true, y_pred):
-    y_pred = tf.convert_to_tensor_v2(y_pred)
-    y_true = tf.cast(y_true, y_pred.dtype)
-    return tf.reduce_mean(math_ops.square(y_pred - y_true), axis=-1)
-```
-
-When used with `tf.distribute.Strategy`, outside of built-in training loops
-such as `tf.keras` `compile` and `fit`, please use 'SUM' or 'NONE' reduction
-types, and reduce losses explicitly in your training loop. Using 'AUTO' or
-'SUM_OVER_BATCH_SIZE' will raise an error.
-
-Please see this custom training [tutorial](
-  https://www.tensorflow.org/tutorials/distribute/custom_training) for more
-details on this.
-
-You can implement 'SUM_OVER_BATCH_SIZE' using global batch size like:
-```python
-with strategy.scope():
-  loss_obj = tf.keras.losses.CategoricalCrossentropy(
-      reduction=tf.keras.losses.Reduction.NONE)
-  ....
-  loss = (tf.reduce_sum(loss_obj(labels, predictions)) *
-          (1. / global_batch_size))
-```"""
-    argument_parser.add_argument(
-        "--reduction",
-        help="""(Optional) Type of `tf.keras.losses.Reduction` to apply to loss.
-Default value is `AUTO`. `AUTO` indicates that the reduction option
-will be determined by the usage context. For almost all cases this
-defaults to `SUM_OVER_BATCH_SIZE`. When used with
-`tf.distribute.Strategy`, outside of built-in training loops such as
-`tf.keras` `compile` and `fit`, using `AUTO` or `SUM_OVER_BATCH_SIZE`
-will raise an error. Please see this custom training [tutorial](
-https://www.tensorflow.org/tutorials/distribute/custom_training) for
-more details.""",
-        default="SUM_OVER_BATCH_SIZE",
-    )
-    argument_parser.add_argument("--name", help="Optional name for the op.")
-    return argument_parser
-
-
 def maeConfig(argument_parser):
     """
     Set CLI arguments
@@ -485,7 +422,7 @@ def maeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute error between labels and predictions.
@@ -520,7 +457,7 @@ def mapeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute percentage error between `y_true` and `y_pred`.
@@ -557,7 +494,7 @@ def mean_absolute_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute error between labels and predictions.
@@ -592,7 +529,7 @@ def mean_absolute_percentage_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean absolute percentage error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean absolute percentage error between `y_true` and `y_pred`.
@@ -629,7 +566,7 @@ def mean_squared_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared error between labels and predictions.
@@ -670,7 +607,7 @@ def mean_squared_logarithmic_errorConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared logarithmic error between `y_true` and `y_pred`.
@@ -712,7 +649,7 @@ def mseConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared error between labels and predictions.
@@ -753,7 +690,7 @@ def msleConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Mean squared logarithmic error values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the mean squared logarithmic error between `y_true` and `y_pred`.
@@ -795,7 +732,7 @@ def poissonConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Poisson loss value. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the Poisson loss between y_true and y_pred.
@@ -836,7 +773,7 @@ def ReductionConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Types of loss reduction.
@@ -887,7 +824,7 @@ def sparse_categorical_crossentropyConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Sparse categorical crossentropy loss value.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the sparse categorical crossentropy loss.
@@ -907,16 +844,15 @@ array([0.0513, 2.303], dtype=float32)"""
     argument_parser.add_argument(
         "--from_logits",
         type=bool,
-        help="""Whether `y_pred` is expected to be a logits tensor. By default, we
-assume that `y_pred` encodes a probability distribution.""",
+        help="""Whether `y_pred` is expected to be a logits tensor. By default, we assume that `y_pred` encodes a
+probability distribution.""",
         required=True,
         default=False,
     )
     argument_parser.add_argument(
         "--axis",
         type=int,
-        help="""(Optional) Defaults to -1. The dimension along which the entropy is
-computed.""",
+        help="(Optional) Defaults to -1. The dimension along which the entropy is computed.",
         default=-1,
     )
     return argument_parser, "```None```"
@@ -929,7 +865,7 @@ def squared_hingeConfig(argument_parser):
     :param argument_parser: argument parser
     :type argument_parser: ```ArgumentParser```
 
-    :return: argument_parser, Squared hinge loss values. shape = `[batch_size, d0, .. dN-1]`.
+    :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the squared hinge loss between `y_true` and `y_pred`.
@@ -947,9 +883,8 @@ Standalone usage:
 ...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
     argument_parser.add_argument(
         "--y_true",
-        help="""The ground truth values. `y_true` values are expected to be -1 or 1.
-If binary (0 or 1) labels are provided we will convert them to -1 or
-1. shape = `[batch_size, d0, .. dN]`.""",
+        help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
+provided we will convert them to -1 or 1. shape = `[batch_size, d0, .. dN]`.""",
         required=True,
     )
     argument_parser.add_argument(
@@ -974,7 +909,6 @@ __all__ = [
     "kl_divergenceConfig",
     "kullback_leibler_divergenceConfig",
     "logcoshConfig",
-    "LossConfig",
     "maeConfig",
     "mapeConfig",
     "mean_absolute_errorConfig",

@@ -332,7 +332,6 @@ class TensorFlowTrainer(BaseTrainer):
             "kl_divergence",
             "kullback_leibler_divergence",
             "logcosh",
-            "Loss",
             "mae",
             "mape",
             "mean_absolute_error",
