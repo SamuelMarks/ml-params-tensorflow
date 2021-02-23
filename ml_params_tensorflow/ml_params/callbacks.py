@@ -18,6 +18,7 @@ This callback is automatically applied to every Keras model."""
         "--stateful_metrics",
         help="""Iterable of string names of metrics that should *not* be averaged over an epoch. Metrics in this
 list will be logged as-is in `on_epoch_end`. All others will be averaged in `on_epoch_end`.""",
+        required=True,
     )
     return argument_parser
 
@@ -100,29 +101,6 @@ def CallbackListConfig(argument_parser):
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = "Container abstracting a list of callbacks."
-    argument_parser.add_argument("--callbacks", help="List of `Callback` instances.")
-    argument_parser.add_argument(
-        "--add_history",
-        type=bool,
-        help="Whether a `History` callback should be added, if one does not already exist in the `callbacks` list.",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--add_progbar",
-        type=bool,
-        help="""Whether a `ProgbarLogger` callback should be added, if one does not already exist in the `callbacks`
-list.""",
-        required=True,
-        default=False,
-    )
-    argument_parser.add_argument(
-        "--model", help="The `Model` these callbacks are used with."
-    )
-    argument_parser.add_argument(
-        "--params",
-        help="If provided, parameters will be passed to each `Callback` via `Callback.set_params`.",
-    )
     return argument_parser
 
 
@@ -194,6 +172,7 @@ in `"auto"` mode, the direction is automatically inferred from the name of the m
         "--baseline",
         help="""Baseline value for the monitored quantity. Training will stop if the model doesn't show improvement
 over the baseline.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--restore_best_weights",
@@ -277,22 +256,28 @@ model.fit(...,
                      cleanup_callback])
 ```"""
     argument_parser.add_argument(
-        "--on_epoch_begin", help="called at the beginning of every epoch."
+        "--on_epoch_begin",
+        help="called at the beginning of every epoch.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--on_epoch_end", help="called at the end of every epoch."
+        "--on_epoch_end", help="called at the end of every epoch.", required=True
     )
     argument_parser.add_argument(
-        "--on_batch_begin", help="called at the beginning of every batch."
+        "--on_batch_begin",
+        help="called at the beginning of every batch.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--on_batch_end", help="called at the end of every batch."
+        "--on_batch_end", help="called at the end of every batch.", required=True
     )
     argument_parser.add_argument(
-        "--on_train_begin", help="called at the beginning of model training."
+        "--on_train_begin",
+        help="called at the beginning of model training.",
+        required=True,
     )
     argument_parser.add_argument(
-        "--on_train_end", help="called at the end of model training."
+        "--on_train_end", help="called at the end of model training.", required=True
     )
     return argument_parser
 
@@ -460,12 +445,6 @@ be saved with the epoch number and the validation loss in the filename.""",
         required=True,
         default="val_loss",
     )
-    argument_parser.add_argument("--mode")
-    argument_parser.add_argument("--options")
-    argument_parser.add_argument("--save_best_only")
-    argument_parser.add_argument("--save_weights_only")
-    argument_parser.add_argument("--verbose")
-    argument_parser.add_argument("--save_freq")
     return argument_parser
 
 
@@ -621,7 +600,7 @@ sent within a form (i.e. send_as_json is set to False).""",
         default="data",
     )
     argument_parser.add_argument(
-        "--headers", help="Dictionary; optional custom HTTP headers."
+        "--headers", help="Dictionary; optional custom HTTP headers.", required=True
     )
     argument_parser.add_argument(
         "--send_as_json",
@@ -735,31 +714,24 @@ model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
         "--log_dir",
         help="the path of the directory where to save the log files to be parsed by TensorBoard.",
         required=True,
-        default="logs",
     )
     argument_parser.add_argument(
         "--histogram_freq",
-        type=int,
         help="""frequency (in epochs) at which to compute activation and weight histograms for the layers of the
 model. If set to 0, histograms won't be computed. Validation data (or split) must be specified for
 histogram visualizations.""",
         required=True,
-        default=0,
     )
     argument_parser.add_argument(
         "--write_graph",
-        type=bool,
         help="""whether to visualize the graph in TensorBoard. The log file can become quite large when write_graph
 is set to True.""",
         required=True,
-        default=True,
     )
     argument_parser.add_argument(
         "--write_images",
-        type=bool,
         help="whether to write model weights to visualize as image in TensorBoard.",
         required=True,
-        default=False,
     )
     argument_parser.add_argument(
         "--update_freq",
@@ -768,24 +740,19 @@ TensorBoard after each batch. The same applies for `'epoch'`. If using an intege
 the callback will write the metrics and losses to TensorBoard every 1000 batches. Note that writing
 too frequently to TensorBoard can slow down your training.""",
         required=True,
-        default="epoch",
     )
     argument_parser.add_argument(
         "--profile_batch",
-        type=int,
         help="""Profile the batch(es) to sample compute characteristics. profile_batch must be a non-negative
 integer or a tuple of integers. A pair of positive integers signify a range of batches to profile.
 By default, it will profile the second batch. Set profile_batch=0 to disable profiling.""",
         required=True,
-        default=2,
     )
     argument_parser.add_argument(
         "--embeddings_freq",
-        type=int,
         help="""frequency (in epochs) at which embedding layers will be visualized. If set to 0, embeddings won't be
 visualized.""",
         required=True,
-        default=0,
     )
     argument_parser.add_argument(
         "--embeddings_metadata",
@@ -793,6 +760,7 @@ visualized.""",
 saved. See the [details]( https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional) about
 metadata files format. In case if the same metadata file is used for all embedding layers, string
 can be passed.""",
+        required=True,
     )
     return argument_parser
 

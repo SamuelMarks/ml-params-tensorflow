@@ -1,9 +1,9 @@
 """
 Type generators. Use these to generate the type annotations throughout this ml-params implementation.
 
-Install doctrans then run, for example:
+Install cdd then run, for example:
 
-    python -m doctrans sync_properties \
+    python -m cdd sync_properties \
                        --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
@@ -14,7 +14,7 @@ Install doctrans then run, for example:
                        --input-param 'exposed_datasets_keys' \
                        --output-param 'TensorFlowTrainer.load_data.dataset_name'
 
-    python -m doctrans sync_properties \
+    python -m cdd sync_properties \
                        --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
@@ -24,7 +24,7 @@ Install doctrans then run, for example:
                        --input-param 'exposed_metrics_keys' \
                        --output-param 'TensorFlowTrainer.train.metrics'
 
-    python -m doctrans sync_properties \
+    python -m cdd sync_properties \
                        --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
@@ -35,7 +35,7 @@ Install doctrans then run, for example:
                        --input-param 'exposed_datasets_keys' \
                        --output-param 'TensorFlowTrainer.load_data.dataset_name'
 
-    python -m doctrans sync_properties \
+    python -m cdd sync_properties \
                        --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
@@ -43,7 +43,7 @@ Install doctrans then run, for example:
                        --output-param-wrap 'Union[{output_param}, AnyStr]' \
                        --output-param 'TensorFlowTrainer.load_model.model'
 
-    python -m doctrans sync_properties \
+    python -m cdd sync_properties \
                        --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/datasets.py' \

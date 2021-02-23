@@ -3,7 +3,7 @@ sync_scripts
 
 For use in CI/CD, it helps to centralise all operations in one place.
 
-Here is a nice a dynamic example for what doctrans allows you to do:
+Here is a nice a dynamic example for what cdd allows you to do:
 
 
 
@@ -20,11 +20,11 @@ Say you have a mapping like:
     class Foo(object):
         foo = "haz"
 
-Then `python -m doctrans sync_properties` will get you:
+Then `python -m cdd sync_properties` will get you:
 
     class Foo(object):
         foo: Literal["can", "haz"] = "haz"
 
 ## `sync`
 
-For examples of sync see doctrans project.
+For examples of sync see cdd project.

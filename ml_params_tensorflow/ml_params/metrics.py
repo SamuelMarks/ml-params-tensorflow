@@ -71,8 +71,6 @@ model.compile(optimizer='sgd', loss='mse', metrics=[tf.keras.metrics.AUC()])
         "--curve",
         help="""(Optional) Specifies the name of the curve to be computed, 'ROC' [default] or 'PR' for the
 Precision-Recall-curve.""",
-        required=True,
-        default="ROC",
     )
     argument_parser.add_argument(
         "--summation_method",
@@ -81,8 +79,6 @@ used. 'interpolation' (default) applies mid-point summation scheme for `ROC`. Fo
 interpolates (true/false) positives but not the ratio that is precision (see Davis & Goadrich 2006
 for details); 'minoring' applies left summation for increasing intervals and right summation for
 decreasing intervals; 'majoring' does the opposite.""",
-        required=True,
-        default="interpolation",
     )
     argument_parser.add_argument(
         "--name", help="(Optional) string name of the metric instance."
@@ -99,14 +95,11 @@ with these to correctly handle predictions equal to exactly 0 or 1.""",
     )
     argument_parser.add_argument(
         "--multi_label",
-        type=bool,
         help="""boolean indicating whether multilabel data should be treated as such, wherein AUC is computed
 separately for each label and then averaged across labels, or (when False) if the data should be
 flattened into a single label before AUC computation. In the latter case, when multilabel data is
 passed to AUC, each label-prediction pair is treated as an individual data point. Should be set to
 False for multi-class data.""",
-        required=True,
-        default=False,
     )
     argument_parser.add_argument(
         "--label_weights",
@@ -328,13 +321,10 @@ model.compile(
     metrics=[tf.keras.metrics.CategoricalHinge()])
 ```"""
     argument_parser.add_argument(
-        "--name",
-        help="(Optional) string name of the metric instance.",
-        required=True,
-        default="categorical_hinge",
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -386,13 +376,10 @@ model.compile(
     metrics=[tf.keras.metrics.CosineSimilarity(axis=1)])
 ```"""
     argument_parser.add_argument(
-        "--name",
-        help="(Optional) string name of the metric instance.",
-        required=True,
-        default="cosine_similarity",
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     argument_parser.add_argument(
         "--axis",
@@ -746,13 +733,10 @@ model.compile(optimizer='sgd',
               metrics=[tf.keras.metrics.LogCoshError()])
 ```"""
     argument_parser.add_argument(
-        "--name",
-        help="(Optional) string name of the metric instance.",
-        required=True,
-        default="logcosh",
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -870,13 +854,10 @@ model.add_metric(tf.keras.metrics.Mean(name='mean_1')(outputs))
 model.compile(optimizer='sgd', loss='mse')
 ```"""
     argument_parser.add_argument(
-        "--name",
-        help="(Optional) string name of the metric instance.",
-        required=True,
-        default="mean",
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -1184,13 +1165,10 @@ array([2., 3., 4., 5.], dtype=float32)
 >>> m.result().numpy()
 array([2.       , 3.6363635, 4.8      , 5.3333335], dtype=float32)"""
     argument_parser.add_argument(
-        "--name",
-        help="(Optional) string name of the metric instance.",
-        required=True,
-        default="mean_tensor",
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -1386,22 +1364,25 @@ model.compile(optimizer='sgd',
 compared with prediction values to determine the truth value of predictions (i.e., above the
 threshold is `true`, below is `false`). One metric value is generated for each threshold value. If
 neither thresholds nor top_k are set, the default is to calculate precision with `thresholds=0.5`.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--top_k",
         help="""(Optional) Unset by default. An int value specifying the top-k predictions to consider when
 calculating precision.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--class_id",
         help="""(Optional) Integer class ID for which we want binary metrics. This must be in the half-open interval
 `[0, num_classes)`, where `num_classes` is the last dimension of predictions.""",
+        required=True,
     )
     argument_parser.add_argument(
-        "--name", help="(Optional) string name of the metric instance."
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -1520,22 +1501,25 @@ model.compile(optimizer='sgd',
 compared with prediction values to determine the truth value of predictions (i.e., above the
 threshold is `true`, below is `false`). One metric value is generated for each threshold value. If
 neither thresholds nor top_k are set, the default is to calculate recall with `thresholds=0.5`.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--top_k",
         help="""(Optional) Unset by default. An int value specifying the top-k predictions to consider when
 calculating recall.""",
+        required=True,
     )
     argument_parser.add_argument(
         "--class_id",
         help="""(Optional) Integer class ID for which we want binary metrics. This must be in the half-open interval
 `[0, num_classes)`, where `num_classes` is the last dimension of predictions.""",
+        required=True,
     )
     argument_parser.add_argument(
-        "--name", help="(Optional) string name of the metric instance."
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 
@@ -1636,10 +1620,6 @@ model.compile(
     loss='mse',
     metrics=[tf.keras.metrics.RootMeanSquaredError()])
 ```"""
-    argument_parser.add_argument(
-        "--name", required=True, default="root_mean_squared_error"
-    )
-    argument_parser.add_argument("--dtype")
     return argument_parser
 
 
@@ -1967,13 +1947,10 @@ model.add_metric(tf.keras.metrics.Sum(name='sum_1')(outputs))
 model.compile(optimizer='sgd', loss='mse')
 ```"""
     argument_parser.add_argument(
-        "--name",
-        help="(Optional) string name of the metric instance.",
-        required=True,
-        default="sum",
+        "--name", help="(Optional) string name of the metric instance.", required=True
     )
     argument_parser.add_argument(
-        "--dtype", help="(Optional) data type of the metric result."
+        "--dtype", help="(Optional) data type of the metric result.", required=True
     )
     return argument_parser
 

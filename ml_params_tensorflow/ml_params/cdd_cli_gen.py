@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Basic helper to generate CLI arguments for `doctrans` (see README.md)
+Basic helper to generate CLI arguments for `cdd` (see README.md)
 """
 
 import sys
@@ -13,8 +13,8 @@ from os import path
 from ml_params_tensorflow import get_logger
 
 p = (
-    get_logger("doctrans_cli_gen").warning(
-        "For `doctrans_cli_gen` to work well, you should `pip install inflect`"
+    get_logger("cdd_cli_gen").warning(
+        "For `cdd_cli_gen` to work well, you should `pip install inflect`"
     )
     or namedtuple("NotInflect", ("singular_noun",))(
         lambda s: s[:-2] if s.endswith("es") else s[:-1]
@@ -26,7 +26,7 @@ p = (
 
 def main(argv=None):
     """
-    CLI main function for doctrans_cli_gen
+    CLI main function for cdd_cli_gen
 
     :param argv: argv, defaults to ```sys.argv```
     :type argv: ```Optional[List[str]]```
@@ -69,7 +69,7 @@ def main(argv=None):
                 imports_from_file="tf.keras.{mod_pl}.{mod_cap}".format(
                     mod_pl=mod_pl, mod_cap=mod_cap
                 ),
-                type="argparse",
+                emit="argparse",
                 output_filename=path.join(
                     "ml_params_tensorflow",
                     "ml_params",

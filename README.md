@@ -42,7 +42,7 @@ After installing as above, follow usage from [ml-params](https://github.com/Samu
 
 ## Development guide
 
-To make the development of _ml-params-tensorflow_ type safer and maintain consistency with the other ml-params implementing projects, the [doctrans](https://github.com/SamuelMarks/doctrans) was created.
+To make the development of _ml-params-tensorflow_ type safer and maintain consistency with the other ml-params implementing projects, the [cdd](https://github.com/offscale/cdd-python) was created.
 
 When TensorFlow itself changes—i.e., a new major version of TensorFlow is releases—then run the `sync_properties`, as shown in the module-level docstring here [`ml_params_tensorflow/ml_params/type_generators.py`](ml_params_tensorflow/ml_params/type_generators.py);
 
@@ -52,7 +52,7 @@ NOTE: The below steps are available in a script within [sync_scripts](sync_scrip
 
 As an example, using the `class TensorFlowTrainer` methods as truth, this will update the CLI parsers and config classes:
 
-    python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
+    python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
                             --class-name 'TrainConfig' \
                             --function 'ml_params_tensorflow/ml_params/trainer.py' \
                             --function-name 'TensorFlowTrainer.train' \
@@ -60,7 +60,7 @@ As an example, using the `class TensorFlowTrainer` methods as truth, this will u
                             --argparse-function-name 'train_parser' \
                             --truth 'function'
 
-    python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
+    python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
                             --class-name 'LoadDataConfig' \
                             --function 'ml_params_tensorflow/ml_params/trainer.py' \
                             --function-name 'TensorFlowTrainer.load_data' \
@@ -68,7 +68,7 @@ As an example, using the `class TensorFlowTrainer` methods as truth, this will u
                             --argparse-function-name 'load_data_parser' \
                             --truth 'function'
 
-    python -m doctrans sync --class 'ml_params_tensorflow/ml_params/config.py' \
+    python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
                             --class-name 'LoadModelConfig' \
                             --function 'ml_params_tensorflow/ml_params/trainer.py' \
                             --function-name 'TensorFlowTrainer.load_model' \
@@ -78,7 +78,7 @@ As an example, using the `class TensorFlowTrainer` methods as truth, this will u
 
 Another example, that you'd run before ^, to generate custom config CLI parsers for members of `tf.keras.losses`:
 
-    $ python -m doctrans gen --name-tpl '{name}Config' \
+    $ python -m cdd gen --name-tpl '{name}Config' \
                              --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_losses' \
                              --prepend '""" Generated Loss config classes """\nimport tensorflow as tf\n' \
                              --imports-from-file 'tf.keras.losses.Loss' \
@@ -89,7 +89,7 @@ There's a bit of boilerplate here, so let's automate it:
 
     $ for name in 'callbacks' 'losses' 'metrics' 'optimizers'; do
         rm 'ml_params_tensorflow/ml_params/'"$name"'.py';        
-        python -m ml_params_tensorflow.ml_params.doctrans_cli_gen "$name" 2>/dev/null | xargs python -m doctrans gen;
+        python -m ml_params_tensorflow.ml_params.cdd_cli_gen "$name" 2>/dev/null | xargs python -m cdd gen;
       done
 
 Cleanup the code everywhere, removing unused imports and autolinting/autoformatting:
