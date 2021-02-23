@@ -48,42 +48,50 @@ When TensorFlow itself changes—i.e., a new major version of TensorFlow is rele
 
 To synchronise all the various other APIs, edit one and it'll translate to the others, but make sure you select which one is the gold-standard.
 
+### Dependencies
+
+    $ pip install python-cdd autoflake black isort
+
+[`fd`](https://github.com/sharkdp/fd#installation) (or you can just use `find`, rewrite to `find -type f -name '*.py' -exec`)
+
+### Examples
+
 NOTE: The below steps are available in a script within [sync_scripts](sync_scripts).
 
 As an example, using the `class TensorFlowTrainer` methods as truth, this will update the CLI parsers and config classes:
 
-    python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
-                            --class-name 'TrainConfig' \
-                            --function 'ml_params_tensorflow/ml_params/trainer.py' \
-                            --function-name 'TensorFlowTrainer.train' \
-                            --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
-                            --argparse-function-name 'train_parser' \
-                            --truth 'function'
+    $ python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
+                         --class-name 'TrainConfig' \
+                         --function 'ml_params_tensorflow/ml_params/trainer.py' \
+                         --function-name 'TensorFlowTrainer.train' \
+                         --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
+                         --argparse-function-name 'train_parser' \
+                         --truth 'function'
 
-    python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
-                            --class-name 'LoadDataConfig' \
-                            --function 'ml_params_tensorflow/ml_params/trainer.py' \
-                            --function-name 'TensorFlowTrainer.load_data' \
-                            --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
-                            --argparse-function-name 'load_data_parser' \
-                            --truth 'function'
+    $ python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
+                         --class-name 'LoadDataConfig' \
+                         --function 'ml_params_tensorflow/ml_params/trainer.py' \
+                         --function-name 'TensorFlowTrainer.load_data' \
+                         --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
+                         --argparse-function-name 'load_data_parser' \
+                         --truth 'function'
 
-    python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
-                            --class-name 'LoadModelConfig' \
-                            --function 'ml_params_tensorflow/ml_params/trainer.py' \
-                            --function-name 'TensorFlowTrainer.load_model' \
-                            --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
-                            --argparse-function-name 'load_model_parser' \
-                            --truth 'function'
+    $ python -m cdd sync --class 'ml_params_tensorflow/ml_params/config.py' \
+                         --class-name 'LoadModelConfig' \
+                         --function 'ml_params_tensorflow/ml_params/trainer.py' \
+                         --function-name 'TensorFlowTrainer.load_model' \
+                         --argparse-function 'ml_params_tensorflow/ml_params/cli.py' \
+                         --argparse-function-name 'load_model_parser' \
+                         --truth 'function'
 
 Another example, that you'd run before ^, to generate custom config CLI parsers for members of `tf.keras.losses`:
 
     $ python -m cdd gen --name-tpl '{name}Config' \
-                             --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_losses' \
-                             --prepend '""" Generated Loss config classes """\nimport tensorflow as tf\n' \
-                             --imports-from-file 'tf.keras.losses.Loss' \
-                             --type 'argparse' \
-                             --output-filename 'ml_params_tensorflow/ml_params/losses.py'
+                        --input-mapping 'ml_params_tensorflow.ml_params.type_generators.exposed_losses' \
+                        --prepend '""" Generated Loss config classes """\nimport tensorflow as tf\n' \
+                        --imports-from-file 'tf.keras.losses.Loss' \
+                        --type 'argparse' \
+                        --output-filename 'ml_params_tensorflow/ml_params/losses.py'
 
 There's a bit of boilerplate here, so let's automate it:
 
@@ -94,9 +102,7 @@ There's a bit of boilerplate here, so let's automate it:
 
 Cleanup the code everywhere, removing unused imports and autolinting/autoformatting:
 
-    $ fd -epy -x autoflake --remove-all-unused-imports -i {} \;
-    $ isort --atomic .
-    $ python -m black .
+    $ fd -HIepy -x sh -c 'autoflake --remove-all-unused-imports -i "$0" && isort --atomic "$0" && python -m black "$0"' {} \;
 
 ---
 
