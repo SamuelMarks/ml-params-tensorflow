@@ -715,6 +715,8 @@ model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
         help="the path of the directory where to save the log files to be parsed by TensorBoard.",
         required=True,
     )
+    import tensorflow as tf
+    tf.keras.callbacks.TensorBoard
     argument_parser.add_argument(
         "--histogram_freq",
         help="""frequency (in epochs) at which to compute activation and weight histograms for the layers of the

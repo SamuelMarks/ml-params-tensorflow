@@ -32,4 +32,51 @@ def get_model(
     )
 
 
+def hack(self, model):
+    """ TODO: Delete """
+
+    print(model.input_shape)
+
+    print(model.summary())
+
+    # model = ml_params_tensorflow.example_model.get_model(self.ds_info.features["label"].num_classes)
+
+    print("model.input_shape:", model.input_shape, ";")
+    model = tf.keras.Sequential(
+        [
+            tf.keras.Input(shape=(224, 224, 3)),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.Conv2D(32, kernel_size=(10, 10), padding="same"),
+            tf.keras.layers.Activation("relu"),
+            tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.Conv2D(64, (3, 3), padding="same"),
+            tf.keras.layers.Activation("relu"),
+            tf.keras.layers.Conv2D(64, (3, 3)),
+            tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(256),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.Dense(
+                self.ds_info.features["label"].num_classes, activation="softmax"
+            ),
+        ]
+    )
+
+    dot_img_file = "/tmp/model.png"
+    tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
+    dot_img_file = "/tmp/model_show_shapes.png"
+    tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
+    dot_img_file = "/tmp/model_show_shapes_show_dtype.png"
+    tf.keras.utils.plot_model(
+        model, to_file=dot_img_file, show_shapes=True, show_dtype=True
+    )
+    dot_img_file = "/tmp/model_false.png"
+    tf.keras.utils.plot_model(
+        model, to_file=dot_img_file, show_shapes=False, show_dtype=False
+    )
+    return model
+
+
 __all__ = ["get_model"]

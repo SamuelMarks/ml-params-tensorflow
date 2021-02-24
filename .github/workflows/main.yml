@@ -39,8 +39,8 @@ jobs:
                     pip install -r requirements.txt
                     pip install -e .
                     python --version | grep -qF '3.9.' && sed -i '/astor/d' requirements.txt || true
-                with:
-                    repo-token: ${{ secrets.GITHUB_TOKEN }}
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Acquire datasets
                 run: |
                     # Used by multiple tests and want to skip the race condition (that multiple will DL it)
