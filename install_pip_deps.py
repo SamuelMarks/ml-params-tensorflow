@@ -5,16 +5,20 @@ Install requirements.txt as if no anonymous http access is required (do clones i
 """
 
 from subprocess import call
-from os import path
+from os import path, environ
 from urllib.parse import urlparse
+from tempfile import gettempdir
 
 
-def up_clone(url):
+def up_clone(url, clone_parent_dir=environ.get("CLONE_PARENT_DIR", gettempdir())):
     """
     Clone if not present else reuse
 
     :param url: URL
     :type url: ```str```
+
+    :param clone_parent_dir: Parent directory to clone everything from
+    :type clone_parent_dir: ```str```
 
     :returns: target_dir, filename
     :rtype: ```Tuple[str, Optional[str]]```
@@ -22,10 +26,10 @@ def up_clone(url):
     u = urlparse(url.replace("api.github.com/repos", "github.com"))
     zipball_idx = u.path.rfind("/zipball")
     p = u.path[:zipball_idx] if zipball_idx > -1 else "/".join(u.path.split("/")[:3])
-    target_dir = p[p.rfind("/") + 1 :]
+    target_dir = path.join(clone_parent_dir, p[p.rfind("/") + 1 :])
     if not path.isdir(target_dir):
         call(
-            ["git", "clone", "--depth=1", "{u.scheme}://{u.netloc}{p}".format(u=u, p=p)]
+            ["git", "clone", "--depth=1", "{u.scheme}://{u.netloc}{p}".format(u=u, p=p), target_dir]
         )
     return target_dir, u.path[u.path.rfind("/") + 1 :].rstrip()
 
