@@ -126,7 +126,6 @@ the loss is no longer decreasing, considering the `min_delta` and
 The quantity to be monitored needs to be available in `logs` dict.
 To make it so, pass the loss or metrics at `model.compile()`.
 
-
 Example:
 
 >>> callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3)
@@ -226,7 +225,6 @@ arguments, as:
 - `on_train_begin` and `on_train_end` expect one positional argument:
   `logs`
 
-
 Example:
 
 ```python
@@ -298,7 +296,6 @@ At the beginning of every epoch, this callback gets the updated learning rate
 value from `schedule` function provided at `__init__`, with the current epoch
 and current learning rate, and applies the updated learning rate
 on the optimizer.
-
 
 Example:
 
@@ -391,7 +388,6 @@ model.fit(epochs=EPOCHS, callbacks=[model_checkpoint_callback])
 model.load_weights(checkpoint_filepath)
 ```
 
-
       * Prefix the name with `"val_`" to monitor validation metrics.
       * Use `"loss"` or "`val_loss`" to monitor the model's total loss.
       * If you specify metrics as strings, like `"accuracy"`, pass the same
@@ -459,7 +455,6 @@ def ProgbarLoggerConfig(argument_parser):
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Callback that prints metrics to stdout.
-
 
 Raises:
     ValueError: In case of invalid `count_mode`."""
@@ -643,7 +638,6 @@ tensorboard --logdir=path_to_your_logs
 You can find more information about TensorBoard
 [here](https://www.tensorflow.org/get_started/summaries_and_tensorboard).
 
-
 Examples:
 
 Basic usage:
@@ -715,8 +709,6 @@ model.fit(x_train, y_train, epochs=2, callbacks=[tensorboard_callback])
         help="the path of the directory where to save the log files to be parsed by TensorBoard.",
         required=True,
     )
-    import tensorflow as tf
-    tf.keras.callbacks.TensorBoard
     argument_parser.add_argument(
         "--histogram_freq",
         help="""frequency (in epochs) at which to compute activation and weight histograms for the layers of the
@@ -777,9 +769,8 @@ def TerminateOnNaNConfig(argument_parser):
     :returns: argument_parser
     :rtype: ```ArgumentParser```
     """
-    argument_parser.description = (
-        "Callback that terminates training when a NaN loss is encountered."
-    )
+    argument_parser.description = """Callback that terminates training when a NaN loss is encountered.
+  """
     return argument_parser
 
 

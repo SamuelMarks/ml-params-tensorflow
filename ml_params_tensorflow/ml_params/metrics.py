@@ -38,7 +38,6 @@ by providing lower or upper bound estimate of the AUC.
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
 
-
 Standalone usage:
 
 >>> m = tf.keras.metrics.AUC(num_thresholds=3)
@@ -132,7 +131,8 @@ Standalone usage:
 >>> m = tf.keras.metrics.binary_accuracy(y_true, y_pred)
 >>> assert m.shape == (4,)
 >>> m.numpy()
-array([1., 1., 1., 1.], dtype=float32)"""
+array([1., 1., 1., 1.], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -172,7 +172,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.binary_crossentropy(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
-array([0.916 , 0.714], dtype=float32)"""
+array([0.916 , 0.714], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -225,7 +226,8 @@ Standalone usage:
 array([0., 1.], dtype=float32)
 
 You can provide logits of classes as `y_pred`, since argmax of
-logits and probabilities are same."""
+logits and probabilities are same.
+"""
     argument_parser.add_argument(
         "--y_true", help="One-hot ground truth values.", required=True
     )
@@ -258,7 +260,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
-array([0.0513, 2.303], dtype=float32)"""
+array([0.0513, 2.303], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of one-hot true targets.", required=True
     )
@@ -297,7 +300,6 @@ def CategoricalHingeConfig(argument_parser):
     :rtype: ```ArgumentParser```
     """
     argument_parser.description = """Computes the categorical hinge metric between `y_true` and `y_pred`.
-
 
 Standalone usage:
 
@@ -347,7 +349,6 @@ See: [Cosine Similarity](https://en.wikipedia.org/wiki/Cosine_similarity).
 
 This metric keeps the average cosine similarity between `predictions` and
 `labels` over a stream of data.
-
 
 Standalone usage:
 
@@ -409,7 +410,6 @@ that is used to keep track of the number of false negatives.
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
 
-
 Standalone usage:
 
 >>> m = tf.keras.metrics.FalseNegatives()
@@ -464,7 +464,6 @@ that is used to keep track of the number of false positives.
 
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
-
 
 Standalone usage:
 
@@ -524,7 +523,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
+...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
@@ -567,7 +567,8 @@ Standalone usage:
 >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
 >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
 >>> assert np.array_equal(
-...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -605,7 +606,8 @@ Standalone usage:
 >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
 >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
 >>> assert np.array_equal(
-...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -643,7 +645,8 @@ Standalone usage:
 >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
 >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
 >>> assert np.array_equal(
-...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -683,7 +686,8 @@ Standalone usage:
 >>> assert np.allclose(
 ...     loss.numpy(),
 ...     np.mean(x + np.log(np.exp(-2. * x) + 1.) - math_ops.log(2.), axis=-1),
-...     atol=1e-5)"""
+...     atol=1e-5)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -710,7 +714,6 @@ def LogCoshErrorConfig(argument_parser):
     argument_parser.description = """Computes the logarithm of the hyperbolic cosine of the prediction error.
 
 `logcosh = log((exp(x) + exp(-x))/2)`, where x is the error (y_pred - y_true)
-
 
 Standalone usage:
 
@@ -762,7 +765,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -799,7 +803,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
+...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -834,7 +839,6 @@ which is an idempotent operation that simply divides `total` by `count`.
 
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
-
 
 Standalone usage:
 
@@ -883,7 +887,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -920,7 +925,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
+...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -955,7 +961,6 @@ The predictions are accumulated in a confusion matrix, weighted by
 
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
-
 
 Standalone usage:
 
@@ -1018,7 +1023,6 @@ an idempotent operation that simply divides `total` by `count`.
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
 
-
 Standalone usage:
 
 >>> m = tf.keras.metrics.MeanRelativeError(normalizer=[1, 3, 2, 3])
@@ -1076,7 +1080,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -1118,7 +1123,8 @@ Standalone usage:
 >>> assert np.allclose(
 ...     loss.numpy(),
 ...     np.mean(
-...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
+...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -1151,7 +1157,6 @@ def MeanTensorConfig(argument_parser):
 mean value is updated by keeping local variables `total` and `count`. The
 `total` tracks the sum of the weighted values, and `count` stores the sum of
 the weighted counts.
-
 
 Standalone usage:
 
@@ -1197,7 +1202,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -1239,7 +1245,8 @@ Standalone usage:
 >>> assert np.allclose(
 ...     loss.numpy(),
 ...     np.mean(
-...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
+...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -1280,7 +1287,8 @@ Standalone usage:
 >>> y_pred = y_pred + 1e-7
 >>> assert np.allclose(
 ...     loss.numpy(), np.mean(y_pred - y_true * np.log(y_pred), axis=-1),
-...     atol=1e-5)"""
+...     atol=1e-5)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -1325,7 +1333,6 @@ If `class_id` is specified, we calculate precision by considering only the
 entries in the batch for which `class_id` is above the threshold and/or in the
 top-k highest predictions, and computing the fraction of them for which
 `class_id` is indeed a correct label.
-
 
 Standalone usage:
 
@@ -1407,7 +1414,6 @@ value is computed and used to evaluate the corresponding precision.
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
 
-
 Standalone usage:
 
 >>> m = tf.keras.metrics.PrecisionAtRecall(0.5)
@@ -1474,7 +1480,6 @@ If `class_id` is specified, we calculate recall by considering only the
 entries in the batch for which `class_id` is in the label, and computing the
 fraction of them for which `class_id` is above the threshold and/or in the
 top-k predictions.
-
 
 Standalone usage:
 
@@ -1546,7 +1551,6 @@ value is computed and used to evaluate the corresponding recall.
 
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
-
 
 Standalone usage:
 
@@ -1653,7 +1657,6 @@ Use `sample_weight` of 0 to mask values.
 For additional information about specificity and sensitivity, see
 [the following](https://en.wikipedia.org/wiki/Sensitivity_and_specificity).
 
-
 Standalone usage:
 
 >>> m = tf.keras.metrics.SensitivityAtSpecificity(0.5)
@@ -1714,7 +1717,8 @@ Standalone usage:
 array([0., 1.], dtype=float32)
 
 You can provide logits of classes as `y_pred`, since argmax of
-logits and probabilities are same."""
+logits and probabilities are same.
+"""
     argument_parser.add_argument(
         "--y_true", help="Integer ground truth values.", required=True
     )
@@ -1746,7 +1750,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
-array([0.0513, 2.303], dtype=float32)"""
+array([0.0513, 2.303], dtype=float32)
+"""
     argument_parser.add_argument("--y_true", help="Ground truth values.", required=True)
     argument_parser.add_argument(
         "--y_pred", help="The predicted values.", required=True
@@ -1787,7 +1792,8 @@ Standalone usage:
 ...     y_true, y_pred, k=3)
 >>> assert m.shape == (2,)
 >>> m.numpy()
-array([1., 1.], dtype=float32)"""
+array([1., 1.], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true", help="tensor of true targets.", required=True
     )
@@ -1830,7 +1836,6 @@ Use `sample_weight` of 0 to mask values.
 
 For additional information about specificity and sensitivity, see
 [the following](https://en.wikipedia.org/wiki/Sensitivity_and_specificity).
-
 
 Standalone usage:
 
@@ -1893,7 +1898,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
+...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
@@ -1931,7 +1937,6 @@ This metric creates one variable, `total`, that is used to compute the sum of
 
 If `sample_weight` is `None`, weights default to 1.  Use `sample_weight` of 0
 to mask values.
-
 
 Standalone usage:
 
@@ -1973,7 +1978,8 @@ Standalone usage:
 >>> m = tf.keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
 >>> assert m.shape == (2,)
 >>> m.numpy()
-array([1., 1.], dtype=float32)"""
+array([1., 1.], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true", help="The ground truth values.", required=True
     )
@@ -2007,7 +2013,6 @@ that is used to keep track of the number of true negatives.
 
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
-
 
 Standalone usage:
 
@@ -2063,7 +2068,6 @@ that is used to keep track of the number of true positives.
 
 If `sample_weight` is `None`, weights default to 1.
 Use `sample_weight` of 0 to mask values.
-
 
 Standalone usage:
 

@@ -20,7 +20,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.binary_crossentropy(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
-array([0.916 , 0.714], dtype=float32)"""
+array([0.916 , 0.714], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -71,7 +72,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
-array([0.0513, 2.303], dtype=float32)"""
+array([0.0513, 2.303], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of one-hot true targets.", required=True
     )
@@ -123,7 +125,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> pos = np.sum(y_true * y_pred, axis=-1)
 >>> neg = np.amax((1. - y_true) * y_pred, axis=-1)
->>> assert np.array_equal(loss.numpy(), np.maximum(0., neg - pos + 1.))"""
+>>> assert np.array_equal(loss.numpy(), np.maximum(0., neg - pos + 1.))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="The ground truth values. `y_true` values are expected to be 0 or 1.",
@@ -164,7 +167,8 @@ Standalone usage:
 >>> y_pred = [[1., 0.], [1., 1.], [-1., -1.]]
 >>> loss = tf.keras.losses.cosine_similarity(y_true, y_pred, axis=1)
 >>> loss.numpy()
-array([-0., -0.999, 0.999], dtype=float32)"""
+array([-0., -0.999, 0.999], dtype=float32)
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -203,7 +207,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))"""
+...     np.mean(np.maximum(1. - y_true * y_pred, 0.), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are
@@ -239,7 +244,8 @@ For each value x in `error = y_true - y_pred`:
 loss = 0.5 * x^2                  if |x| <= d
 loss = 0.5 * d^2 + d * (|x| - d)  if |x| > d
 ```
-where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss"""
+where d is `delta`. See: https://en.wikipedia.org/wiki/Huber_loss
+"""
     argument_parser.add_argument(
         "--y_true", help="tensor of true targets.", required=True
     )
@@ -285,7 +291,8 @@ Standalone usage:
 >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
 >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
 >>> assert np.array_equal(
-...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -323,7 +330,8 @@ Standalone usage:
 >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
 >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
 >>> assert np.array_equal(
-...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -361,7 +369,8 @@ Standalone usage:
 >>> y_true = tf.keras.backend.clip(y_true, 1e-7, 1)
 >>> y_pred = tf.keras.backend.clip(y_pred, 1e-7, 1)
 >>> assert np.array_equal(
-...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))"""
+...     loss.numpy(), np.sum(y_true * np.log(y_true / y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true", help="Tensor of true targets.", required=True
     )
@@ -401,7 +410,8 @@ Standalone usage:
 >>> assert np.allclose(
 ...     loss.numpy(),
 ...     np.mean(x + np.log(np.exp(-2. * x) + 1.) - math_ops.log(2.), axis=-1),
-...     atol=1e-5)"""
+...     atol=1e-5)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -436,7 +446,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -473,7 +484,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
+...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -508,7 +520,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_absolute_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.abs(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -545,7 +558,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))"""
+...     100. * np.mean(np.abs((y_true - y_pred) / y_true), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -583,7 +597,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -625,7 +640,8 @@ Standalone usage:
 >>> assert np.allclose(
 ...     loss.numpy(),
 ...     np.mean(
-...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
+...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -666,7 +682,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.mean_squared_error(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
-...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))"""
+...     loss.numpy(), np.mean(np.square(y_true - y_pred), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -708,7 +725,8 @@ Standalone usage:
 >>> assert np.allclose(
 ...     loss.numpy(),
 ...     np.mean(
-...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))"""
+...         np.square(np.log(y_true + 1.) - np.log(y_pred + 1.)), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -749,7 +767,8 @@ Standalone usage:
 >>> y_pred = y_pred + 1e-7
 >>> assert np.allclose(
 ...     loss.numpy(), np.mean(y_pred - y_true * np.log(y_pred), axis=-1),
-...     atol=1e-5)"""
+...     atol=1e-5)
+"""
     argument_parser.add_argument(
         "--y_true",
         help="Ground truth values. shape = `[batch_size, d0, .. dN]`.",
@@ -836,7 +855,8 @@ Standalone usage:
 >>> loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
 >>> assert loss.shape == (2,)
 >>> loss.numpy()
-array([0.0513, 2.303], dtype=float32)"""
+array([0.0513, 2.303], dtype=float32)
+"""
     argument_parser.add_argument("--y_true", help="Ground truth values.", required=True)
     argument_parser.add_argument(
         "--y_pred", help="The predicted values.", required=True
@@ -880,7 +900,8 @@ Standalone usage:
 >>> assert loss.shape == (2,)
 >>> assert np.array_equal(
 ...     loss.numpy(),
-...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))"""
+...     np.mean(np.square(np.maximum(1. - y_true * y_pred, 0.)), axis=-1))
+"""
     argument_parser.add_argument(
         "--y_true",
         help="""The ground truth values. `y_true` values are expected to be -1 or 1. If binary (0 or 1) labels are

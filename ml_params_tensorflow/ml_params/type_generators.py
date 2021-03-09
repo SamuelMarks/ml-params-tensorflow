@@ -4,7 +4,7 @@ Type generators. Use these to generate the type annotations throughout this ml-p
 Install cdd then run, for example:
 
     python -m cdd sync_properties \
-                       --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
+                       --input-filename 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
                        --input-param 'exposed_loss_keys' \
@@ -15,7 +15,7 @@ Install cdd then run, for example:
                        --output-param 'TensorFlowTrainer.load_data.dataset_name'
 
     python -m cdd sync_properties \
-                       --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
+                       --input-filename 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
                        --output-param-wrap 'Optional[List[{output_param}]]' \
@@ -25,7 +25,7 @@ Install cdd then run, for example:
                        --output-param 'TensorFlowTrainer.train.metrics'
 
     python -m cdd sync_properties \
-                       --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
+                       --input-filename 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
                        --input-param 'exposed_loss_keys' \
@@ -36,7 +36,7 @@ Install cdd then run, for example:
                        --output-param 'TensorFlowTrainer.load_data.dataset_name'
 
     python -m cdd sync_properties \
-                       --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
+                       --input-filename 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/trainer.py' \
                        --input-param 'exposed_applications_keys' \
@@ -44,7 +44,7 @@ Install cdd then run, for example:
                        --output-param 'TensorFlowTrainer.load_model.model'
 
     python -m cdd sync_properties \
-                       --input-file 'ml_params_tensorflow/ml_params/type_generators.py' \
+                       --input-filename 'ml_params_tensorflow/ml_params/type_generators.py' \
                        --input-eval \
                        --output-file 'ml_params_tensorflow/ml_params/datasets.py' \
                        --output-param-wrap 'Union[{output_param}, AnyStr]' \

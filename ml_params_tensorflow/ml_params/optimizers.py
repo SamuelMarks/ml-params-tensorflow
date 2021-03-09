@@ -41,7 +41,6 @@ used with 100 network replicas.The epsilon used is 1e-6 with rho=0.95
 which converged faster than ADAGRAD, by the following construction:
 def __init__(self, lr=1.0, rho=0.95, epsilon=1e-6, decay=0., **kwargs):
 
-
 Reference:
   - [Zeiler, 2012](http://arxiv.org/abs/1212.5701)"""
     argument_parser.add_argument(
@@ -101,7 +100,6 @@ Adagrad is an optimizer with parameter-specific learning rates,
 which are adapted relative to how frequently a parameter gets
 updated during training. The more updates a parameter receives,
 the smaller the updates.
-
 
 Reference:
   - [Duchi et al., 2011](
@@ -166,7 +164,6 @@ the method is "*computationally
 efficient, has little memory requirement, invariant to diagonal rescaling of
 gradients, and is well suited for problems that are large in terms of
 data/parameters*".
-
 
 Usage:
 
@@ -305,7 +302,6 @@ behavior is contrast to the dense behavior (similar to some momentum
 implementations which ignore momentum unless a variable slice was actually
 used).
 
-
 Reference:
   - [Kingma et al., 2014](http://arxiv.org/abs/1412.6980)"""
     argument_parser.add_argument(
@@ -392,7 +388,6 @@ Check the documentation for the l2_shrinkage_regularization_strength
 parameter for more details when shrinkage is enabled, in which case gradient
 is replaced with gradient_with_shrinkage.
 
-
 Reference:
   - [paper](
     https://www.eecs.tufts.edu/~dsculley/papers/ad-click-prediction.pdf)"""
@@ -478,7 +473,6 @@ def NadamConfig(argument_parser):
 Much like Adam is essentially RMSprop with momentum, Nadam is Adam with
 Nesterov momentum.
 
-
 Reference:
   - [Dozat, 2015](http://cs229.stanford.edu/proj2015/054_report.pdf)."""
     argument_parser.add_argument(
@@ -548,7 +542,6 @@ This implementation of RMSprop uses plain momentum, not Nesterov momentum.
 
 The centered version additionally maintains a moving average of the
 gradients, and uses that average to estimate the variance.
-
 
 Note that in the dense implementation of this algorithm, variables and their
 corresponding accumulators (momentum, gradient moving average, square
