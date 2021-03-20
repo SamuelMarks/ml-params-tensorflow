@@ -11,8 +11,7 @@ ml_params_tensorflow
 
 [TensorFlow](https://tensorflow.org) implementation of the [ml-params](https://github.com/SamuelMarks/ml-params) API and CLI.
 
-The purpose of ml-params is to expose the hooks and levers of ML experiments for external usage, e.g., in GUIs, CLIs,
-REST & RPC APIs, and parameter and hyperparameter optimisers.
+The purpose of ml-params is to expose the hooks and levers of ML experiments for external usage, e.g., in GUIs, CLIs, REST & RPC APIs, and parameter and hyperparameter optimisers.
 
 ## Install dependencies
 
