@@ -1,6 +1,6 @@
 """
-    Implementation of datasets following vendor recommendations.
-    """
+Implementation of datasets following vendor recommendations.
+"""
 import os
 from functools import partial
 from importlib import import_module

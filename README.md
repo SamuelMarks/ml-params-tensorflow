@@ -95,7 +95,7 @@ Another example, that you'd run before ^, to generate custom config CLI parsers 
 There's a bit of boilerplate here, so let's automate it:
 
     $ for name in 'callbacks' 'losses' 'metrics' 'optimizers'; do
-        rm 'ml_params_tensorflow/ml_params/'"$name"'.py';        
+        rm 'ml_params_tensorflow/ml_params/'"$name"'.py';
         python -m ml_params_tensorflow.ml_params.cdd_cli_gen "$name" 2>/dev/null | xargs python -m cdd gen;
       done
 
